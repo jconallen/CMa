@@ -1,0 +1,21 @@
+{
+	"name": "CMa",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node app.js"
+	},
+	"dependencies": {
+		"express": "4.15.x",
+		"request": "*",
+		"async": "*",
+		"body-parser": "^1.15.x",
+   		"cookie-parser": "^1.4.x",
+   		"cookie-session": "*",
+		"ejs": "^2.5.x"
+	},
+	"repository": {},
+	"engines": {
+		"node": "6.x"
+	} 
+}
