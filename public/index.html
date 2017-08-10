@@ -102,6 +102,12 @@
 							</tr>
 						</tbody>
 					</table>
+					<div class="alert alert-danger collapse" role="alert" id="VMError">
+	            	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					    <span aria-hidden="true">&times;</span>
+					</button>
+  					<strong>VM Error!</strong> Change a few things up and try submitting again.
+					</div>
 				</div>
 		    </div>
 	    </div>
@@ -233,9 +239,13 @@
 	</div> <!--  outer container -->
 	    
 	<script src="/js/globals.js"></script>
-    <script src="/js/instructions.js"></script>
-	<script src="/js/sample_program.js"></script>
+    <script src="/js/instr_arithmetic.js"></script>
+    <script src="/js/instr_controlflow.js"></script>
+    <script src="/js/instr_io.js"></script>
+    <script src="/js/instr_loadstore.js"></script>
+    <script src="/js/instr_heap.js"></script>
 	<script src="/js/parser.js"></script>
+	<script src="/js/starter_program.js"></script>
 	
 	<script type="text/javascript">	
 		
@@ -274,14 +284,17 @@
 		updateDisplay();
 	}
 	
-	var VM = new VirtualMachine(64, 128, 32);
+	var VM = new VirtualMachine(32, 64, 32);
 	
-	VM.loadProgram( ex_prog );
+	VM.loadProgram( starter_prog );
 	
-	$("#out").html("");
-
 	function executeNext(){
-		VM.executeNextInstruction();
+		try{
+			VM.executeNextInstruction();
+		} catch( err ) {
+			$('#VMError').html(err);
+			$('#VMError').show();
+		}
 		updateDisplay();		
 	}
 	
@@ -368,17 +381,11 @@
 		
 		var stackData = [];
 
-		for(var i=VM.S_Stack.length-1; i>=0; i--) {
+		for(var i=VM.MAX_STACK_SIZE-1; i>=0; i--) {
 			
-			var value = VM.S_Stack[i];
+			var value = VM.S[i];
 			var row = { "address": i };
 			row.value = value.toString();
-			
-			if( VM.SP == i ) {
-				row.ptr = "->";
-			} else {
-				row.ptr = "";
-			}
 			
 			row.color = '#c4daef';
 	    	if( i > VM.SP ){
@@ -400,10 +407,18 @@
 
 		var heapData = [];
 
-		for(var i=VM.HeapSize-1; i>0; i--) {
-			var heapValue = VM.S_Heap[i];
-			var row = { "address": i+VM.MAX_STACKSIZE-1 };
+		for(var i=VM.MAIN_MEMORY_SIZE-1; i>=VM.EP; i--) {
+			var heapValue = VM.S[i];
+			var addr = i ;
+			var row = { "address": addr};
 			row.value = heapValue.toString();
+			
+			row.color = "#ffffff";
+	    	if( addr > VM.HP ){
+	    		row.color = '#efe9c4' ;
+	    	}
+			
+			
 			heapData.push(row);
 		}
 		
@@ -411,8 +426,8 @@
 		$('#Heap').append(
 			    $.map(heapData, function (item, index) {
 			    	return '<tr>' 
-			    		+ '<td class="col-md-4 text-center table-bordered">' + item.address + '</td>'  
-			    		+ '<td class="col-md-8 text-center table-bordered">' + item.value.toString() + '</td>'
+			    		+ '<td class="col-md-4 text-center table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>'  
+			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value.toString() + '</td>'
 			    		+ '</tr>';
 		}).join());
 		
@@ -435,11 +450,11 @@
 		
 	}
 	
-	updateDisplay(); // initial update
 	
 	function restart(){
 		VM.restart();
 		$("#out").html("");
+		$('#VMError').hide();
 		updateDisplay();
 	}
 	
@@ -463,6 +478,12 @@
 
 	}
 
+	
+	$( document ).ready(function() {
+		updateDisplay();
+		$("#out").html("");
+
+	});
 
 	</script>
 

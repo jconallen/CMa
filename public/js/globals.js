@@ -20,7 +20,7 @@ class Instruction {
 	};
 	
 	toFormattedString(){
-		var str =  '<b>' + this.impl.name + '</b>';
+		var str =  '<b>' + this.name() + '</b>';
 		if( this.argument ) {
 			if( this.argument.type=="label" ) {
 				str += " <i>" + this.argument.toString() + "</i>";
@@ -40,8 +40,11 @@ class Instruction {
 		return this._argument;
 	}
 	
-	get name(){
-		this.impl.name;
+	name(){
+		if( this.impl.name.startsWith("_") ) {
+			return this.impl.name.substring(1);
+		}
+		return this.impl.name;
 	}
 	
 	get description(){
@@ -98,7 +101,7 @@ class VirtualMachine {
 	constructor( ProgramStoreSize, MainMemorySize, MaxStackSize ){
 		this.MAIN_MEMORY_SIZE = MainMemorySize;
 		this.PROGRAM_STORE_SIZE = ProgramStoreSize;
-		this.MAX_STACKSIZE = MaxStackSize;
+		this.MAX_STACK_SIZE = MaxStackSize;
 		
 		this.C = [];  // Program Store
 		
@@ -134,6 +137,7 @@ class VirtualMachine {
 				
 				// increment the program counter
 				this.PC += 1;
+				
 			} else {
 				this.running = false;
 				this.out = '\nMachine halted';	
@@ -146,24 +150,20 @@ class VirtualMachine {
 		this.PC = 0;
 		this.FP = -1;
 		this.SP = -1;
-		this.EP = this.MAX_STACKSIZE;
+		this.EP = this.MAX_STACK_SIZE;
 		this.HP = this.MAIN_MEMORY_SIZE - 1 ;
 		
 		this.out = "";
+		this.err = "";
 		this.running = true;
 		
-		this.S_Stack = [];  
+		this.S = [];  
 		
-		for(var i=0; i<this.MAX_STACKSIZE; i++) {
-			this.S_Stack.push(NULL_VALUE);
+		for(var i=0; i<this.MAIN_MEMORY_SIZE; i++){
+			this.S[i] = NULL_VALUE;
 		}
+		
 
-		var heapSize = this.MAIN_MEMORY_SIZE-this.MAX_STACKSIZE+1;
-		this.S_Heap = [];  
-
-		for(var i=0; i<heapSize; i++) {
-			this.S_Heap.push(NULL_VALUE);
-		}
 	}
 	
 	loadProgram( program ) {
@@ -174,19 +174,33 @@ class VirtualMachine {
 	}
 	
 	pop() {
-		var v = this.S_Stack[this.SP];
-		this.S_Stack[this.SP] = NULL_VALUE;
+		if( this.SP < 0 ) {
+			throw "Stack underflow.  Attempt to pop on empty stack.";
+		}
+		var v = this.S[this.SP];
+		this.S[this.SP] = NULL_VALUE;
 		this.SP--;
 		return v;
 	}
 
+	peek() {
+		if( this.SP < 0 ) {
+			throw "Stack underflow.  Attempt to pop on empty stack.";
+		}
+		var v = this.S[this.SP];
+		return v;
+	}
+
 	push(value) {
+		if( this.SP >= this.EP ) {
+			throw "Stack overflow.  Attempt to push on full stack.";
+		}
 		this.SP++;
-		this.S_Stack[this.SP] = value;
+		this.S[this.SP] = value;
 	}
 	
 	print( value ) {
-		this.out += value;
+		this.out += value.toString();
 	}
 	
 	eatOutput(){
