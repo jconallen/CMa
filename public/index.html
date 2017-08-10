@@ -1,114 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
-
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+	
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+ 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+ 	
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js"></script>
+ 	<style>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+ 	</style>
+ 	
   </head>
+
   <body>
-    <h1>CMa </h1>
     
-    <pre id="pre"></pre>
+    <div class=container>
     
+    <h1>CMa Virtual Machine</h1>
+<div class="container">
+
+<!-- Modal Dialog for Program Upload -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" data-dismiss="modal">×</button>
+              <h3>CMa Program Editor</h3>
+            </div>
+            <div class="modal-body">
+	            <div class="row">
+	            <div class="col-md-8">
+	               <div class="form-group">
+				    <label for="exampleTextarea">Code</label>
+				    <textarea class="form-control" id="programCode" rows="10"></textarea>
+				    <a class="btn btn-primary" onclick="parseCode()">Parse program</a>
+				  </div>
+	            </div>
+	             
+				  <div class="col-md-4">
+				  	<table class="table table-fixed header-fixed "  id="UploadedProgram">
+					  <thead >
+					  		<th data-field="label">label</th>
+						    <th data-field="instruction">instruction</th>
+					  </thead>
+					</table>
+				  
+				  </div>
+	            </div>
+
+	            <div class="row">
+	            <div class="col-md-8">
+	            
+	            	<div class="alert alert-danger collapse" role="alert" id="ParseError">
+	            	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  						<strong>Oh snap!</strong> Change a few things up and try submitting again.
+					</div>
+	            
+	            </div>
+	            </div>
+	        </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal">Close</a>
+            	<a class="btn btn-primary" onclick="loadProgram()">Load program</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
     
     <div class="row">
-    <div class="col-md-4">
-    
-		<div class="panel panel-primary">
-		  <!-- Default panel contents -->
-		  <div class="panel-heading">Program Store (C)</div>
-		  <div class="panel-body">
-		    <p>...</p>
-		  </div>
-		
-		  <!-- Table -->
-		  <table class="display table table-bordered" id="PS">
-		    <thead>
-		    	<tr>
-		    		<th>bkpt</th>
-		    		<th>label</th>
-		    		<th>addr</th>
-		    		<th>instr</th>
-		    	</tr>
-		    </thead>
-		    <tbody/>
-		  </table>
-		</div>
-  	</div>
-  	
-  	<div class="col-md-8">
-  		<div class="panel panel-success">
-  		<div class="panel-heading">Main Memory (S) </div>
-		  <div class="panel-body">
-		   
-<div class="col-md-4">
-    
-		<div class="panel panel-default">
-		  <!-- Default panel contents -->
-		  <div class="panel-heading">Stack </div>
-		  <div class="panel-body">
-		    <p>...</p>
-		  </div>
-		
-		  <!-- Table -->
-		  <table class="table">
-		    ...
-		  </table>
-		</div>
-  	</div>
-  	
-  	  <div class="col-md-4">
-    
-		<div class="panel panel-default">
-		  <!-- Default panel contents -->
-		  <div class="panel-heading">Heap</div>
-		  <div class="panel-body">
-		    <p>...</p>
-		  </div>
-		
-		  <!-- Table -->
-		  <table class="table">
-		    ...
-		  </table>
-		</div>
-  	</div>
+	    <div class="col-md-4">
+		    <div class="panel panel-info" style="width: 350px;">
+		    	<div class="panel-heading" >
+					<h3 class="panel-title">Registers</h3>
+				</div>
+				<div class="panel-body" >
+					<table class="table table-bordered" >
+						<thead>
+							<th>PC</th>
+							<th>FP</th>
+							<th>SP</th>
+							<th>EP</th>
+							<th>HP</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td id="PC"></td>
+								<td id="FP"></td>
+								<td id="SP"></td>
+								<td id="EP"></td>
+								<td id="HP"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+		    </div>
+	    </div>
+	    <div class="col-md-7">
+		    <div class="panel panel-primary" >
+		    	<div class="panel-heading" >
+					<h3 class="panel-title">Controls</h3>
+				</div>
+				<div class="panel-body" >
+					<div class="btn-group" role="group" aria-label="...">
+						<button type="button" class="btn btn-default" onclick="executeNext()" id="executeBtn">Execute</button>
+						<button type="button" class="btn btn-default" onclick="restart()">Restart</button>
+						<a data-toggle="modal" href="#myModal" class="btn btn-default ">Load Program</a>
+						
+					</div>
+					<div class="panel panel-default">
+					  <div class="panel-heading" id="NextInstr">next instr</div>
+					  <div class="panel-body" id="NextInstrDescription">
+					    Description of the next instruction
+					  </div>
+					</div>
+				
+				</div>
+		    </div>
+	    </div>
 
+    </div>
+    
+ 	<div class="row">
+	 	<div class="col-md-4">
+	 	
+			<div class="panel panel-info" style="width: 350px;">
+				<div class="panel-heading" >
+			    	<h3 class="panel-title">Program Store (C)</h3>
+			    </div>
+			    <div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+					  <thead style="border:0px; ">
+					  		<th class="col-md-1 text-center"></th>
+					  		<th class="col-md-2 text-right"></th>
+					  		<th class="col-md-3 text-center">label</th>
+						    <th class="col-md-1 text-center">addr</th>
+						    <th class="col-md-6 ">instr</th>
+					  </thead>
+					</table>
+			  	</div>
+			  	<div class="panel-body" style="overflow: auto; height: 400px; padding:0px; ">
+					<table class="table table-fixed header-fixed "  id="ProgramStore">
+					
+					</table>
+				</div>
+			</div>
+		
+		</div>
+	
 
-		  </div>
-  		</div>
-  	</div>
-  	
-    
-  	
-	</div>    
-    
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	 	<div class="col-md-4">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+			    	<h3 class="panel-title">Stack</h3>
+			  	</div>
+			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+					  <thead style="border:0px; ">
+					  		<th class="col-md-1 text-right" data-field="ptr"></th>
+					  		<th class="col-md-2 text-center" data-field="address">addr</th>
+					  		<th class="col-md-4 text-center" data-field="variable">variable</th>
+						    <th class="col-md-5 text-center" data-field="value">value</th>
+					  </thead>
+					</table>
+			  	</div>
+				<div class="panel-body" style="overflow: auto; height: 400px; padding:0px">
+					<table class="table " id="Stack">
+					  
+					</table>
+				</div>
+			
+			</div>
+		</div>
+	
+
+		<div class="col-md-3">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+			    	<h3 class="panel-title">Heap</h3>
+			  	</div>
+			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+						<thead style="border:0px; ">
+					  		<th class="col-md-2 text-center">addr</th>
+						 	<th class="col-md-10 text-center">val</th>
+				  		</thead>
+				  	</table>
+			  	</div>
+				<div class="panel-body" style="overflow: auto; height: 400px;">
+					<table class="table" id="Heap">
+					</table>
+				</div>
+			
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-10">
+		
+				<div class="panel panel-default" >
+					<div class="panel-heading">
+				    	<h3 class="panel-title">Output</h3>
+				  	</div>
+					<div class="panel-body" >
+						<pre class="table" style="overflow: auto; height:200px;" id="out">
+						</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	
+
+	</div>
+	
+	</div> <!--  outer container -->
+	    
 	<script src="/js/globals.js"></script>
-	<script src="/js/instructions.js"></script>
+    <script src="/js/instructions.js"></script>
 	<script src="/js/sample_program.js"></script>
+	<script src="/js/parser.js"></script>
+	
+	<script type="text/javascript">	
+		
+	function parseCode(){
+		$('#ParseError').hide();
+		var code = $("#programCode").val();
+		var result = parseProgram(code);
+
+		$('#UploadedProgram tr').not(function(){ return !!$(this).has('th').length; }).remove()
+		
+		if( result.error ) {
+			$('#ParseError').html(result.error);
+			$('#ParseError').show();
+		}
+		
+		$('#UploadedProgram').append(
+			    $.map(result.instructions, function (instruction, index) {
+			    	return '<tr>' 
+			    		+ '<td class="col-md-3 text-right table-bordered ">' + instruction.label + '</td>' 
+			    		+ '<td class="col-md-6 text-left table-bordered ">' + instruction.toFormattedString() + '</td>'
+			    		+ '</tr>';
+		}).join());
+		
+	}
+	
+	function loadProgram(){
+		var code = $("#programCode").val();
+		var result = parseProgram(code);
+		var instructions = result.instructions;
+		VM.loadProgram( instructions );
+		$('#myModal').modal('hide');
+		$('#executeBtn').prop('disabled', false);
+		updateDisplay();
+	}
+	
+	var VM = new VirtualMachine(1024, 256, 512);
+	
+	VM.loadProgram( ex_prog );
+	
+	$("#out").html("");
+
+	function executeNext(){
+		VM.executeNextInstruction();
+		updateDisplay();		
+	}
+
+	function updateDisplay(){
+		
+		$('#PC').html(VM.PC);
+		$('#FP').html(VM.FP);
+		$('#SP').html(VM.SP);
+		$('#EP').html(VM.EP);
+		$('#HP').html(VM.HP);
+	
+		var pcData = [];
+
+		for(var i=0; i<VM.C.length; i++) {
+			var instr = VM.C[i];
+			
+			var row = row = { "address": i };
+			if( VM.PC == i ) {
+				row.ptr = "->";
+			} else {
+				row.ptr = "";
+			}
+			if( instr.breakpoint ) {
+				row.breakpoint = "x";
+			} else {
+				row.breakpoint = "";
+			}
+			if( instr.impl ) {
+				row.instruction = instr.toFormattedString();
+			} else {
+				row.instruction = "-";
+			}
+			
+			if( instr.label ) {
+				row.label = instr.label;
+			} else {
+				row.label = "";
+			}
+			pcData.push(row);
+			
+		}
+		
+		$('#ProgramStore').empty();
+		$('#ProgramStore').append(
+			    $.map(pcData, function (item, index) {
+			    	return '<tr>' 
+			    		+ '<td class="col-md-1 text-right">' + item.breakpoint + '</td>' 
+			    		+ '<td class="col-md-2 text-center">' + item.ptr + '</td>' 
+			    		+ '<td class="col-md-3 text-right table-bordered ">' + item.label + '</td>' 
+			    		+ '<td class="col-md-1 text-center table-bordered ">' + index + '</td>'
+			    		+ '<td class="col-md-6 text-left table-bordered ">' + item.instruction + '</td>'
+			    		+ '</tr>';
+		}).join());
+		
+		
+		var stackData = [];
+
+		for(var i=VM.S_Stack.length-1; i>=0; i--) {
+			
+			var stackValue = VM.S_Stack[i];
+			
+			var row = { "address": i };
+			
+			if( stackValue.value ){
+				row.value = stackValue.value.toString();
+			} else {
+				row.value = "0";
+			}
+			
+			if( VM.SP == i ) {
+				row.ptr = "->";
+			} else {
+				row.ptr = "";
+			}
+			
+			if( stackValue.variable ){
+				row.variable = stackValue.variable;
+			} else {
+				row.variable = "";
+			}
+			
+			
+			stackData.push(row);
+		}
+		
+		$('#Stack').empty();
+		$('#Stack').append(
+			    $.map(stackData, function (item, index) {
+			    	
+			    	if( item.value.toString() === "2" ) {
+			    		alert( JSON.stringify(item));
+			    	}
+			    	return '<tr>' 
+			    		+ '<td class="col-md-1 text-right"></td>' 
+			    		+ '<td class="col-md-2 text-right table-bordered">' + item.address + '</td>' 
+			    		+ '<td class="col-md-4 text-center table-bordered ">' + item.variable + '</td>' 
+			    		+ '<td class="col-md-5 text-center table-bordered ">' + item.value.toString() + '</td>'
+			    		+ '</tr>';
+			}).join());
 
 
-	<script type="text/javascript">
-	document.getElementById("pre").innerHTML = "Hello JavaScript!";
+		var heapData = [];
+
+		for(var i=VM.HeapSize-1; i>=0; i--) {
+			var heapValue = VM.S_Heap[i];
+			var row = { "address": i+VM.MAX_STACKSIZE-1 };
+			row.value = heapValue.toString();
+			heapData.push(row);
+		}
+		
+		$('#Heap').empty();
+		$('#Heap').append(
+			    $.map(heapData, function (item, index) {
+			    	return '<tr>' 
+			    		+ '<td class="col-md-3 text-center table-bordered">' + item.address + '</td>'  
+			    		+ '<td class="col-md-9 text-center table-bordered">' + item.value.toString() + '</td>'
+			    		+ '</tr>';
+		}).join());
+		
+		var output = VM.eatOutput();
+		$("#out").append(output);
+		
+		$('#executeBtn').prop('disabled', !VM.isRunning());
+		
+	}
+	
+	updateDisplay(); // initial update
+	
+	function restart(){
+		VM.restart();
+		$("#out").empty();
+		updateDisplay();
+	}
+
 	</script>
 
 
