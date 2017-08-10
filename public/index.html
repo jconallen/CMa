@@ -16,11 +16,12 @@
  	
   </head>
 
-  <body>
+<body>
     
     <div class=container>
     
     <h1>CMa Virtual Machine</h1>
+    
 <div class="container">
 
 <!-- Modal Dialog for Program Upload -->
@@ -57,9 +58,9 @@
 	            
 	            	<div class="alert alert-danger collapse" role="alert" id="ParseError">
 	            	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-  						<strong>Oh snap!</strong> Change a few things up and try submitting again.
+					    <span aria-hidden="true">&times;</span>
+					</button>
+  					<strong>Oh snap!</strong> Change a few things up and try submitting again.
 					</div>
 	            
 	            </div>
@@ -104,7 +105,7 @@
 				</div>
 		    </div>
 	    </div>
-	    <div class="col-md-7">
+	    <div class="col-md-6">
 		    <div class="panel panel-primary" >
 		    	<div class="panel-heading" >
 					<h3 class="panel-title">Controls</h3>
@@ -157,7 +158,7 @@
 		</div>
 	
 
-	 	<div class="col-md-4">
+	 	<div class="col-md-3">
 			<div class="panel panel-success">
 				<div class="panel-heading">
 			    	<h3 class="panel-title">Stack</h3>
@@ -167,7 +168,6 @@
 					  <thead style="border:0px; ">
 					  		<th class="col-md-1 text-right" data-field="ptr"></th>
 					  		<th class="col-md-2 text-center" data-field="address">addr</th>
-					  		<th class="col-md-4 text-center" data-field="variable">variable</th>
 						    <th class="col-md-5 text-center" data-field="value">value</th>
 					  </thead>
 					</table>
@@ -290,6 +290,8 @@
 			var row = row = { "address": i };
 			if( VM.PC == i ) {
 				row.ptr = "->";
+				$('#NextInstr').html(instr.toFormattedString());
+				$('#NextInstrDescription').html(instr.description);
 			} else {
 				row.ptr = "";
 			}
@@ -330,43 +332,24 @@
 
 		for(var i=VM.S_Stack.length-1; i>=0; i--) {
 			
-			var stackValue = VM.S_Stack[i];
-			
+			var value = VM.S_Stack[i];
 			var row = { "address": i };
-			
-			if( stackValue.value ){
-				row.value = stackValue.value.toString();
-			} else {
-				row.value = "0";
-			}
+			row.value = value.toString();
 			
 			if( VM.SP == i ) {
 				row.ptr = "->";
 			} else {
 				row.ptr = "";
 			}
-			
-			if( stackValue.variable ){
-				row.variable = stackValue.variable;
-			} else {
-				row.variable = "";
-			}
-			
-			
 			stackData.push(row);
 		}
 		
 		$('#Stack').empty();
 		$('#Stack').append(
 			    $.map(stackData, function (item, index) {
-			    	
-			    	if( item.value.toString() === "2" ) {
-			    		alert( JSON.stringify(item));
-			    	}
 			    	return '<tr>' 
 			    		+ '<td class="col-md-1 text-right"></td>' 
 			    		+ '<td class="col-md-2 text-right table-bordered">' + item.address + '</td>' 
-			    		+ '<td class="col-md-4 text-center table-bordered ">' + item.variable + '</td>' 
 			    		+ '<td class="col-md-5 text-center table-bordered ">' + item.value.toString() + '</td>'
 			    		+ '</tr>';
 			}).join());
@@ -393,7 +376,12 @@
 		var output = VM.eatOutput();
 		$("#out").append(output);
 		
-		$('#executeBtn').prop('disabled', !VM.isRunning());
+		if( !VM.isRunning()) {
+			$('#executeBtn').prop('disabled', !VM.isRunning());
+			$('#NextInstr').html("next instruction");
+			$('#NextInstrDescription').html("");
+		}
+		
 		
 	}
 	

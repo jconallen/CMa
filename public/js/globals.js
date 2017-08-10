@@ -1,5 +1,7 @@
 // globals
 
+var InstructionDescriptions = {};
+
 class Instruction {
 	
 	constructor( impl, argument, label ) {
@@ -33,20 +35,16 @@ class Instruction {
 		return this._argument;
 	}
 	
-};
-
-class StackValue {
-	constructor( value, variable ){
-		this.value = value;
-		this.variable = variable;
+	get name(){
+		this.impl.name;
 	}
 	
-	toString(){
-		return " " + this.value.toString();
+	get description(){
+		var descr = InstructionDescriptions[this.impl.name];
+		return descr;
 	}
 	
 };
-
 
 class Value {
 	constructor( type, value ){
@@ -76,7 +74,6 @@ class Value {
 };
 
 const NULL_VALUE = new Value("int", 0 );
-const NULL_STACK_VALUE = new StackValue( NULL_VALUE, null);
 const NOP = new Instruction(null,null,null);
 
 
@@ -138,7 +135,7 @@ class VirtualMachine {
 		this.S_Stack = [this.MAX_STACKSIZE];  
 		
 		for(var i=0; i<this.MAX_STACKSIZE; i++) {
-			this.S_Stack.push(NULL_STACK_VALUE);
+			this.S_Stack.push(NULL_VALUE);
 		}
 
 		var heapSize = this.MAIN_MEMORY_SIZE-this.MAX_STACKSIZE;
@@ -158,14 +155,14 @@ class VirtualMachine {
 	
 	pop() {
 		var v = this.S_Stack[this.SP];
-		this.S_Stack[this.SP] = NULL_STACK_VALUE;
+		this.S_Stack[this.SP] = NULL_VALUE;
 		this.SP--;
 		return v;
 	}
 
-	push(stackValue) {
+	push(value) {
 		this.SP++;
-		this.S_Stack[this.SP] = stackValue;
+		this.S_Stack[this.SP] = value;
 	}
 	
 	print( value ) {
