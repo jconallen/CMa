@@ -48,7 +48,7 @@ function parseProgram( str ){
 		}
 		
 	} else {
-		return { "error": "<p>Now semi colon (;).  Every instrution should be followed with a semi colon.</p>", "instructions": [] };
+		return { "error": "<p>No semi colon (;).  Every instrution should be followed with a semi colon.</p>", "instructions": [] };
 	}
 
 	return { "error": errors, "instructions": instructions };

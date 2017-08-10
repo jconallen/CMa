@@ -8,6 +8,7 @@ class Instruction {
 		this.impl = impl;
 		this._argument = argument;
 		this._label = label;
+		this._breakpoint = false;
 	};
 	
 	toString(){
@@ -21,7 +22,11 @@ class Instruction {
 	toFormattedString(){
 		var str =  '<b>' + this.impl.name + '</b>';
 		if( this.argument ) {
-			str += " " + this.argument.toString();
+			if( this.argument.type=="label" ) {
+				str += " <i>" + this.argument.toString() + "</i>";
+			} else {
+				str += " " + this.argument.toString();
+			}
 		} 
 		return str;
 	};
@@ -44,6 +49,15 @@ class Instruction {
 		return descr;
 	}
 	
+	get breakpoint(){
+		return this._breakpoint;
+	}
+	
+	toggleBreakpoint(){
+		this._breakpoint = !this._breakpoint;
+		return this._breakpoint;
+	}
+	
 };
 
 class Value {
@@ -57,14 +71,16 @@ class Value {
 		var str = "";
 		if( this.type=="int" ){
 			str += this.value;
-		} else if( this.type="float" ){
+		} else if( this.type=="float" ){
 			if( this.value % 1 ){				
 				str += this.value;
 			} else {
 				str += this.value + ".0"; 
 			}
-		} else if( this.type="ptr" ) {
+		} else if( this.type=="ptr" ) {
 			str += "*" + this.value;
+		} else if( this.type=="label" ) {
+			str += this.value;
 		} else {
 			str += "UNKNOWN";
 		}
@@ -79,12 +95,12 @@ const NOP = new Instruction(null,null,null);
 
 class VirtualMachine {
 
-	constructor( MainMemorySize, ProgramStoreSize, MaxStackSize ){
+	constructor( ProgramStoreSize, MainMemorySize, MaxStackSize ){
 		this.MAIN_MEMORY_SIZE = MainMemorySize;
 		this.PROGRAM_STORE_SIZE = ProgramStoreSize;
 		this.MAX_STACKSIZE = MaxStackSize;
 		
-		this.C = [this.PROGRAM_STORE_SIZE];  // Program Store
+		this.C = [];  // Program Store
 		
 		for(var i=0; i<this.PROGRAM_STORE_SIZE; i++) {
 			this.C.push(NOP);
@@ -95,7 +111,11 @@ class VirtualMachine {
 	}
 	
 	get HeapSize(){
-		return this.MAIN_MEMORY_SIZE-this.MAX_STACKSIZE;
+		return this.MAIN_MEMORY_SIZE-this.MAX_STACKSIZE+1;
+	}
+	
+	get currentInstruction(){
+		return this.C[this.PC];
 	}
 
 	isRunning() {
@@ -132,14 +152,14 @@ class VirtualMachine {
 		this.out = "";
 		this.running = true;
 		
-		this.S_Stack = [this.MAX_STACKSIZE];  
+		this.S_Stack = [];  
 		
 		for(var i=0; i<this.MAX_STACKSIZE; i++) {
 			this.S_Stack.push(NULL_VALUE);
 		}
 
-		var heapSize = this.MAIN_MEMORY_SIZE-this.MAX_STACKSIZE;
-		this.S_Heap = [heapSize];  
+		var heapSize = this.MAIN_MEMORY_SIZE-this.MAX_STACKSIZE+1;
+		this.S_Heap = [];  
 
 		for(var i=0; i<heapSize; i++) {
 			this.S_Heap.push(NULL_VALUE);
@@ -177,6 +197,16 @@ class VirtualMachine {
 
 	halt(){
 		this.running = false;
+	}
+	
+	getAddress(label){
+		for(var i=0; i<this.PROGRAM_STORE_SIZE; i++) {
+			var instr = this.C[i];
+			if( label == instr._label ){
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 }

@@ -79,7 +79,7 @@
     
     <div class="row">
 	    <div class="col-md-4">
-		    <div class="panel panel-info" style="width: 350px;">
+		    <div class="panel panel-info" >
 		    	<div class="panel-heading" >
 					<h3 class="panel-title">Registers</h3>
 				</div>
@@ -111,16 +111,26 @@
 					<h3 class="panel-title">Controls</h3>
 				</div>
 				<div class="panel-body" >
-					<div class="btn-group" role="group" aria-label="...">
-						<button type="button" class="btn btn-default" onclick="executeNext()" id="executeBtn">Execute</button>
-						<button type="button" class="btn btn-default" onclick="restart()">Restart</button>
-						<a data-toggle="modal" href="#myModal" class="btn btn-default ">Load Program</a>
-						
-					</div>
-					<div class="panel panel-default">
-					  <div class="panel-heading" id="NextInstr">next instr</div>
-					  <div class="panel-body" id="NextInstrDescription">
-					    Description of the next instruction
+					
+						<button type="button" class="btn btn-default" onclick="executeNext()" id="executeBtn">
+							<span class="glyphicon glyphicon-step-forward"></span> Next
+						</button>
+						<button type="button" class="btn btn-default" onclick="runToBreakpoint()" id="runToBreakBtn">
+							<span class="glyphicon glyphicon-fast-forward"></span> Run to Brkpt
+						</button>
+						<button type="button" class="btn btn-default" onclick="runToEnd()" id="playBtn">
+							<span class="glyphicon glyphicon-play"></span> Run 
+						</button>
+						<button type="button" class="btn btn-default" onclick="restart()">
+							<span class="glyphicon glyphicon-refresh"></span> Restart
+						</button>
+						<button type="button" class="btn btn-default" onclick="openLoadProgramDialog()">
+							<span class="glyphicon glyphicon-open-file"></span> Load
+						</button>
+					
+					<div class="panel panel-default" style="margin-top: 10px;">
+					  <div class="panel-heading" id="NextInstr"></div>
+					  <div class="panel-body" id="NextInstrDescription" style="min-height: 120px; max-height: 120px;overflow-y: scroll;">
 					  </div>
 					</div>
 				
@@ -140,10 +150,9 @@
 			    <div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 					  <thead style="border:0px; ">
-					  		<th class="col-md-1 text-center"></th>
 					  		<th class="col-md-2 text-right"></th>
 					  		<th class="col-md-3 text-center">label</th>
-						    <th class="col-md-1 text-center">addr</th>
+						    <th class="col-md-2 text-center">addr</th>
 						    <th class="col-md-6 ">instr</th>
 					  </thead>
 					</table>
@@ -166,9 +175,8 @@
 			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 					  <thead style="border:0px; ">
-					  		<th class="col-md-1 text-right" data-field="ptr"></th>
-					  		<th class="col-md-2 text-center" data-field="address">addr</th>
-						    <th class="col-md-5 text-center" data-field="value">value</th>
+					  		<th class="col-md-4 text-center">addr</th>
+						    <th class="col-md-8 text-center">value</th>
 					  </thead>
 					</table>
 			  	</div>
@@ -190,12 +198,12 @@
 			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 						<thead style="border:0px; ">
-					  		<th class="col-md-2 text-center">addr</th>
-						 	<th class="col-md-10 text-center">val</th>
+					  		<th class="col-md-4 text-center">addr</th>
+						 	<th class="col-md-8 text-center">val</th>
 				  		</thead>
 				  	</table>
 			  	</div>
-				<div class="panel-body" style="overflow: auto; height: 400px;">
+				<div class="panel-body" style="overflow: auto; height: 400px; padding:0px">
 					<table class="table" id="Heap">
 					</table>
 				</div>
@@ -253,17 +261,20 @@
 		
 	}
 	
+	function openLoadProgramDialog(){
+		$('#myModal').modal('show');
+	}
+	
 	function loadProgram(){
 		var code = $("#programCode").val();
 		var result = parseProgram(code);
 		var instructions = result.instructions;
 		VM.loadProgram( instructions );
 		$('#myModal').modal('hide');
-		$('#executeBtn').prop('disabled', false);
 		updateDisplay();
 	}
 	
-	var VM = new VirtualMachine(1024, 256, 512);
+	var VM = new VirtualMachine(64, 128, 32);
 	
 	VM.loadProgram( ex_prog );
 	
@@ -272,6 +283,36 @@
 	function executeNext(){
 		VM.executeNextInstruction();
 		updateDisplay();		
+	}
+	
+	function runToEnd(){
+		// run until halt or error
+		while( VM.isRunning() ) {
+			VM.executeNextInstruction();
+			updateDisplay();	
+		}
+	}
+	
+	function runToBreakpoint(){
+		VM.executeNextInstruction();
+		updateDisplay();
+		while( VM.isRunning() && !VM.currentInstruction.breakpoint ) {
+			VM.executeNextInstruction();
+			updateDisplay();
+		};
+	}
+	
+	function updateNextInstructionInformation(instr){
+		var descr = instr.description;
+		var info = "";
+		if( descr.semantics ){
+			info += '<p><code>'+descr.semantics+'</code></p>';
+		}
+		
+		info += '<p>'+descr.description+'</p>';
+		
+		$('#NextInstr').html('<b><code>'+descr.name+'</code></b>');
+		$('#NextInstrDescription').html(info);
 	}
 
 	function updateDisplay(){
@@ -289,17 +330,15 @@
 			
 			var row = row = { "address": i };
 			if( VM.PC == i ) {
-				row.ptr = "->";
-				$('#NextInstr').html(instr.toFormattedString());
-				$('#NextInstrDescription').html(instr.description);
+				row.ptr = '<span class="glyphicon glyphicon-chevron-right"/>';  
+				updateNextInstructionInformation(instr);
 			} else {
 				row.ptr = "";
 			}
 			if( instr.breakpoint ) {
-				row.breakpoint = "x";
-			} else {
-				row.breakpoint = "";
-			}
+				row.ptr += '<span class="glyphicon glyphicon-record"/>'; 
+			} 
+
 			if( instr.impl ) {
 				row.instruction = instr.toFormattedString();
 			} else {
@@ -319,11 +358,10 @@
 		$('#ProgramStore').append(
 			    $.map(pcData, function (item, index) {
 			    	return '<tr>' 
-			    		+ '<td class="col-md-1 text-right">' + item.breakpoint + '</td>' 
-			    		+ '<td class="col-md-2 text-center">' + item.ptr + '</td>' 
+			    		+ '<td class="col-md-3 text-right">' + item.ptr + '</td>' 
 			    		+ '<td class="col-md-3 text-right table-bordered ">' + item.label + '</td>' 
 			    		+ '<td class="col-md-1 text-center table-bordered ">' + index + '</td>'
-			    		+ '<td class="col-md-6 text-left table-bordered ">' + item.instruction + '</td>'
+			    		+ '<td class="col-md-5 text-left table-bordered ">' + item.instruction + '</td>'
 			    		+ '</tr>';
 		}).join());
 		
@@ -341,23 +379,28 @@
 			} else {
 				row.ptr = "";
 			}
+			
+			row.color = '#c4daef';
+	    	if( i > VM.SP ){
+	    		row.color = "#ffffff";
+	    	}
+			
 			stackData.push(row);
 		}
 		
 		$('#Stack').empty();
 		$('#Stack').append(
 			    $.map(stackData, function (item, index) {
-			    	return '<tr>' 
-			    		+ '<td class="col-md-1 text-right"></td>' 
-			    		+ '<td class="col-md-2 text-right table-bordered">' + item.address + '</td>' 
-			    		+ '<td class="col-md-5 text-center table-bordered ">' + item.value.toString() + '</td>'
+			    	return '<tr>'
+			    		+ '<td class="col-md-4 text-right table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>' 
+			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value.toString() + '</td>'
 			    		+ '</tr>';
 			}).join());
 
 
 		var heapData = [];
 
-		for(var i=VM.HeapSize-1; i>=0; i--) {
+		for(var i=VM.HeapSize-1; i>0; i--) {
 			var heapValue = VM.S_Heap[i];
 			var row = { "address": i+VM.MAX_STACKSIZE-1 };
 			row.value = heapValue.toString();
@@ -368,8 +411,8 @@
 		$('#Heap').append(
 			    $.map(heapData, function (item, index) {
 			    	return '<tr>' 
-			    		+ '<td class="col-md-3 text-center table-bordered">' + item.address + '</td>'  
-			    		+ '<td class="col-md-9 text-center table-bordered">' + item.value.toString() + '</td>'
+			    		+ '<td class="col-md-4 text-center table-bordered">' + item.address + '</td>'  
+			    		+ '<td class="col-md-8 text-center table-bordered">' + item.value.toString() + '</td>'
 			    		+ '</tr>';
 		}).join());
 		
@@ -377,11 +420,18 @@
 		$("#out").append(output);
 		
 		if( !VM.isRunning()) {
-			$('#executeBtn').prop('disabled', !VM.isRunning());
-			$('#NextInstr').html("next instruction");
+			
+			$('#NextInstr').html("<code></code>"); // keep code element to prevent the bar from resizing
 			$('#NextInstrDescription').html("");
 		}
 		
+		$('#executeBtn').prop('disabled', !VM.isRunning());
+		$('#playBtn').prop('disabled', !VM.isRunning());
+		$('#runToBreakBtn').prop('disabled', !VM.isRunning());
+		
+		$('#ProgramStore tr').click(function(){
+			  toggleBreakpoint(this);
+		});
 		
 	}
 	
@@ -389,9 +439,30 @@
 	
 	function restart(){
 		VM.restart();
-		$("#out").empty();
+		$("#out").html("");
 		updateDisplay();
 	}
+	
+	function toggleBreakpoint(tr){
+
+		var $columns = $(tr).find('td');
+		var address = Number($columns[2].innerHTML);
+		
+		var instr = VM.C[address];
+		
+		var html = "";
+		if( VM.PC == address ){
+			html = '<span class="glyphicon glyphicon-chevron-right"/>';
+		}
+		
+		if( instr.toggleBreakpoint() ) {
+			html += '<span class="glyphicon glyphicon-record"/>';
+		} 
+		
+		$columns[0].innerHTML = html;
+
+	}
+
 
 	</script>
 

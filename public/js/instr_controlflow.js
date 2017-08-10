@@ -1,25 +1,11 @@
+// PC←q
 
-
-function halt(){
-	
+InstructionDescriptions["loadc"] = {
+		"name": "jump q",
+		"semantics": "PC←q",
+		"description": "Unconditional jump to value specified by the argument."
 }
-
-function jump(q){
 	
-}
-
-function jumpz(q){
-	
-}
-
-function jumpi(q){
-	
-}
-
-function call(q){
-	
-}
-
-function _return(){
-	
+function jump(instr,vm){
+	vm.SP = instr.value;
 }
