@@ -10,7 +10,18 @@ InstructionDefinition["mark"] = {
 							vm.S[vm.SP-2] = vm.EP;
 							vm.S[vm.SP-1] = vm.FP;
 							
-							vm.SP = vm.SP + 1; // compensate for auto increment
 			
+						}
+}
+
+
+InstructionDefinition["dup"] = {
+		"name": 		"dup",
+		"displayName":	"dup",
+		"semantics": 	"SP←SP+1;S[SP]←S[SP-1]",
+		"description": 	"Duplicate the value on top of the stack.", 
+		"impl": 		function(instr,vm){
+							vm.SP = vm.SP + 1;
+							vm.S[vm.SP] = vm.S[vm.SP-1];
 						}
 }

@@ -43,7 +43,7 @@ InstructionDefinition["sub"] = {
 		"impl":			function(instr,vm){
 							var a = vm.pop();
 							var b = vm.pop();
-							var c = Number(b) - Number(a);
+							var c = Number(b.value) - Number(a.value);
 							var t = "int";
 							if( a.type=="float" || b.type=="float" ) {
 								t = "float";

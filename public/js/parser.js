@@ -30,11 +30,18 @@ function parseProgram( str ){
 					code = l[0].trim();
 					var argVal = l[1].trim();
 					
-					if( argVal.endsWith("f") || argVal.includes('.') ){
-						arg = new Value("float", Number(argVal) );
+					if( isNaN(argVal) ) {
+						//assume is a label
+						arg = new Value("label", argVal );
 					} else {
-						arg = new Value("int", Number(argVal) );
+						if( argVal.endsWith("f") || argVal.includes('.') ){
+							arg = new Value("float", Number(argVal) );
+						} else {
+							arg = new Value("int", Number(argVal) );
+						}
 					}
+						
+					
 
 				}
 				

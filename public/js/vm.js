@@ -36,6 +36,29 @@ class Instruction {
 		
 	};
 	
+	// returns the argument value as an int, thows error if it is not.
+	argumentAsInt(){
+		if( this._argument.type == "int" || this._argument.type == "ptr" ) {
+			return this._argument.value;
+		} else {
+			throw 'Error: Argument for instruction ' + this.def.name 
+					+ ' must be an int or a ptr, not ' + this._argument.type + '.';
+		}
+			
+	}
+
+	// returns the argument value as an int or ptr 
+	argumentAsPtr(){
+		if( this._argument.type == "int" || this._argument.type == "ptr" ) {
+			return this._argument.value;
+		} else {
+			throw 'Error: Argument for instruction ' + this.def.name 
+					+ ' must be an int or a ptr, not ' + this._argument.type + '.';
+		}
+			
+	}
+
+	
 	get label(){
 		if( !this._label ) return ""; 
 		return this._label+':';
@@ -69,6 +92,14 @@ class Value {
 	constructor( type, value ){
 		this.type = type;
 		this.value = value;
+	}
+	
+	asIntOrPtr(){
+		if( this.type == "int" || this.type == "ptr" ) {
+			return this.value;
+		} else {
+			throw 'Error: Value expected to be an int or ptr, not ' + this._argument.type + '.';
+		}
 	}
 	
 	toString(){
@@ -133,16 +164,12 @@ class VirtualMachine {
 			// get next instruction, invoke implementation with a reference to the instr and vm
 			var instr = this.C[this.PC];
 			
-			if( instr.def.name != "halt" ) {  // specialcase
 				// perform the instruction
 				instr.def.impl( instr, this );
-				
+
+			if( this.isRunning() ) {
 				// increment the program counter
 				this.PC += 1;
-				
-			} else {
-				this.running = false;
-				this.out = '\nMachine halted';	
 			}
 		} 
 		
@@ -150,7 +177,7 @@ class VirtualMachine {
 	
 	restart(){
 		this.PC = 0;
-		this.FP = -1;
+		this.FP = 0;
 		this.SP = -1;
 		this.EP = this.MAX_STACK_SIZE;
 		this.HP = this.MAIN_MEMORY_SIZE - 1 ;
@@ -183,7 +210,6 @@ class VirtualMachine {
 			throw "Stack underflow.  Attempt to pop on empty stack.";
 		}
 		var v = this.S[this.SP];
-		this.S[this.SP] = NULL_VALUE;
 		this.SP--;
 		return v;
 	}
@@ -216,16 +242,21 @@ class VirtualMachine {
 
 	halt(){
 		this.running = false;
+		this.out += '\nMachine halted';	
 	}
 	
-	getAddress(label){
-		for(var i=0; i<this.PROGRAM_STORE_SIZE; i++) {
-			var instr = this.C[i];
-			if( label == instr._label ){
-				return i;
+	getAddressFromArgument(arg){
+		if( arg.type=="label" ) {
+			for(var i=0; i<this.PROGRAM_STORE_SIZE; i++) {
+				var instr = this.C[i];
+				if( arg.value == instr._label ){
+					return i;
+				}
 			}
+		} else if( arg.type=="int" ){
+			return arg.value;
 		}
-		return -1;
+		throw "Error: unable to convert argument to physical address.";
 	}
 	
 }

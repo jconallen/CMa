@@ -13,31 +13,61 @@ InstructionDefinition["loadc"] = {
 
 InstructionDefinition["load"] = {
 		"name": 		"load",
-		"displayName":	"loadc",
-		"semantics": 	"S[SP] ← S[S[SP]]",
+		"displayName":	"load m",
+		"semantics": 	"for(i←m-1; i>=0; i--) { S[SP+i]←S[S[SP]+i]; } SP←SP+m-1;",
 		"description": 	"The value in memory refrenced by the address at the top of the stack, is" +
-						"copied to the top of the stack.",
+						"copied to the top of the stack.  If there is an optional argument <i>m</i>, then " +
+						"that number of memory locations is copied to the top of the stack. " +
+						"Note: <b>load</b> <i>m</i> where <i>m</i>=1 is equivalent to <b>load</b>.",
 		"impl": 		function(instr,vm){
-							var addr = vm.pop();
-							if( addr.type == "int" || addr.type == "ptr" ) {
-								var val = vm.S[addr.value];
-								vm.push( val );
+							var addr = vm.pop().asIntOrPtr();
+							if( instr.argument ) {
+								var m = instr.argumentAsInt();
+								for(var i=m-1; i>=0; i-- ) {
+									var val = vm.S[addr-i];
+									vm.push( val );
+								}
 							} else {
-								throw "Memory reference value not an int or ptr.  Unable to load.";
+								var val = vm.S[addr];
+								vm.push( val );
 							}
+							
 						}
 }
 
 InstructionDefinition["store"] = {
-		"name": "store",
-		"displayName":	"store",
-		"semantics": 	"S[S[SP]] ← S[SP-1]; SP ← SP - 1",
+		"name": 		"store",
+		"displayName":	"store m",
+		"semantics": 	"for(i←0; i&lt;m; i++) { S[S[SP]+i]←S[SP-m+i]; } SP←SP+m-1;",
 		"description": 	"At the location refrenced by the top of the stack, store the value " +
-						"next on the stack.",
+						"next on the stack.  If there is an argument, m, then store the m consequtive values " +
+						"to the heap. NOTE: the implementation of this instruction does not correspond to the" +
+						"semantics mentioned here.  I think the text is wrong.",
 			"impl": 	function(instr,vm){
-							var addr = vm.pop().value;
-							var val = vm.pop();
-							vm.S[addr] = val;
+							if( instr.argument ) { 
+								var dest = vm.pop().asIntOrPtr(); // get the address of the memory to start storing at
+								var m = instr.argumentAsInt();
+								for(var i=0; i<m; i++ ) {
+									var v = vm.pop();
+									vm.S[dest-i] = v;
+								}
+							} else {
+								var addr = vm.pop().asIntOrPtr();
+								var val = vm.pop();
+								vm.S[addr] = val;
+							}
+						}
+}
+
+InstructionDefinition["loadrc"] = {
+		"name": 		"loadrc",
+		"displayName":	"loadrc q",
+		"semantics": 	"SP←SP+1; S[SP]←FP+q",
+		"description": 	"",
+		"impl":			function(instr,vm){
+							var q = instr.argumentAsInt();
+							vm.SP = vm.SP + 1;
+							vm.S[vm.SP] = vm.FP+q;
 						}
 }
 
@@ -48,14 +78,9 @@ InstructionDefinition["loada"] = {
 		"description": 	"Put the value referenced by the address at the top of the stack, " +
 						"on top of the stack.  Rquivalent to <b>loadc</b> q; <b>load</b>",
 		"impl":			function(instr,vm){
-							var addr = instr.argument;
-							if( addr.type == "int" || addr.type == "ptr" ) {
-								var val = vm.S[addr.value];
-								vm.push( val );
-							} else {
-								throw "Memory reference value not an int or ptr.  Unable to load.";
-							}
-							
+							var q = instr.argumentAsInt();
+							var v = vm.S[q];
+							vm.push(v);
 						}
 }
 
@@ -63,17 +88,13 @@ InstructionDefinition["loada"] = {
 InstructionDefinition["storea"] = {
 		"name": 		"storea",
 		"displayName":	"storea q",
-		"semantics": 	"SP[q] ← S[SP]",
+		"semantics": 	"S[S[SP]] ← q; SP ← SP-1;",
 		"description": 	"Store the value q at the location pointed to by the top of the stack.  Equivalent " +
-						"to <b>loadc</b> q; <b>store</b>",
+						"to <b>loadc</b> q; <b>store</b>;",
 		"impl":			function(instr,vm){
-							var addr = instr.argument;
-							if( addr.type == "int" || addr.type == "ptr" ) {
-								var val = vm.S[addr.value];
-								vm.push( val );
-							} else {
-								throw "Memory reference value not an int or ptr.  Unable to storea.";
-							}
+							var q = instr.argument;
+							var a = vm.pop().asIntOrPtr();
+							vm.S[a] = q;
 						}
 }
 
@@ -99,7 +120,7 @@ InstructionDefinition["loadr"] = {
 InstructionDefinition["storer"] = {
 		"name": 		"storer",
 		"displayName":	"storer q",
-		"semantics": 	"SP[FP + q] ← S[SP]",
+		"semantics": 	"SP[FP+q] ← S[SP]",
 		"description": 	"Store relative the value q at the location pointed to by the top of the stack.  Equivalent " +
 						"to <b>loadc</b> q; <b>store</b>",
 		"impl":			function(instr,vm){

@@ -11,7 +11,9 @@ InstructionDefinition["leq"] = {
 								vm.push( new Value("int", 1 ) );
 							} else {
 								vm.push( new Value("int", 0 ) );
-
 							}
+							
+							// decrement the SP
+							vm.SP = vm.SP - 1;
 						}
 }

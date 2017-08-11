@@ -238,7 +238,7 @@
 	
 	</div> <!--  outer container -->
 	    
-	<script src="/js/globals.js"></script>
+	<script src="/js/vm.js"></script>
     <script src="/js/instr_arithmetic.js"></script>
     <script src="/js/instr_comparison.js"></script>
     <script src="/js/instr_controlflow.js"></script>
@@ -287,7 +287,7 @@
 	}
 	
 	var VM = new VirtualMachine(32, 64, 32);
-	
+
 	VM.loadProgram( starter_prog );
 	
 	function executeNext(){
@@ -388,6 +388,7 @@
 			row.color = '#c4daef';
 	    	if( i > VM.SP ){
 	    		row.color = "#ffffff";
+	    		row.value = "<i>" + value.toString() + "</i>";
 	    	}
 			
 			stackData.push(row);
@@ -398,7 +399,7 @@
 			    $.map(stackData, function (item, index) {
 			    	return '<tr>'
 			    		+ '<td class="col-md-4 text-right table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>' 
-			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value.toString() + '</td>'
+			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value + '</td>'
 			    		+ '</tr>';
 			}).join());
 
@@ -425,7 +426,7 @@
 			    $.map(heapData, function (item, index) {
 			    	return '<tr>' 
 			    		+ '<td class="col-md-4 text-center table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>'  
-			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value.toString() + '</td>'
+			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value + '</td>'
 			    		+ '</tr>';
 		}).join());
 		
