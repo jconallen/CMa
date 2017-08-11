@@ -240,10 +240,12 @@
 	    
 	<script src="/js/globals.js"></script>
     <script src="/js/instr_arithmetic.js"></script>
+    <script src="/js/instr_comparison.js"></script>
     <script src="/js/instr_controlflow.js"></script>
     <script src="/js/instr_io.js"></script>
     <script src="/js/instr_loadstore.js"></script>
     <script src="/js/instr_heap.js"></script>
+	<script src="/js/instr_stack.js"></script>
 	<script src="/js/parser.js"></script>
 	<script src="/js/starter_program.js"></script>
 	
@@ -316,15 +318,15 @@
 	}
 	
 	function updateNextInstructionInformation(instr){
-		var descr = instr.description;
+		var def = instr.def;
 		var info = "";
-		if( descr.semantics ){
-			info += '<p><code>'+descr.semantics+'</code></p>';
+		if( def.semantics ){
+			info += '<p><code>'+def.semantics+'</code></p>';
 		}
 		
-		info += '<p>'+descr.description+'</p>';
+		info += '<p>'+def.description+'</p>';
 		
-		$('#NextInstr').html('<b><code>'+descr.name+'</code></b>');
+		$('#NextInstr').html('<b><code>'+def.name+'</code></b>');
 		$('#NextInstrDescription').html(info);
 	}
 
@@ -352,11 +354,7 @@
 				row.ptr += '<span class="glyphicon glyphicon-record"/>'; 
 			} 
 
-			if( instr.impl ) {
-				row.instruction = instr.toFormattedString();
-			} else {
-				row.instruction = "-";
-			}
+			row.instruction = instr.toFormattedString();
 			
 			if( instr.label ) {
 				row.label = instr.label;

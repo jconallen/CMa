@@ -1,18 +1,18 @@
 // globals
 
-var InstructionDescriptions = {};
+var InstructionDefinition = {};
 
 class Instruction {
 	
-	constructor( impl, argument, label ) {
-		this.impl = impl;
+	constructor( def, argument, label ) {
+		this.def = def;
 		this._argument = argument;
 		this._label = label;
 		this._breakpoint = false;
 	};
 	
 	toString(){
-		var str =  this.impl.name;
+		var str =  this.def.name;
 		if( this.argument ) {
 			str += " " + this.argument.toString();
 		} 
@@ -20,15 +20,20 @@ class Instruction {
 	};
 	
 	toFormattedString(){
-		var str =  '<b>' + this.name() + '</b>';
-		if( this.argument ) {
-			if( this.argument.type=="label" ) {
-				str += " <i>" + this.argument.toString() + "</i>";
-			} else {
-				str += " " + this.argument.toString();
-			}
-		} 
-		return str;
+		if( this.def ) {
+			var str =  '<b>' + this.def.name + '</b>';
+			if( this.argument ) {
+				if( this.argument.type=="label" ) {
+					str += " <i>" + this.argument.toString() + "</i>";
+				} else {
+					str += " " + this.argument.toString();
+				}
+			} 
+			return str;
+		}
+		
+		return "-";
+		
 	};
 	
 	get label(){
@@ -41,14 +46,11 @@ class Instruction {
 	}
 	
 	name(){
-		if( this.impl.name.startsWith("_") ) {
-			return this.impl.name.substring(1);
-		}
-		return this.impl.name;
+		return this.def.name;
 	}
 	
 	get description(){
-		var descr = InstructionDescriptions[this.impl.name];
+		var descr = this.def.description;
 		return descr;
 	}
 	
@@ -131,9 +133,9 @@ class VirtualMachine {
 			// get next instruction, invoke implementation with a reference to the instr and vm
 			var instr = this.C[this.PC];
 			
-			if( instr.impl.name != "halt" ) {
+			if( instr.def.name != "halt" ) {  // specialcase
 				// perform the instruction
-				instr.impl( instr, this );
+				instr.def.impl( instr, this );
 				
 				// increment the program counter
 				this.PC += 1;
@@ -170,6 +172,9 @@ class VirtualMachine {
 		for( var i=0; i <program.length; i++ ){
 			var instr = program[i];
 			this.C[i] = instr;
+		}
+		for( var i=program.length; i<this.PROGRAM_STORE_SIZE; i++){
+			this.C[i] = NOP;
 		}
 	}
 	
