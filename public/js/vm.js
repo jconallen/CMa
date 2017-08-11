@@ -180,7 +180,7 @@ class VirtualMachine {
 		this.FP = 0;
 		this.SP = -1;
 		this.EP = this.MAX_STACK_SIZE;
-		this.HP = this.MAIN_MEMORY_SIZE - 1 ;
+		this.HP = this.MAIN_MEMORY_SIZE;
 		
 		this.out = "";
 		this.err = "";
@@ -195,7 +195,7 @@ class VirtualMachine {
 
 	}
 	
-	loadProgram( program ) {
+	_loadProgram( program ) {
 		for( var i=0; i <program.length; i++ ){
 			var instr = program[i];
 			this.C[i] = instr;
@@ -203,6 +203,26 @@ class VirtualMachine {
 		for( var i=program.length; i<this.PROGRAM_STORE_SIZE; i++){
 			this.C[i] = NOP;
 		}
+	}
+	
+	loadProgram( program, memory ) {
+		for( var i=0; i <program.length; i++ ){
+			var instr = program[i];
+			this.C[i] = instr;
+		}
+		for( var i=program.length; i<this.PROGRAM_STORE_SIZE; i++){
+			this.C[i] = NOP;
+		}
+
+		
+		if( memory ) {
+			// now update main memory with the supplied values
+			for( var i=0; i<memory.length; i++ ) {
+				var v = memory[i];
+				this.S[v.address] = v.value;
+			}	
+		}
+		
 	}
 	
 	pop() {

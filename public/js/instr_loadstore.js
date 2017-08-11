@@ -41,16 +41,14 @@ InstructionDefinition["store"] = {
 		"semantics": 	"for(i←0; i&lt;m; i++) { S[S[SP]+i]←S[SP-m+i]; } SP←SP+m-1;",
 		"description": 	"At the location refrenced by the top of the stack, store the value " +
 						"next on the stack.  If there is an argument, m, then store the m consequtive values " +
-						"to the heap. NOTE: the implementation of this instruction does not correspond to the" +
-						"semantics mentioned here.  I think the text is wrong.",
+						"to the heap. ",
 			"impl": 	function(instr,vm){
 							if( instr.argument ) { 
-								var dest = vm.pop().asIntOrPtr(); // get the address of the memory to start storing at
 								var m = instr.argumentAsInt();
 								for(var i=0; i<m; i++ ) {
-									var v = vm.pop();
-									vm.S[dest-i] = v;
+									vm.S[ vm.S[vm.SP].value + i ] = vm.S[vm.SP-m+i].value;
 								}
+								vm.SP = vm.SP-m-1;
 							} else {
 								var addr = vm.pop().asIntOrPtr();
 								var val = vm.pop();

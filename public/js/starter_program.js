@@ -1,6 +1,12 @@
 
 
-var starter_prog_src = "loada 3; loadc 7; add; load; loadc 0; add; loada 1; loadc 1; add; loadc 1; mul; add; end: halt;";
+var starter_prog_src = "loadc 7; load; loadc 1; add; loadc 4; store; halt";
+
+var starter_memory = [
+	{ "address": 4, "value": 32 },
+	{ "address": 7, "value": 12 },
+];
+
 
 // var starter_prog_src = "loadc 42; loadc 40; loadc 38; loadc 3; new; store 3; end: halt;";
 

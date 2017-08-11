@@ -288,7 +288,7 @@
 	
 	var VM = new VirtualMachine(32, 64, 32);
 
-	VM.loadProgram( starter_prog );
+	VM.loadProgram( starter_prog, starter_memory );
 	
 	function executeNext(){
 		try{
@@ -413,7 +413,7 @@
 			row.value = heapValue.toString();
 			
 			row.color = "#ffffff";
-	    	if( addr > VM.HP ){
+	    	if( addr >= VM.HP ){
 	    		row.color = '#efe9c4' ;
 	    	}
 			
