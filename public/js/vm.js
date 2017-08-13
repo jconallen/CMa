@@ -4,11 +4,12 @@ var InstructionDefinition = {};
 
 class Instruction {
 	
-	constructor( def, argument, label ) {
+	constructor( def, argument, label, comment ) {
 		this.def = def;
 		this._argument = argument;
 		this._label = label;
 		this._breakpoint = false;
+		this._comment = comment;
 	};
 	
 	toString(){
@@ -66,6 +67,10 @@ class Instruction {
 	
 	get argument(){
 		return this._argument;
+	}
+	
+	get comment(){
+		return this._comment;
 	}
 	
 	name(){

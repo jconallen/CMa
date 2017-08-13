@@ -1,6 +1,13 @@
 
 
-var starter_prog_src = "loadc 7; load; loadc 1; add; loadc 4; store; halt";
+var starter_prog_src = 
+	"loadc 7 \n" +
+	"load ; comment\n" +
+	"loadc 1 \n" +
+	"add \n" +
+	"loadc 4 \n" +
+	"store \n" +
+	"end: halt";
 
 var starter_memory = [
 	{ "address": 4, "value": 32 },
@@ -8,24 +15,10 @@ var starter_memory = [
 ];
 
 
-// var starter_prog_src = "loadc 42; loadc 40; loadc 38; loadc 3; new; store 3; end: halt;";
-
 var parsed_prog = parseProgram(starter_prog_src);
 
-if( parsed_prog.error ) {
+if( parsed_prog.errors.length>0 ) {
 	alert('Error parsing starter program: ' + parsed_prog.error );
 } 
 
 var starter_prog = parsed_prog.instructions;
-
-
-var starter_prog_old = [
-
-	new Instruction( InstructionDefinition["loadc"], new Value("int",1), null ),
-	new Instruction( InstructionDefinition["new"], null, null ),
-	new Instruction( InstructionDefinition["storea"], new Value("int",42), null ),
-	new Instruction( InstructionDefinition["loada"], new Value("int",63), null ),
-	new Instruction( InstructionDefinition["print"], null, null ),
-	new Instruction( InstructionDefinition["halt"], null, 'end')
-	
-];

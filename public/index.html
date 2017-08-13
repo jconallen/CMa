@@ -18,7 +18,7 @@
 
 <body>
     
-    <div class=container>
+<div class="container" >
     
     <h1>CMa Virtual Machine</h1>
     
@@ -26,7 +26,7 @@
 
 <!-- Modal Dialog for Program Upload -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
               <button class="close" data-dismiss="modal">×</button>
@@ -78,7 +78,7 @@
 
     
     <div class="row">
-	    <div class="col-md-4">
+	    <div class="col-md-3">
 		    <div class="panel panel-info" >
 		    	<div class="panel-heading" >
 					<h3 class="panel-title">Registers</h3>
@@ -111,7 +111,7 @@
 				</div>
 		    </div>
 	    </div>
-	    <div class="col-md-6">
+	    <div class="col-md-9">
 		    <div class="panel panel-primary" >
 		    	<div class="panel-heading" >
 					<h3 class="panel-title">Controls</h3>
@@ -147,19 +147,20 @@
     </div>
     
  	<div class="row">
-	 	<div class="col-md-4">
+	 	<div class="col-md-6">
 	 	
-			<div class="panel panel-info" style="width: 350px;">
+			<div class="panel panel-info" >
 				<div class="panel-heading" >
 			    	<h3 class="panel-title">Program Store (C)</h3>
 			    </div>
 			    <div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 					  <thead style="border:0px; ">
-					  		<th class="col-md-2 text-right"></th>
-					  		<th class="col-md-3 text-center">label</th>
-						    <th class="col-md-2 text-center">addr</th>
-						    <th class="col-md-6 ">instr</th>
+					  		<th class="col-md-1 text-right"></th>
+					  		<th class="col-md-2 text-center">label</th>
+						    <th class="col-md-1 text-center">addr</th>
+						    <th class="col-md-3 ">instr</th>
+						    <th class="col-md-5 ">comment</th>
 					  </thead>
 					</table>
 			  	</div>
@@ -258,8 +259,13 @@
 
 		$('#UploadedProgram tr').not(function(){ return !!$(this).has('th').length; }).remove()
 		
-		if( result.error ) {
-			$('#ParseError').html(result.error);
+		if( result.errors.length>0 ) {
+			var errStr = "";
+			for( vare=0; e<error.length; e++){
+				var er = error[e];
+				errStr += "\n"+ e;
+			}
+			$('#ParseError').html(errStr);
 			$('#ParseError').show();
 		}
 		
@@ -361,6 +367,12 @@
 			} else {
 				row.label = "";
 			}
+			
+			if( instr.comment ) {
+				row.comment = instr.comment;
+			} else {
+				row.comment = "";
+			}
 			pcData.push(row);
 			
 		}
@@ -369,10 +381,11 @@
 		$('#ProgramStore').append(
 			    $.map(pcData, function (item, index) {
 			    	return '<tr>' 
-			    		+ '<td class="col-md-3 text-right">' + item.ptr + '</td>' 
-			    		+ '<td class="col-md-3 text-right table-bordered ">' + item.label + '</td>' 
+			    		+ '<td class="col-md-1 text-right">' + item.ptr + '</td>' 
+			    		+ '<td class="col-md-2 text-right table-bordered ">' + item.label + '</td>' 
 			    		+ '<td class="col-md-1 text-center table-bordered ">' + index + '</td>'
-			    		+ '<td class="col-md-5 text-left table-bordered ">' + item.instruction + '</td>'
+			    		+ '<td class="col-md-3 text-left table-bordered ">' + item.instruction + '</td>'
+			    		+ '<td class="col-md-5 text-left table-bordered " style="text-color: green"><i>' + item.comment + '</i></td>'
 			    		+ '</tr>';
 		}).join());
 		
