@@ -1,0 +1,53 @@
+;
+;  CMa program to exercise pow function
+;
+;  int pow(int x, int y) {
+;    int i = y;
+;    int v = 0;
+;    while( i > 1 ) {
+;      v = v * x; 
+;      i--;
+;    }
+;	 return v;
+;  }
+;  
+;  int main(){
+;     int x = 3;
+;     int y = 2;
+;     int z = pow(x,y);
+;     printf("%i", z );
+;  }
+;
+
+_main: loadc 3       ; put constant 3 on top of stack as x
+       loadc 2       ; put constant 2 on top of stack as y
+       mark          ;
+       loadc _pow    ; put address of function on stack
+       call          ; call the recursive function _pow
+       print         ; print the result of the call to _pow to the output
+ end:  halt          ; end of program
+_pow:  enter 3       ; 
+       loadr -3      ; put local x on top of stack
+       loadr -4      ; put local y on top of stack
+       loadr -4      ; put local y on top of stack as local i
+       loadc 0       ; put 0 on top stack as local v
+       loadr 
+       loadc 1       ; put constant 1 on top of stack
+       gr            ; compare  i>1
+       jumpz A       ; if it is not, then jump to A 
+       loadc 1       ; otherwise put constant 1 on top of stack
+       storer -3     ;     update return value to the value at top of stack (=1). 
+       return 3      ;     return this instance of function
+   A:  loadr -3      ; put value of local variable n on top of stack
+       loadr -3      ; put value of local variable n on top of stack (again) 
+                     ;    - now value of n is top two values on stack
+       loadc 1       ; put constant 1 on top of stack
+       sub           ; subtract, putting value on top of stack ( n-1 )
+       mark          ; prepare to call function
+       loadc _faq    ; put address of function on top of stack
+       call          ; instantiate function, this invokes the function and 
+                     ;   places result back on top of stack
+       mul           ; multiply the top two values on stack (one of which 
+                     ;   is the return value of the prev fac call)
+       storer -3     ; put value of local n on top of stack
+       return 3      ; return this instance of the function

@@ -1,0 +1,55 @@
+;
+;  int x = 42;
+;  int y;
+;
+;  int add(int x, int y){
+;    return x + y;
+;  }
+;
+;  int main(){
+;    int a = 30;
+;    int b = 40;
+;    int c = add( a, b );
+;    print c;
+;  }
+;===============================================
+;    define the global variables and assign the values
+       loadc 42   ; define and initialize global var x=42
+       alloc 1    ; define global var y,  no initialization
+       
+       
+;===============================================
+;    set up the program call to main, and halt
+       
+       alloc 1    ; return value of call note: this is before the mark
+       mark       ; create stack frame
+       loadc main ; put address of main on stack
+       call       ; call main function
+       halt       ;
+       
+;===============================================
+;    the main function
+       
+ main: enter 3    ; there are three items for the stack (a,b,c)
+       loadc 30   ; var a = 30
+       loadc 40   ; var b = 40
+       alloc 1    ; define return val
+       mark       ;
+       loadc add  ;
+       call       ;
+       storer 3   ; put return value in local var c;
+       loadr 3    ; put it on top of stack
+       print      ; print the top of stack
+       return 3   ;  3 local vars
+       
+;
+;===============================================
+;   define the function add 
+;
+ add:  enter 2    ;
+       loadr -5   ;
+       loadr -4   ;
+       add        ;
+       storer -3  ;
+       return 3   ;
+       

@@ -428,7 +428,7 @@
 			row.instruction = instr.toFormattedString();
 			
 			if( instr.label ) {
-				row.label = instr.label;
+				row.label = instr.label+':';
 			} else {
 				row.label = "";
 			}
@@ -467,7 +467,7 @@
 			row.color = '#c4daef';
 	    	if( i > VM.SP ){
 	    		row.color = "#ffffff";
-	    		row.value = "<i>" + value.toString() + ":</i>";
+	    		row.value = "<i>" + value.toString() + "</i>";
 	    	}
 			
 			stackData.push(row);

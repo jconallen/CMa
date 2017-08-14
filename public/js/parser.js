@@ -50,8 +50,6 @@ function parseLine(line, lineNo) {
 				// there is a second argument
 				var arg2Val = l[2].trim();
 				
-				alert( arg2Val );
-				
 				if( isNaN(arg2Val) ) {
 					//assume is a label
 					arg2 = new Value("ptr", arg2Val );
