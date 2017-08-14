@@ -2,17 +2,12 @@
 InstructionDefinition["mark"] = {
 		"name": 		"mark",
 		"displayName":	"mark",
-		"semantics": 	"SP←SP+4; S[SP-2]←EP; S[SP-1]←FP",
-		"description": 	"", 
+		"semantics": 	"S[SP+1]←EP; S[SP+2]←FP; SP←SP+2;",
+		"description": 	"Start a new stack frame.  Put the FP and EP on top of the stack.", 
 		"impl": 		function(instr,vm){
 							vm.S[vm.SP+1] = new Value("ptr", vm.EP);
 							vm.S[vm.SP+2] = new Value("ptr", vm.FP);
 							vm.SP = vm.SP + 2;
-//							vm.SP = vm.SP + 4;
-//							vm.S[vm.SP-2] = vm.EP;
-//							vm.S[vm.SP-1] = vm.FP;
-							
-			
 						}
 }
 

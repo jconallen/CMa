@@ -164,7 +164,7 @@
 					  </thead>
 					</table>
 			  	</div>
-			  	<div class="panel-body" style="overflow: auto; height: 800px; padding:0px; ">
+			  	<div class="panel-body" style="overflow: auto; height: 600px; padding:0px; ">
 					<table class="table table-fixed header-fixed "  id="ProgramStore">
 					
 					</table>
@@ -187,7 +187,7 @@
 					  </thead>
 					</table>
 			  	</div>
-				<div class="panel-body" style="overflow: auto; height: 800px; padding:0px">
+				<div class="panel-body" style="overflow: auto; height: 600px; padding:0px">
 					<table class="table " id="Stack">
 					  
 					</table>
@@ -210,7 +210,7 @@
 				  		</thead>
 				  	</table>
 			  	</div>
-				<div class="panel-body" style="overflow: auto; height: 400px; padding:0px">
+				<div class="panel-body" style="overflow: auto; height: 600px; padding:0px">
 					<table class="table" id="Heap">
 					</table>
 				</div>
@@ -443,7 +443,7 @@
 			row.color = '#c4daef';
 	    	if( i > VM.SP ){
 	    		row.color = "#ffffff";
-	    		row.value = "<i>" + value.toString() + "</i>";
+	    		row.value = "<i>" + value.toString() + ":</i>";
 	    	}
 			
 			stackData.push(row);
