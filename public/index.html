@@ -315,34 +315,74 @@
 	}
 	
 	function runToBreakpoint(){
-		VM.executeNextInstruction();
-		updateDisplay();
-		while( VM.isRunning() && !VM.currentInstruction.breakpoint ) {
+		try{
 			VM.executeNextInstruction();
+		} catch( err ) {
+			$('#VMError').html(err);
+			$('#VMError').show();
+		}
+		while( VM.isRunning() && !VM.isNextInstructionBreakpoint() ) {
+			try{
+				VM.executeNextInstruction();
+			} catch( err ) {
+				$('#VMError').html(err);
+				$('#VMError').show();
+			}
 			updateDisplay();
 		};
 	}
 	
 	function updateNextInstructionInformation(instr){
-		var def = instr.def;
-		var info = "";
-		if( def.semantics ){
-			info += '<p><code>'+def.semantics+'</code></p>';
+		if( VM.isRunning()) {
+			var def = instr.def;
+			var info = "";
+			if( def.semantics ){
+				info += '<p><code>'+def.semantics+'</code></p>';
+			}
+			
+			info += '<p>'+def.description+'</p>';
+			
+			$('#NextInstr').html('<b><code>'+def.name+'</code></b>');
+			$('#NextInstrDescription').html(info);
+		} else {
+			$('#NextInstr').html('');
+			$('#NextInstrDescription').html('');
 		}
-		
-		info += '<p>'+def.description+'</p>';
-		
-		$('#NextInstr').html('<b><code>'+def.name+'</code></b>');
-		$('#NextInstrDescription').html(info);
 	}
 
 	function updateDisplay(){
 		
-		$('#PC').html(VM.PC);
-		$('#FP').html(VM.FP);
-		$('#SP').html(VM.SP);
-		$('#EP').html(VM.EP);
-		$('#HP').html(VM.HP);
+		if( $('#PC').text() != VM.PC ) {
+			$('#PC').html('<b>'+VM.PC+'</b>');
+		} else {
+			$('#PC').html(VM.PC);
+		}
+		if( $('#FP').text() != VM.FP ) {
+			$('#FP').html('<b>'+VM.FP+'</b>');
+		} else {
+			$('#FP').html(VM.FP);
+		}
+		if( $('#SP').text() != VM.SP ) {
+			$('#SP').html('<b>'+VM.SP+'</b>');
+		} else {
+			$('#SP').html(VM.SP);
+		}
+		if( $('#EP').text() != VM.EP ) {
+			$('#EP').html('<b>'+VM.EP+'</b>');
+		} else {
+			$('#EP').html(VM.EP);
+		}
+		if( $('#HP').text() != VM.HP ) {
+			$('#HP').html('<b>'+VM.HP+'</b>');
+		} else {
+			$('#HP').html(VM.HP);
+		}
+		
+		//$('#PC').html(VM.PC);
+		//$('#FP').html(VM.FP);
+		//$('#SP').html(VM.SP);
+		//$('#EP').html(VM.EP);
+		//$('#HP').html(VM.HP);
 	
 		var pcData = [];
 
@@ -446,8 +486,7 @@
 		var output = VM.eatOutput();
 		$("#out").append(output);
 		
-		if( !VM.isRunning()) {
-			
+		if( !VM.isRunning()) {			
 			$('#NextInstr').html("<code></code>"); // keep code element to prevent the bar from resizing
 			$('#NextInstrDescription').html("");
 		}

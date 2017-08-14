@@ -6,7 +6,13 @@ InstructionDefinition["loadc"] = {
 		"description": 	"The stack pointer (SP) is incremented by one. The constant argument q is placed at the" +
 						" on the stack at the position of the stack pointer.", 
 		"impl": 		function(instr,vm){
-							vm.push( instr.argument );
+							if( instr.argument.type == "int" ) {
+								vm.push( instr.argument );
+							} else if( instr.argument.type == 'ptr' ){
+								// compute adde
+								var addr = vm.getAddressFromArgument(instr.argument);
+								vm.push( addr );
+							}
 						}
 }
 
@@ -14,7 +20,7 @@ InstructionDefinition["loadc"] = {
 InstructionDefinition["load"] = {
 		"name": 		"load",
 		"displayName":	"load m",
-		"semantics": 	"for(i←m-1; i>=0; i--) { S[SP+i]←S[S[SP]+i]; } SP←SP+m-1;",
+		"semantics": 	"S[SP]←S[S[SP]] with no argument otherwise; for(i←m-1; i>=0; i--) { S[SP+i]←S[S[SP]+i]; } SP←SP+m-1;",
 		"description": 	"The value in memory refrenced by the address at the top of the stack, is" +
 						"copied to the top of the stack.  If there is an optional argument <i>m</i>, then " +
 						"that number of memory locations is copied to the top of the stack. " +
@@ -38,7 +44,7 @@ InstructionDefinition["load"] = {
 InstructionDefinition["store"] = {
 		"name": 		"store",
 		"displayName":	"store m",
-		"semantics": 	"for(i←0; i&lt;m; i++) { S[S[SP]+i]←S[SP-m+i]; } SP←SP+m-1;",
+		"semantics": 	"S[S[SP]]←S[SP] with no argument otherwise; for(i←0; i&lt;m; i++) { S[S[SP]+i]←S[SP-m+i]; } SP←SP+m-1;",
 		"description": 	"At the location refrenced by the top of the stack, store the value " +
 						"next on the stack.  If there is an argument, m, then store the m consequtive values " +
 						"to the heap. ",
@@ -103,15 +109,9 @@ InstructionDefinition["loadr"] = {
 		"description": 	"Put the value referenced by the address at the top of the stack, " +
 						"on top of the stack.",
 		"impl":			function(instr,vm){
-							var q = instr.argument;
-							if( q.type == "int" || q.type == "ptr" ) {
-								vm.SP = vm.SP + 1;
-								vm.S[vm.SP] = vm.S[ vm.FP + q.value ];
-							} else {
-								throw "Memory reference value not an int or ptr.  Unable to load.";
-							}
-			
-							
+							var q = instr.argumentAsInt();
+							vm.SP = vm.SP + 1;
+							vm.S[vm.SP] = vm.S[ vm.FP + q ];
 						}
 }
 

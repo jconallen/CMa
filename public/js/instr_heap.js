@@ -20,17 +20,14 @@ InstructionDefinition["new"] = {
 
 InstructionDefinition["enter"] = {
 		"name": 		"enter",
-		"displayName": 	"enter q",
-		"semantics": 	"EP ← SP + q",
+		"displayName": 	"enter m",
+		"semantics": 	"EP ← SP + m; if( EP>=HP ) error('Stack Overflow Error')",
 		"description": 	"",
 		"impl":			function _new(inst,vm){
-						var t = a.type;
-							if( t=="int" ) {
-								var q = Number(a.value);
-								vm.EP = vm.SP + q;
-							} else {
-								throw "int required for enter instruction.";
+							var m = inst.argumentAsInt();
+							//vm.EP = vm.SP + m;
+							if( vm.HP < vm.EP ) {
+								throw "Stack Overflow.";
 							}
-							
 						}
 }

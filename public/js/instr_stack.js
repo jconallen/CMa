@@ -5,10 +5,12 @@ InstructionDefinition["mark"] = {
 		"semantics": 	"SP←SP+4; S[SP-2]←EP; S[SP-1]←FP",
 		"description": 	"", 
 		"impl": 		function(instr,vm){
-			
-							vm.SP = vm.SP + 4;
-							vm.S[vm.SP-2] = vm.EP;
-							vm.S[vm.SP-1] = vm.FP;
+							vm.S[vm.SP+1] = vm.EP;
+							vm.S[vm.SP+2] = vm.FP;
+							vm.SP = vm.SP + 2;
+//							vm.SP = vm.SP + 4;
+//							vm.S[vm.SP-2] = vm.EP;
+//							vm.S[vm.SP-1] = vm.FP;
 							
 			
 						}
@@ -25,3 +27,43 @@ InstructionDefinition["dup"] = {
 							vm.S[vm.SP] = vm.S[vm.SP-1];
 						}
 }
+
+
+InstructionDefinition["alloc"] = {
+		"name": 		"alloc",
+		"displayName":	"alloc q",
+		"semantics": 	"SP←SP+q",
+		"description": 	"Increment the SP by the amount q.", 
+		"impl": 		function(instr,vm){
+							var q = instr.argumentAsInt();
+							vm.SP = vm.SP + q;
+						}
+}
+
+InstructionDefinition["slide"] = {
+		"name": 		"slide",
+		"displayName":	"slide q m",
+		"semantics": 	"SP←SP+q",
+		"description": 	"", 
+		"impl": 		function(instr,vm){
+			
+							var q = instr.argumentAsInt();
+							var m = instr.argument2AsInt();
+			
+							if(q>0 ) {
+								if(m==0) sp = sp-q;
+								else {
+									sp = sp-q-m
+									for(i=0;i<m;i++){
+										sp++;
+										s[sp] = s[sp+q]
+									}
+								}
+							}
+			
+			
+							var q = instr.argumentAsInt();
+							vm.SP = vm.SP + q;
+						}
+}
+

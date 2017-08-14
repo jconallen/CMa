@@ -18,9 +18,8 @@ InstructionDefinition["jumpz"] = {
 						"Then decrement the stack pointer (SP)",
 		"impl":			function(instr,vm){
 							var q = vm.getAddressFromArgument(instr.argument);
-							var cond = vm.S[vm.SP];
-							if( cond.value == 0 ) {
-								vm.PC = q - 1; // sub 1 because vm process next instr will auto increment;
+							if( vm.S[vm.SP] == 0 ) {
+								vm.PC = q; 
 							}
 							// decrement the SP
 							vm.SP = vm.SP - 1;
@@ -43,28 +42,29 @@ InstructionDefinition["jumpi"] = {
 
 InstructionDefinition["call"] = {
 		"name": 		"call",
-		"displayName": 	"call q",
-		"semantics": 	"FP←SP-q-1; S[FP]←PC; PC←S[SP]; SP←SP-1",
+		"displayName": 	"call",
+		"semantics": 	"FP←SP; tmp←PC; PC←S[SP]; S[SP]←tmp;",
 		"description": 	"",
 		"impl":			function(instr,vm){
-							var q = instr.argumentAsInt();
-							vm.FP = vm.SP - q - 1;
-							vm.SP[vm.FP] = vm.PC;
-							vm.PC = vm.S[vm.SP] - 1; // sub 1 because vm process next instr will auto increment;
-							vm.SP = vm.SP - 1;
+							vm.FP = vm.SP;
+							var tmp = vm.PC;
+							vm.PC = vm.S[vm.SP];
+							vm.S[vm.SP] = tmp;
 						}
 }
 
 InstructionDefinition["return"] = {
 		"name": 		"return",
-		"displayName": 	"return",
-		"semantics": 	"PC←S[FP];EP←S[FP-2];SP←FP-3;FP←S[SP+2]",
+		"displayName": 	"return q",
+		"semantics": 	"PC←S[FP]; EP←S[FP-2]; if(EP>=HP) error(Stack Overflow); SP←FP-q; FP←S[FP-1];",
 		"description": 	"",
 		"impl":			function(instr,vm){
-							vm.PC = vm.S[vm.FP] - 1; // sub 1 because vm process next instr will auto increment;;
+							var q = instr.argumentAsInt();
+							vm.PC = vm.S[vm.FP]; 
 							vm.EP = vm.S[vm.FP-2];
-							vm.SP = vm.FP-3;
-							vm.FP = vm.S[vm.SP+2];
+							if( vm.EP >= vm.HP ) throw "Stack Overflow";
+							vm.SP = vm.FP-q;
+							vm.FP = vm.S[vm.FP-1];
 						}
 }
 
@@ -76,5 +76,6 @@ InstructionDefinition["halt"] = {
 		"description": 	"Stops the virtual machine.",
 		"impl":			function halt(inst,vm){
 							vm.halt();
+							vm.PC = -1;
 						}
 }

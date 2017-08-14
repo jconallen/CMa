@@ -7,10 +7,11 @@ function parseLine(line, lineNo) {
 	var code =line.trim();
 	var label = null;
 	var arg = null;
+	var arg2 = null;
 	var comment = null;
 	
 	var t = line.indexOf(';');
-	if( t>0 ) {
+	if( t>=0 ) {
 		code = line.substring(0,t).trim(); // everything after the semi is a comment
 		comment = line.substring(t+1).trim();
 	} 
@@ -27,12 +28,14 @@ function parseLine(line, lineNo) {
 		
 		if( code.includes(' ') ){  // then an argument is defined
 			var l = code.split(' ');
+			
+			
 			code = l[0].trim();
 			var argVal = l[1].trim();
 			
 			if( isNaN(argVal) ) {
 				//assume is a label
-				arg = new Value("label", argVal );
+				arg = new Value("ptr", argVal );
 			} else {
 				if( argVal.includes('.') ){
 					arg = new Value("float", Number(argVal) );
@@ -40,12 +43,33 @@ function parseLine(line, lineNo) {
 					arg = new Value("int", Number(argVal) );
 				}
 			}
+			
+			if( l.length > 2 ) {
+				
+				
+				// there is a second argument
+				var arg2Val = l[2].trim();
+				
+				alert( arg2Val );
+				
+				if( isNaN(arg2Val) ) {
+					//assume is a label
+					arg2 = new Value("ptr", arg2Val );
+				} else {
+					if( arg2Val.includes('.') ){
+						arg2 = new Value("float", Number(arg2Val) );
+					} else {
+						arg2 = new Value("int", Number(arg2Val) );
+					}
+				}
+			}
+			
 		}
 		
 		var def = InstructionDefinition[code];
 		
 		if (def) {
-			var instr = new Instruction(def, arg, label, comment);
+			var instr = new Instruction(def, arg, arg2, label, comment);
 			instructions.push(instr);
 		} else {
 			errors.push("<p>Unrecognized instruction: " + code + " at line: " + lineNo + "</p>");

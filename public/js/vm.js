@@ -4,12 +4,13 @@ var InstructionDefinition = {};
 
 class Instruction {
 	
-	constructor( def, argument, label, comment ) {
+	constructor( def, argument, argument2, label, comment ) {
 		this.def = def;
-		this._argument = argument;
-		this._label = label;
-		this._breakpoint = false;
-		this._comment = comment;
+		this.argument = argument;
+		this.argument2 = argument2;
+		this.label = label;
+		this.breakpoint = false;
+		this.comment = comment;
 	};
 	
 	toString(){
@@ -29,7 +30,16 @@ class Instruction {
 				} else {
 					str += " " + this.argument.toString();
 				}
-			} 
+			};
+			
+			if( this.argument2 ) {
+				if( this.argument2.type=="label" ) {
+					str += " <i>" + this.argument2.toString() + "</i>";
+				} else {
+					str += " " + this.argument2.toString();
+				}
+			};
+			
 			return str;
 		}
 		
@@ -39,56 +49,45 @@ class Instruction {
 	
 	// returns the argument value as an int, thows error if it is not.
 	argumentAsInt(){
-		if( this._argument.type == "int" || this._argument.type == "ptr" ) {
-			return this._argument.value;
+		if( this.argument.type == "int" || this.argument.type == "ptr" ) {
+			return this.argument.value;
 		} else {
 			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this._argument.type + '.';
+					+ ' must be an int or a ptr, not ' + this.argument.type + '.';
 		}
 			
 	}
 
 	// returns the argument value as an int or ptr 
 	argumentAsPtr(){
-		if( this._argument.type == "int" || this._argument.type == "ptr" ) {
-			return this._argument.value;
+		if( this.argument.type == "int" || this.argument.type == "ptr" ) {
+			return this.argument.value;
 		} else {
 			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this._argument.type + '.';
+					+ ' must be an int or a ptr, not ' + this.argument.type + '.';
 		}
 			
 	}
 
-	
-	get label(){
-		if( !this._label ) return ""; 
-		return this._label+':';
+	// returns the argument value as an int, thows error if it is not.
+	argument2AsInt(){
+		if( this.argument2.type == "int" || this.argument2.type == "ptr" ) {
+			return this.argument2.value;
+		} else {
+			throw 'Error: Argument for instruction ' + this.def.name 
+					+ ' must be an int or a ptr, not ' + this.argument2.type + '.';
+		}
+			
 	}
-	
-	get argument(){
-		return this._argument;
-	}
-	
-	get comment(){
-		return this._comment;
-	}
-	
+
+
 	name(){
 		return this.def.name;
 	}
 	
-	get description(){
-		var descr = this.def.description;
-		return descr;
-	}
-	
-	get breakpoint(){
-		return this._breakpoint;
-	}
-	
 	toggleBreakpoint(){
-		this._breakpoint = !this._breakpoint;
-		return this._breakpoint;
+		this.breakpoint = !this.breakpoint;
+		return this.breakpoint;
 	}
 	
 };
@@ -103,7 +102,7 @@ class Value {
 		if( this.type == "int" || this.type == "ptr" ) {
 			return this.value;
 		} else {
-			throw 'Error: Value expected to be an int or ptr, not ' + this._argument.type + '.';
+			throw 'Error: Value expected to be an int or ptr, not ' + this.argument.type + '.';
 		}
 	}
 	
@@ -119,7 +118,7 @@ class Value {
 				str += this.value + ".0"; 
 			}
 		} else if( this.type=="ptr" ) {
-			str += "*" + this.value;
+			str += this.value;
 		} else if( this.type=="label" ) {
 			str += this.value;
 		} else {
@@ -149,6 +148,7 @@ class VirtualMachine {
 		
 		this.running = false;
 		this.restart();
+		this.memory = null;
 	}
 	
 	get HeapSize(){
@@ -163,19 +163,23 @@ class VirtualMachine {
 		return this.running;
 	}
 	
+	isNextInstructionBreakpoint() {
+		var instr = this.C[this.PC];
+		return instr.breakpoint;
+	}
+	
 	executeNextInstruction() {
 		
 		if( this.running) {
+
 			// get next instruction, invoke implementation with a reference to the instr and vm
 			var instr = this.C[this.PC];
 			
-				// perform the instruction
-				instr.def.impl( instr, this );
+			this.PC++;
 
-			if( this.isRunning() ) {
-				// increment the program counter
-				this.PC += 1;
-			}
+			// perform the instruction
+			instr.def.impl( instr, this );
+
 		} 
 		
 	}
@@ -197,36 +201,34 @@ class VirtualMachine {
 			this.S[i] = NULL_VALUE;
 		}
 		
+		// put first stack frame on stack for int main()
+//		this.push(new Value("int",0) );   // return value
+//		this.push(new Value("int",this.EP) );   // EP old
+//		this.push(new Value("int",this.FP) );   // FP old
+//		this.push(new Value("int",0) );   // PC old
 
-	}
-	
-	_loadProgram( program ) {
-		for( var i=0; i <program.length; i++ ){
-			var instr = program[i];
-			this.C[i] = instr;
-		}
-		for( var i=program.length; i<this.PROGRAM_STORE_SIZE; i++){
-			this.C[i] = NOP;
-		}
-	}
-	
-	loadProgram( program, memory ) {
-		for( var i=0; i <program.length; i++ ){
-			var instr = program[i];
-			this.C[i] = instr;
-		}
-		for( var i=program.length; i<this.PROGRAM_STORE_SIZE; i++){
-			this.C[i] = NOP;
-		}
-
-		
-		if( memory ) {
+		if( this.memory ) {
 			// now update main memory with the supplied values
-			for( var i=0; i<memory.length; i++ ) {
-				var v = memory[i];
+			for( var i=0; i<this.memory.length; i++ ) {
+				var v = this.memory[i];
 				this.S[v.address] = v.value;
 			}	
 		}
+		
+	}
+	
+	loadProgram( program, memory ) {
+		this.memory = memory;
+		
+		for( var i=0; i <program.length; i++ ){
+			var instr = program[i];
+			this.C[i] = instr;
+		}
+		for( var i=program.length; i<this.PROGRAM_STORE_SIZE; i++){
+			this.C[i] = NOP;
+		} 
+		
+		restart();
 		
 	}
 	
@@ -271,10 +273,10 @@ class VirtualMachine {
 	}
 	
 	getAddressFromArgument(arg){
-		if( arg.type=="label" ) {
+		if( arg.type=="ptr" ) {
 			for(var i=0; i<this.PROGRAM_STORE_SIZE; i++) {
 				var instr = this.C[i];
-				if( arg.value == instr._label ){
+				if( arg.value == instr.label ){
 					return i;
 				}
 			}
