@@ -11,7 +11,7 @@ InstructionDefinition["loadc"] = {
 							} else if( instr.argument.type == 'ptr' ){
 								// compute adde
 								var addr = vm.getAddressFromArgument(instr.argument);
-								vm.push( addr );
+								vm.push( new Value("ptr", addr) );
 							}
 						}
 }
@@ -71,7 +71,7 @@ InstructionDefinition["loadrc"] = {
 		"impl":			function(instr,vm){
 							var q = instr.argumentAsInt();
 							vm.SP = vm.SP + 1;
-							vm.S[vm.SP] = vm.FP+q;
+							vm.S[vm.SP] = new Value("ptr", vm.FP+q);
 						}
 }
 
@@ -118,17 +118,12 @@ InstructionDefinition["loadr"] = {
 InstructionDefinition["storer"] = {
 		"name": 		"storer",
 		"displayName":	"storer q",
-		"semantics": 	"SP[FP+q] ← S[SP]",
-		"description": 	"Store relative the value q at the location pointed to by the top of the stack.  Equivalent " +
-						"to <b>loadc</b> q; <b>store</b>",
+		"semantics": 	"...",
+		"description": 	"Store the value at the top of the stack relative address q (FP+q)",
 		"impl":			function(instr,vm){
-							var addr = instr.argument;
-							if( addr.type == "int" || addr.type == "ptr" ) {
-								var val = vm.S[addr.value];
-								vm.push( val );
-							} else {
-								throw "Memory reference value not an int or ptr.  Unable to load.";
-							}
+							var q = instr.argumentAsInt();
+							vm.S[vm.FP+q] = vm.S[vm.SP];
+							vm.SP = vm.SP-1;
 						}
 }
 

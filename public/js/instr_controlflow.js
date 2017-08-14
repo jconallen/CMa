@@ -18,7 +18,7 @@ InstructionDefinition["jumpz"] = {
 						"Then decrement the stack pointer (SP)",
 		"impl":			function(instr,vm){
 							var q = vm.getAddressFromArgument(instr.argument);
-							if( vm.S[vm.SP] == 0 ) {
+							if( vm.S[vm.SP].value == 0 ) {
 								vm.PC = q; 
 							}
 							// decrement the SP
@@ -48,8 +48,8 @@ InstructionDefinition["call"] = {
 		"impl":			function(instr,vm){
 							vm.FP = vm.SP;
 							var tmp = vm.PC;
-							vm.PC = vm.S[vm.SP];
-							vm.S[vm.SP] = tmp;
+							vm.PC = vm.S[vm.SP].value;
+							vm.S[vm.SP] = new Value("int", tmp);
 						}
 }
 
@@ -60,11 +60,11 @@ InstructionDefinition["return"] = {
 		"description": 	"",
 		"impl":			function(instr,vm){
 							var q = instr.argumentAsInt();
-							vm.PC = vm.S[vm.FP]; 
-							vm.EP = vm.S[vm.FP-2];
+							vm.PC = vm.S[vm.FP].value; 
+							vm.EP = vm.S[vm.FP-2].value;
 							if( vm.EP >= vm.HP ) throw "Stack Overflow";
 							vm.SP = vm.FP-q;
-							vm.FP = vm.S[vm.FP-1];
+							vm.FP = vm.S[vm.FP-1].value;
 						}
 }
 

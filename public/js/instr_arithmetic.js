@@ -41,15 +41,14 @@ InstructionDefinition["sub"] = {
 		"description": 	"The top value on the stack is subtracted from the next value on the stack " +
 						"and the result placed back on the stack.",
 		"impl":			function(instr,vm){
-							var a = vm.pop();
-							var b = vm.pop();
-							var c = Number(b.value) - Number(a.value);
-							var t = "int";
-							if( a.type=="float" || b.type=="float" ) {
-								t = "float";
+							var a = Number(vm.S[vm.SP-1].value);
+							var b = Number(vm.S[vm.SP].value);
+							if( vm.S[vm.SP-1].type=="float" || vm.S[vm.SP].type=="float"){
+								vm.S[ vm.SP-1 ] = new Value("float", a-b );
+							} else {
+								vm.S[ vm.SP-1 ] = new Value("int", a-b );
 							}
-							var value = new Value( t, c );
-							vm.push(value);
+							vm.SP--;
 						}
 }
 
@@ -59,16 +58,15 @@ InstructionDefinition["mul"] = {
 		"semantics": 	"S[SP-1] ← S[SP-1] * S[SP]; SP ← SP - 1",
 		"description": "The top two values on the stack are multiplied and replaced with the result.",
 		"impl":			function(instr,vm){
-							var a = vm.pop();
-							var b = vm.pop();
-							
-							var c = Number(b) * Number(a);
-							var t = "int";
-							if( a.type=="float" || b.type=="float" ) {
-								t = "float";
+							var a = vm.S[vm.SP-1];
+							var b = vm.S[vm.SP];
+							var m = Number(a.value) * Number(b.value);
+							if( a.type=="float" || b.type=="float"){
+								vm.S[ vm.SP-1 ] = new Value("float", m );
+							} else {
+								vm.S[ vm.SP-1 ] = new Value("int", m );
 							}
-							var value = new Value( t, c );
-							vm.push(value);
+							vm.SP--;
 							
 						}
 }
@@ -81,21 +79,16 @@ InstructionDefinition["div"] = {
 						"If either value is a float the result is a float.  If the are both ints then the " +
 						"result is an int and there is no remainder.",
 		"impl":			function(instr,vm){
-						
-							var a = vm.pop();
-							var b = vm.pop();
-							
-							var c = Number(b) / Number(a);
-							
-							if( a.type=="float" || b.type=="float" ) {
-								var value = new Value( "float", c );
-								vm.push(value);
+							var a = Number(vm.S[vm.SP-1].value);
+							var b = Number(vm.S[vm.SP].value);
+							var v = a/b;
+							if( vm.S[vm.SP-1].type=="float" || vm.S[vm.SP].type=="float"){
+								vm.S[ vm.SP-1 ] = new Value("float", v );
 							} else {
-								// treat as int
-								var value = new Value( "int", Math.floor(c) );
-								vm.push(value);
+								vm.S[ vm.SP-1 ] = new Value("int", Math.floor(v) );
 							}
-							
+							vm.S--;
+											
 						}
 }
 

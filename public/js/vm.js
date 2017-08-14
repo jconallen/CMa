@@ -131,6 +131,8 @@ class Value {
 
 const NULL_VALUE = new Value("int", 0 );
 const NOP = new Instruction(null,null,null);
+const TRUE = new Value("int", 1 );
+const FALSE = new Value("int", 0 );
 
 
 class VirtualMachine {

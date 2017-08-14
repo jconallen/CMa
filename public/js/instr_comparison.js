@@ -8,7 +8,10 @@ InstructionDefinition["leq"] = {
 							var a = vm.S[vm.SP-1];
 							var b = vm.S[vm.SP];
 							if( a <= b ) {
-								vm.SP = vm.SP -1;
+								vm.S[vm.SP-1] = TRUE;
+							} else {
+								vm.S[vm.SP-1] = FALSE;
 							}
+							vm.SP = vm.SP -1;
 						}
 }

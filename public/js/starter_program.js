@@ -44,8 +44,8 @@ var starter_prog_src =
 	' end:  halt          ; end of program \n' +
 	'_fac:  enter 3       ;  \n' +
 	'       loadr -3      ; put local n on top of stack \n' +
-	'       loadc 0       ; put constant 0 on top of stack \n' +
-	'       leq           ; compare  n <= 0 \n' +
+	'       loadc 1       ; put constant 1 on top of stack \n' +
+	'       leq           ; compare  n <= 1 \n' +
 	'       jumpz A       ; if it is not, then jump to A  \n' +
 	'       loadc 1       ; otherwise put constant 1 on top of stack \n' +
 	'       storer -3     ;     update return value to the value at top of stack (=1).  \n' +

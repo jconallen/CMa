@@ -3,7 +3,7 @@
 ;
 ;
 ;  int _fac(int n) {
-;	  if( n <= 0 ) return 1;
+;	  if( n <= 1 ) return 1;
 ;	  else return n * fac(n-1);
 ;  }
 ;  
@@ -21,8 +21,8 @@ _main: loadc 3       ; put constant 3 on top of stack
  end:  halt          ; end of program
 _fac:  enter 3       ; 
        loadr -3      ; put local n on top of stack
-       loadc 0       ; put constant 0 on top of stack
-       leq           ; compare  n <= 0
+       loadc 1       ; put constant 1 on top of stack
+       leq           ; compare  n <= 1
        jumpz A       ; if it is not, then jump to A 
        loadc 1       ; otherwise put constant 1 on top of stack
        storer -3     ;     update return value to the value at top of stack (=1). 

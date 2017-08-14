@@ -5,8 +5,8 @@ InstructionDefinition["mark"] = {
 		"semantics": 	"SP←SP+4; S[SP-2]←EP; S[SP-1]←FP",
 		"description": 	"", 
 		"impl": 		function(instr,vm){
-							vm.S[vm.SP+1] = vm.EP;
-							vm.S[vm.SP+2] = vm.FP;
+							vm.S[vm.SP+1] = new Value("ptr", vm.EP);
+							vm.S[vm.SP+2] = new Value("ptr", vm.FP);
 							vm.SP = vm.SP + 2;
 //							vm.SP = vm.SP + 4;
 //							vm.S[vm.SP-2] = vm.EP;

@@ -164,7 +164,7 @@
 					  </thead>
 					</table>
 			  	</div>
-			  	<div class="panel-body" style="overflow: auto; height: 400px; padding:0px; ">
+			  	<div class="panel-body" style="overflow: auto; height: 800px; padding:0px; ">
 					<table class="table table-fixed header-fixed "  id="ProgramStore">
 					
 					</table>
@@ -187,7 +187,7 @@
 					  </thead>
 					</table>
 			  	</div>
-				<div class="panel-body" style="overflow: auto; height: 400px; padding:0px">
+				<div class="panel-body" style="overflow: auto; height: 800px; padding:0px">
 					<table class="table " id="Stack">
 					  
 					</table>
@@ -324,11 +324,12 @@
 		while( VM.isRunning() && !VM.isNextInstructionBreakpoint() ) {
 			try{
 				VM.executeNextInstruction();
+				updateDisplay();
 			} catch( err ) {
 				$('#VMError').html(err);
 				$('#VMError').show();
 			}
-			updateDisplay();
+			
 		};
 	}
 	
@@ -435,6 +436,7 @@
 		for(var i=VM.MAX_STACK_SIZE-1; i>=0; i--) {
 			
 			var value = VM.S[i];
+			
 			var row = { "address": i };
 			row.value = value.toString();
 			
