@@ -8,7 +8,7 @@ class Instruction {
 		this.def = def;
 		this.argument = argument;
 		this.argument2 = argument2;
-		this.label = label;
+		this._label = label;
 		this.breakpoint = false;
 		this.comment = comment;
 	};
@@ -20,6 +20,13 @@ class Instruction {
 		} 
 		return str;
 	};
+	
+	get label(){
+		if( this._label ) {
+			return this._label;
+		};
+		return "";
+	}
 	
 	toFormattedString(){
 		if( this.def ) {

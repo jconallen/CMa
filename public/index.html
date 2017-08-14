@@ -37,7 +37,7 @@
 	            <div class="col-md-8">
 	               <div class="form-group">
 				    <label for="exampleTextarea">Code</label>
-				    <textarea class="form-control" id="programCode" rows="10"></textarea>
+				    <textarea class="form-control" id="programCode" rows="10" style="font-family:monospace;"></textarea>
 				    <a class="btn btn-primary" onclick="parseCode()">Parse program</a>
 				  </div>
 	            </div>
@@ -69,6 +69,30 @@
             <div class="modal-footer">
                 <a href="#" class="btn" data-dismiss="modal">Close</a>
             	<a class="btn btn-primary" onclick="loadProgram()">Load program</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Dialog for Instruction Description -->
+<div class="modal fade" id="instrDescrModal" tabindex="-1" role="dialog" aria-labelledby="myInstrDescrModal" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" data-dismiss="modal">×</button>
+              <h3>Instruction Description</h3>
+            </div>
+            <div class="modal-body">
+            	<div class="panel panel-default" style="margin-top: 10px;">
+		            	<div class="panel-heading" >
+							<h3 class="panel-title" id="InsructionDescriptionTitle"></h3>
+						</div>
+					  <div class="panel-body" id="InstructionDescription">
+					  </div>
+				</div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal">Close</a>
             </div>
         </div>
     </div>
@@ -422,10 +446,10 @@
 		$('#ProgramStore').append(
 			    $.map(pcData, function (item, index) {
 			    	return '<tr>' 
-			    		+ '<td class="col-md-1 text-right">' + item.ptr + '</td>' 
+			    		+ '<td class="col-md-1 text-right" id="bp">' + item.ptr + '</td>' 
 			    		+ '<td class="col-md-2 text-right table-bordered ">' + item.label + '</td>' 
 			    		+ '<td class="col-md-1 text-center table-bordered ">' + index + '</td>'
-			    		+ '<td class="col-md-3 text-left table-bordered ">' + item.instruction + '</td>'
+			    		+ '<td class="col-md-3 text-left table-bordered " id="instr">' + item.instruction + '</td>'
 			    		+ '<td class="col-md-5 text-left table-bordered " style="text-color: green"><i>' + item.comment + '</i></td>'
 			    		+ '</tr>';
 		}).join());
@@ -496,11 +520,13 @@
 		$('#executeBtn').prop('disabled', !VM.isRunning());
 		$('#playBtn').prop('disabled', !VM.isRunning());
 		$('#runToBreakBtn').prop('disabled', !VM.isRunning());
-		
-		$('#ProgramStore tr').click(function(){
+			
+		$('#ProgramStore tr td#bp').click(function(e){
 			  toggleBreakpoint(this);
 		});
-		
+		$('#ProgramStore tr td#instr').click(function(e){
+			displayInstructionDescription(this);
+		});
 	}
 	
 	
@@ -511,10 +537,9 @@
 		updateDisplay();
 	}
 	
-	function toggleBreakpoint(tr){
-
-		var $columns = $(tr).find('td');
-		var address = Number($columns[2].innerHTML);
+	function toggleBreakpoint(td){
+		
+		var address = $(td).closest('tr').find('td:eq(2)').text();
 		
 		var instr = VM.C[address];
 		
@@ -527,9 +552,25 @@
 			html += '<span class="glyphicon glyphicon-record"/>';
 		} 
 		
-		$columns[0].innerHTML = html;
+		$(td).html(html);
 
 	}
+
+	function displayInstructionDescription(td){
+		
+		var address = $(td).closest('tr').find('td:eq(2)').text();
+		
+		var instr = VM.C[address];
+		var def = instr.def;
+		
+		var html = '<p><code>'+def.semantics+'</code></p><p>' + def.description + '</p>';
+		
+		$('#InstructionDescription').html(html);
+		$('#InsructionDescriptionTitle').text(def.displayName);
+		
+		$('#instrDescrModal').modal('show');
+	}
+
 
 	
 	$( document ).ready(function() {
