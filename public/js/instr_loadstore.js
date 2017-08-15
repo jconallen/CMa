@@ -6,13 +6,14 @@ InstructionDefinition["loadc"] = {
 		"description": 	"The stack pointer (SP) is incremented by one. The constant argument q is placed at the" +
 						" on the stack at the position of the stack pointer.", 
 		"impl": 		function(instr,vm){
-							if( instr.argument.type == "int" ) {
-								vm.push( instr.argument );
-							} else if( instr.argument.type == 'ptr' ){
+							
+							if( instr.arg1.type == "int" ) {
+								vm.push( instr.arg1 );
+							} else if( instr.arg1.type == 'ptr' ){
 								// compute adde
-								var addr = vm.getAddressFromArgument(instr.argument);
+								var addr = vm.getAddressFromArgument(instr.arg1);
 								vm.push( new Value("ptr", addr) );
-							}
+							}							
 						}
 }
 
@@ -27,8 +28,8 @@ InstructionDefinition["load"] = {
 						"Note: <b>load</b> <i>m</i> where <i>m</i>=1 is equivalent to <b>load</b>.",
 		"impl": 		function(instr,vm){
 							var addr = vm.pop().asIntOrPtr();
-							if( instr.argument ) {
-								var m = instr.argumentAsInt();
+							if( instr.arg1 ) {
+								var m = instr.argument1AsInt();
 								for(var i=m-1; i>=0; i-- ) {
 									var val = vm.S[addr-i];
 									vm.push( val );
@@ -49,8 +50,8 @@ InstructionDefinition["store"] = {
 						"next on the stack.  If there is an argument, m, then store the m consequtive values " +
 						"to the heap. ",
 			"impl": 	function(instr,vm){
-							if( instr.argument ) { 
-								var m = instr.argumentAsInt();
+							if( instr.argu1 ) { 
+								var m = instr.argument1AsInt();
 								for(var i=0; i<m; i++ ) {
 									vm.S[ vm.S[vm.SP].value + i ] = vm.S[vm.SP-m+i].value;
 								}
@@ -69,7 +70,7 @@ InstructionDefinition["loadrc"] = {
 		"semantics": 	"SP←SP+1; S[SP]←FP+q",
 		"description": 	"",
 		"impl":			function(instr,vm){
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							vm.SP = vm.SP + 1;
 							vm.S[vm.SP] = new Value("ptr", vm.FP+q);
 						}
@@ -82,7 +83,7 @@ InstructionDefinition["loada"] = {
 		"description": 	"Put the value referenced by the address at the top of the stack, " +
 						"on top of the stack.  Rquivalent to <b>loadc</b> q; <b>load</b>",
 		"impl":			function(instr,vm){
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							var v = vm.S[q];
 							vm.push(v);
 						}
@@ -96,7 +97,7 @@ InstructionDefinition["storea"] = {
 		"description": 	"Store the value q at the location pointed to by the top of the stack.  Equivalent " +
 						"to <b>loadc</b> q; <b>store</b>;",
 		"impl":			function(instr,vm){
-							var q = instr.argument;
+							var q = instr.arg1;
 							var a = vm.pop().asIntOrPtr();
 							vm.S[a] = q;
 						}
@@ -109,7 +110,7 @@ InstructionDefinition["loadr"] = {
 		"description": 	"Put the value referenced by the address at the top of the stack, " +
 						"on top of the stack.",
 		"impl":			function(instr,vm){
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							vm.SP = vm.SP + 1;
 							vm.S[vm.SP] = vm.S[ vm.FP + q ];
 						}
@@ -118,10 +119,10 @@ InstructionDefinition["loadr"] = {
 InstructionDefinition["storer"] = {
 		"name": 		"storer",
 		"displayName":	"storer q",
-		"semantics": 	"...",
+		"semantics": 	"S[FP+q] ← S[SP]; SP ← SP - 1;",
 		"description": 	"Store the value at the top of the stack relative address q (FP+q)",
 		"impl":			function(instr,vm){
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							vm.S[vm.FP+q] = vm.S[vm.SP];
 							vm.SP = vm.SP-1;
 						}

@@ -12,23 +12,43 @@
 ;     printf("%i", f );
 ; }
 ;
+;===============================================
+;    define the global variables and assign the values
 
-_main: loadc 3       ; put constant 3 on top of stack
-       mark          ;
-       loadc _fac    ; put address of function on stack
-       call          ; call the recursive function _fac
-       print         ; print the result of the call to _fac to the output
- end:  halt          ; end of program
-_fac:  enter 3       ; 
-       loadr -3      ; put local n on top of stack
+;===============================================
+;    set up the program call to main, and halt
+       
+       alloc 1    ; return value of call note: this is before the mark
+       mark       ; create stack frame
+       loadc main ; put address of main on stack
+       call       ; call main function
+ end:  halt       ;
+       
+;===============================================
+;    the main function
+       
+ main: enter 3    ; there is 1  item for the stack (f)
+       alloc 1    ; allocate variable f
+       alloc 1    ; allocate space for ret value
+       mark       ;
+       loadc _fac ; put addr of function on stack
+       call       ;
+       storer 1   ; put return value in local var f;
+       loadr 1    ; put it on top of stack
+       print      ; print the top of stack
+       return 1   ;  1 local vars
+
+
+_fac:  enter 1       ; 
+       loadr -1      ; put local n on top of stack
        loadc 1       ; put constant 1 on top of stack
        leq           ; compare  n <= 1
        jumpz A       ; if it is not, then jump to A 
        loadc 1       ; otherwise put constant 1 on top of stack
-       storer -3     ;     update return value to the value at top of stack (=1). 
+       storer -1     ;     update return value to the value at top of stack (=1). 
        return 3      ;     return this instance of function
-   A:  loadr -3      ; put value of local variable n on top of stack
-       loadr -3      ; put value of local variable n on top of stack (again) 
+   A:  loadr -1      ; put value of local variable n on top of stack
+       loadr -1      ; put value of local variable n on top of stack (again) 
                      ;    - now value of n is top two values on stack
        loadc 1       ; put constant 1 on top of stack
        sub           ; subtract, putting value on top of stack ( n-1 )
@@ -38,5 +58,5 @@ _fac:  enter 3       ;
                      ;   places result back on top of stack
        mul           ; multiply the top two values on stack (one of which 
                      ;   is the return value of the prev fac call)
-       storer -3     ; put value of local n on top of stack
+       storer -1     ; put value of local n on top of stack
        return 3      ; return this instance of the function

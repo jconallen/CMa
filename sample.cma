@@ -3,7 +3,8 @@
 ;  int y;
 ;
 ;  int add(int x, int y){
-;    return x + y;
+;    int z = 20;
+;    return x + y + z;
 ;  }
 ;
 ;  int main(){
@@ -12,8 +13,10 @@
 ;    int c = add( a, b );
 ;    print c;
 ;  }
+
 ;===============================================
 ;    define the global variables and assign the values
+
        loadc 42   ; define and initialize global var x=42
        alloc 1    ; define global var y,  no initialization
        
@@ -21,35 +24,40 @@
 ;===============================================
 ;    set up the program call to main, and halt
        
-       alloc 1    ; return value of call note: this is before the mark
-       mark       ; create stack frame
+       alloc 1    ; allocate space for return of int main()
+       mark       ; create stack frame (EP|FP|PC)
        loadc main ; put address of main on stack
-       call       ; call main function
+       call 0     ; call main function, no arguments
+       print      ; print result int main()
        halt       ;
        
 ;===============================================
 ;    the main function
        
  main: enter 3    ; there are three items for the stack (a,b,c)
-       loadc 30   ; var a = 30
-       loadc 40   ; var b = 40
-       alloc 1    ; define return val
-       mark       ;
-       loadc add  ;
-       call       ;
-       storer 3   ; put return value in local var c;
-       loadr 3    ; put it on top of stack
+       loadc 30   ; a = 30
+       loadc 40   ; b = 40
+       alloc 1    ; allocate c
+       alloc 1    ; ready to call, allocate return value
+       mark       ; create stack frame
+       loadr 1    ; put first formal param on stack
+       loadr 2    ; put second param on top
+       loadc add  ; set up addr to call
+       call 2     ; two formal parameters
+       storer 3   ; put return value in local var c (third local var)
+       loadr 3    ; copy c to top of stack
        print      ; print the top of stack
-       return 3   ;  3 local vars
+       return 3   ; 3 local vars + no formal params
        
-;
 ;===============================================
 ;   define the function add 
-;
+
  add:  enter 2    ;
-       loadr -5   ;
-       loadr -4   ;
-       add        ;
-       storer -3  ;
-       return 3   ;
+       loadc 20   ; define local var z
+       loadr 1    ; now copy local var x on stack
+       loadr 2    ; now copy local var y on stack
+       add        ; x+y
+       add        ; (x+y) + z
+       storer -2  ;
+       return 2   ; no local vars + two formal params
        

@@ -93,3 +93,41 @@ function parseProgram( str ){
 	return { "errors": errors, "instructions": instructions };
 	
 }
+
+function serializeProgram(instructions){
+	var code = "";
+	for(var i=0;i<instructions.length;i++){
+
+		var instr = instructions[i];
+		if( instr && instr.def ) {
+			var name = instr.name;
+			var label = instr.label;
+			var comment = instr.comment;
+			var arg1 = instr.arg1;
+			var arg2 = instr.arg2;
+			
+			if( label && label!='') {
+				code += label + ': ';
+			}
+			
+			code += name;
+			
+			if( arg1 ) {
+				code += ' ' + arg1.value;
+			}
+			
+			if( arg2 ) {
+				code += ' ' + arg2.value;
+			}
+			
+			if( comment && comment!='') {
+				code += ' ; ' + comment;
+			}
+			
+			code += '\n';
+		} 
+		
+	}
+	
+	return code;
+}

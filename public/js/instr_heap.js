@@ -24,7 +24,7 @@ InstructionDefinition["enter"] = {
 		"semantics": 	"EP ← SP + m; if( EP>=HP ) error('Stack Overflow Error')",
 		"description": 	"",
 		"impl":			function _new(inst,vm){
-							var m = inst.argumentAsInt();
+							var m = inst.argument1AsInt();
 							//vm.EP = vm.SP + m;
 							if( vm.HP < vm.EP ) {
 								throw "Stack Overflow.";

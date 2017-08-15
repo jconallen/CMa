@@ -4,7 +4,7 @@ InstructionDefinition["jump"] = {
 		"semantics": 	"PC←q",
 		"description": 	"Unconditional jump to instruction at q.  q may be a label reference.",
 		"impl":			function(instr,vm){
-							var q = vm.getAddressFromArgument(instr.argument);
+							var q = vm.getAddressFromArgument(instr.arg1);
 							vm.PC = q-1;  // sub 1 because vm process next instr will auto increment;
 						}
 }
@@ -17,7 +17,7 @@ InstructionDefinition["jumpz"] = {
 						"set the next instruction to the label, or if an int then relative to the current PC. " +
 						"Then decrement the stack pointer (SP)",
 		"impl":			function(instr,vm){
-							var q = vm.getAddressFromArgument(instr.argument);
+							var q = vm.getAddressFromArgument(instr.arg1);
 							if( vm.S[vm.SP].value == 0 ) {
 								vm.PC = q; 
 							}
@@ -33,7 +33,7 @@ InstructionDefinition["jumpi"] = {
 		"description": 	"Jump indirect. The value pointed to by the address on top of the stack is added to " +
 						"the argument q to determine the next value of the program counter (PC).",
 		"impl":			function(instr,vm){
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							vm.PC = vm.S[vm.SP].value + q - 1; // sub 1 because vm process next instr will auto increment;
 							// decrement the SP
 							vm.SP = vm.SP - 1;
@@ -42,14 +42,21 @@ InstructionDefinition["jumpi"] = {
 
 InstructionDefinition["call"] = {
 		"name": 		"call",
-		"displayName": 	"call",
+		"displayName": 	"call q",
 		"semantics": 	"FP←SP; tmp←PC; PC←S[SP]; S[SP]←tmp;",
-		"description": 	"",
+		"description": 	"q is the number of formal parameters",
 		"impl":			function(instr,vm){
-							vm.FP = vm.SP;
-							var tmp = vm.PC;
-							vm.PC = vm.S[vm.SP].value;
-							vm.S[vm.SP] = new Value("int", tmp);
+			                var q = 0;
+							if( instr.arg1 ) {
+								q = instr.argument1AsInt();
+							}
+							vm.FP = vm.SP - q - 1;
+							vm.S[vm.FP] = new Value("ptr", vm.PC);
+							vm.PC = vm.S[vm.SP];
+							vm.SP = vm.SP -1;
+//							var tmp = vm.PC;
+//							vm.PC = vm.S[vm.SP].value;
+//							vm.S[vm.SP] = new Value("int", tmp);
 						}
 }
 
@@ -59,10 +66,10 @@ InstructionDefinition["return"] = {
 		"semantics": 	"PC←S[FP]; EP←S[FP-2]; if(EP>=HP) error(Stack Overflow); SP←FP-q; FP←S[FP-1];",
 		"description": 	"",
 		"impl":			function(instr,vm){
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							vm.PC = vm.S[vm.FP].value; 
 							vm.EP = vm.S[vm.FP-2].value;
-							if( vm.EP >= vm.HP ) throw "Stack Overflow";
+							//if( vm.EP >= vm.HP ) throw "Stack Overflow";
 							vm.SP = vm.FP-q;
 							vm.FP = vm.S[vm.FP-1].value;
 						}

@@ -4,13 +4,13 @@ var InstructionDefinition = {};
 
 class Instruction {
 	
-	constructor( def, argument, argument2, label, comment ) {
+	constructor( def, arg1, arg2, label, comment ) {
 		this.def = def;
-		this.argument = argument;
-		this.argument2 = argument2;
+		this._arg1 = arg1;
+		this._arg2 = arg2;
 		this._label = label;
 		this.breakpoint = false;
-		this.comment = comment;
+		this._comment = comment;
 	};
 	
 	toString(){
@@ -28,22 +28,47 @@ class Instruction {
 		return "";
 	}
 	
+	get arg1(){
+		if( this._arg1 ) {
+			return this._arg1;
+		};
+		return "";
+	}
+	
+	get arg2(){
+		if( this._arg2 ) {
+			return this._arg2;
+		};
+		return "";
+	}
+	
+	get name(){
+		return this.def.name;
+	}
+	
+	get comment(){
+		if( this._comment ) {
+			return this._comment;
+		};
+		return "";
+	}
+
 	toFormattedString(){
 		if( this.def ) {
 			var str =  '<b>' + this.def.name + '</b>';
-			if( this.argument ) {
-				if( this.argument.type=="label" ) {
-					str += " <i>" + this.argument.toString() + "</i>";
+			if( this._arg1 ) {
+				if( this._arg1.type=="label" ) {
+					str += " <i>" + this._arg1.toString() + "</i>";
 				} else {
-					str += " " + this.argument.toString();
+					str += " " + this._arg1.toString();
 				}
 			};
 			
-			if( this.argument2 ) {
-				if( this.argument2.type=="label" ) {
-					str += " <i>" + this.argument2.toString() + "</i>";
+			if( this._arg2 ) {
+				if( this._arg2.type=="label" ) {
+					str += " <i>" + this._arg2.toString() + "</i>";
 				} else {
-					str += " " + this.argument2.toString();
+					str += " " + this._arg2.toString();
 				}
 			};
 			
@@ -55,43 +80,38 @@ class Instruction {
 	};
 	
 	// returns the argument value as an int, thows error if it is not.
-	argumentAsInt(){
-		if( this.argument.type == "int" || this.argument.type == "ptr" ) {
-			return this.argument.value;
+	argument1AsInt(){
+		if( this._arg1.type == "int" || this._arg1.type == "ptr" ) {
+			return this._arg1.value;
 		} else {
 			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this.argument.type + '.';
+					+ ' must be an int or a ptr, not ' + this._arg1.type + '.';
 		}
 			
 	}
 
 	// returns the argument value as an int or ptr 
-	argumentAsPtr(){
-		if( this.argument.type == "int" || this.argument.type == "ptr" ) {
-			return this.argument.value;
+	argument1AsPtr(){
+		if( this._arg1.type == "int" || this._arg1.type == "ptr" ) {
+			return this.arg1.value;
 		} else {
 			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this.argument.type + '.';
+					+ ' must be an int or a ptr, not ' + this._arg1.type + '.';
 		}
 			
 	}
 
 	// returns the argument value as an int, thows error if it is not.
 	argument2AsInt(){
-		if( this.argument2.type == "int" || this.argument2.type == "ptr" ) {
-			return this.argument2.value;
+		if( this._arg2.type == "int" || this._arg2.type == "ptr" ) {
+			return this.arg2.value;
 		} else {
 			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this.argument2.type + '.';
+					+ ' must be an int or a ptr, not ' + this._arg2.type + '.';
 		}
 			
 	}
 
-
-	name(){
-		return this.def.name;
-	}
-	
 	toggleBreakpoint(){
 		this.breakpoint = !this.breakpoint;
 		return this.breakpoint;
@@ -209,12 +229,6 @@ class VirtualMachine {
 		for(var i=0; i<this.MAIN_MEMORY_SIZE; i++){
 			this.S[i] = NULL_VALUE;
 		}
-		
-		// put first stack frame on stack for int main()
-//		this.push(new Value("int",0) );   // return value
-//		this.push(new Value("int",this.EP) );   // EP old
-//		this.push(new Value("int",this.FP) );   // FP old
-//		this.push(new Value("int",0) );   // PC old
 
 		if( this.memory ) {
 			// now update main memory with the supplied values
@@ -239,6 +253,10 @@ class VirtualMachine {
 		
 		restart();
 		
+	}
+	
+	getSource(){
+		return serializeProgram(this.C);
 	}
 	
 	pop() {

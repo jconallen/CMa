@@ -157,6 +157,9 @@
 						<button type="button" class="btn btn-default" onclick="openLoadProgramDialog()">
 							<span class="glyphicon glyphicon-open-file"></span> Load
 						</button>
+						<button type="button" class="btn btn-default" onclick="editProgram()">
+							<span class="glyphicon glyphicon-pencil"></span> Edit 
+						</button>
 					
 					<div class="panel panel-default" style="margin-top: 10px;">
 					  <div class="panel-heading" id="NextInstr"></div>
@@ -206,8 +209,9 @@
 			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 					  <thead style="border:0px; ">
-					  		<th class="col-md-4 text-center">addr</th>
-						    <th class="col-md-8 text-center">value</th>
+					  		<th class="col-md-3 text-center">addr</th>
+						    <th class="col-md-3 text-center">value</th>
+						    <th class="col-md-6 text-center">notes</th>
 					  </thead>
 					</table>
 			  	</div>
@@ -229,8 +233,9 @@
 			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 						<thead style="border:0px; ">
-					  		<th class="col-md-4 text-center">addr</th>
-						 	<th class="col-md-8 text-center">val</th>
+					  		<th class="col-md-3 text-center">addr</th>
+						 	<th class="col-md-3 text-center">val</th>
+						    <th class="col-md-6 text-center">notes</th>
 				  		</thead>
 				  	</table>
 			  	</div>
@@ -275,7 +280,18 @@
 	<script src="/js/starter_program.js"></script>
 	
 	<script type="text/javascript">	
-		
+
+
+	var SourceCode = starter_prog_src;
+	var starterProgram = parseProgram(SourceCode);
+
+	var PROGRAM_SPACE = 32;
+	var MAIN_MEMORY = 64;
+	var STACK_VIEW = 32;
+	var MemoryNotes = [];
+	var VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY, STACK_VIEW);
+	VM.loadProgram( starterProgram.instructions, starter_memory );
+	
 	function parseCode(){
 		$('#ParseError').hide();
 		var code = $("#programCode").val();
@@ -307,18 +323,19 @@
 		$('#myModal').modal('show');
 	}
 	
+	function editProgram(){
+		$("#programCode").val(SourceCode);
+		$('#myModal').modal('show');
+	}
+	
 	function loadProgram(){
-		var code = $("#programCode").val();
-		var result = parseProgram(code);
+		SourceCode = $("#programCode").val();
+		var result = parseProgram(SourceCode);
 		var instructions = result.instructions;
 		VM.loadProgram( instructions );
 		$('#myModal').modal('hide');
 		updateDisplay();
 	}
-	
-	var VM = new VirtualMachine(32, 64, 32);
-
-	VM.loadProgram( starter_prog, starter_memory );
 	
 	function executeNext(){
 		try{
@@ -402,13 +419,7 @@
 		} else {
 			$('#HP').html(VM.HP);
 		}
-		
-		//$('#PC').html(VM.PC);
-		//$('#FP').html(VM.FP);
-		//$('#SP').html(VM.SP);
-		//$('#EP').html(VM.EP);
-		//$('#HP').html(VM.HP);
-	
+
 		var pcData = [];
 
 		for(var i=0; i<VM.C.length; i++) {
@@ -469,7 +480,11 @@
 	    		row.color = "#ffffff";
 	    		row.value = "<i>" + value.toString() + "</i>";
 	    	}
-			
+	    	if( MemoryNotes[i] ){
+		    	row.note = MemoryNotes[i];
+	    	} else {
+		    	row.note = "";
+	    	}
 			stackData.push(row);
 		}
 		
@@ -477,8 +492,9 @@
 		$('#Stack').append(
 			    $.map(stackData, function (item, index) {
 			    	return '<tr>'
-			    		+ '<td class="col-md-4 text-right table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>' 
-			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value + '</td>'
+			    		+ '<td class="col-md-3 text-right table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>' 
+			    		+ '<td class="col-md-3 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value + '</td>'
+			    		+ '<td class="col-md-6 text-left table-bordered" style="background-color:'+ item.color +'" id="note">'+item.note+'</td>'
 			    		+ '</tr>';
 			}).join());
 
@@ -495,8 +511,11 @@
 	    	if( addr >= VM.HP ){
 	    		row.color = '#efe9c4' ;
 	    	}
-			
-			
+	    	if( MemoryNotes[i] ){
+		    	row.note = MemoryNotes[i];
+	    	} else {
+		    	row.note = "";
+	    	}
 			heapData.push(row);
 		}
 		
@@ -504,8 +523,9 @@
 		$('#Heap').append(
 			    $.map(heapData, function (item, index) {
 			    	return '<tr>' 
-			    		+ '<td class="col-md-4 text-center table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>'  
-			    		+ '<td class="col-md-8 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value + '</td>'
+			    		+ '<td class="col-md-3 text-center table-bordered" style="background-color:'+ item.color +'">' + item.address + '</td>'  
+			    		+ '<td class="col-md-3 text-center table-bordered" style="background-color:'+ item.color +'">' + item.value + '</td>'
+			    		+ '<td class="col-md-6 text-left table-bordered" style="background-color:'+ item.color +'" id="note">'+item.note+'</td>'
 			    		+ '</tr>';
 		}).join());
 		
@@ -526,6 +546,17 @@
 		});
 		$('#ProgramStore tr td#instr').click(function(e){
 			displayInstructionDescription(this);
+		});
+		
+		$('#Stack tr td#note').click(function(e){
+			var address = $(this).closest('tr').find('td:eq(0)').text();
+			var oldNote = "";
+			if( MemoryNotes.length>address && MemoryNotes[address]){
+				oldNote =  MemoryNotes[address];
+			}
+ 			var note = prompt('Note', oldNote);
+			MemoryNotes[address]=note;
+			$(this).closest('tr').find('td:eq(2)').text(note);
 		});
 	}
 	

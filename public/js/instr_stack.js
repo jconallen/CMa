@@ -7,7 +7,8 @@ InstructionDefinition["mark"] = {
 		"impl": 		function(instr,vm){
 							vm.S[vm.SP+1] = new Value("ptr", vm.EP);
 							vm.S[vm.SP+2] = new Value("ptr", vm.FP);
-							vm.SP = vm.SP + 2;
+							vm.S[vm.SP+3] = new Value("ptr", 0 ); // for the PC
+							vm.SP = vm.SP + 3;
 						}
 }
 
@@ -30,7 +31,7 @@ InstructionDefinition["alloc"] = {
 		"semantics": 	"SP←SP+q",
 		"description": 	"Increment the SP by the amount q.", 
 		"impl": 		function(instr,vm){
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							vm.SP = vm.SP + q;
 						}
 }
@@ -42,7 +43,7 @@ InstructionDefinition["slide"] = {
 		"description": 	"", 
 		"impl": 		function(instr,vm){
 			
-							var q = instr.argumentAsInt();
+							var q = instr.argument1AsInt();
 							var m = instr.argument2AsInt();
 			
 							if(q>0 ) {
@@ -55,9 +56,6 @@ InstructionDefinition["slide"] = {
 									}
 								}
 							}
-			
-			
-							var q = instr.argumentAsInt();
 							vm.SP = vm.SP + q;
 						}
 }
