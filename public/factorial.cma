@@ -3,14 +3,14 @@
 ;
 ;
 ;  int _fac(int n) {
-;	  if( n <= 1 ) return 1;
-;	  else return n * fac(n-1);
+;    if( n <= 1 ) return 1;
+;    else return n * fac(n-1);
 ;  }
 ;  
 ;  int main(){
-;     int f = _fac(3);
-;     printf("%i", f );
-; }
+;    int f = _fac(3);
+;    printf("%i", f );
+;  }
 ;
 ;===============================================
 ;    define the global variables and assign the values
@@ -27,7 +27,7 @@
 ;===============================================
 ;    the main function
        
- main: enter 1    ; there is 1  item for the stack (f)
+ main: enter      ; 
        alloc 1    ; allocate variable f
        alloc 1    ; allocate space for ret value
        mark       ;

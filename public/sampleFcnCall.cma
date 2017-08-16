@@ -33,7 +33,7 @@
 ;===============================================
 ;    the main function
        
- main: enter 3    ; there are three items for the stack (a,b,c)
+ main: enter      ; 
        loadc 30   ; a = 30
        loadc 40   ; b = 40
        alloc 1    ; allocate c
@@ -51,7 +51,7 @@
 ;===============================================
 ;   define the function add 
 
- add:  enter 2    ;
+ add:  enter      ;
        loadc 20   ; define local var z
        loadr 1    ; now copy local var x on stack
        loadr 2    ; now copy local var y on stack

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  	<title>CMa Instruction Set</title>
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+ 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+ 	
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js"></script>
+ 	<style>
+
+ 	</style>
+ 	
+  </head>
+
+<body>
+    
+<div class="container" >
+
+<h1>CMa Instruction Set</h1>
+
+<table class="table" id='InstructionTable' style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+<thead>
+	<th>Instruction</th><th>Semantics</th>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+
+
+</div>
+
+<script src="js/vm.js"></script>
+<script src="js/instr_arithmetic.js"></script>
+<script src="js/instr_comparison.js"></script>
+<script src="js/instr_controlflow.js"></script>
+<script src="js/instr_io.js"></script>
+<script src="js/instr_loadstore.js"></script>
+<script src="js/instr_heap.js"></script>
+<script src="js/instr_stack.js"></script>
+
+<script type="text/javascript">	
+
+function loadTable(){
+	var instructionNames = Object.keys(InstructionDefinition);
+	instructionNames.sort();
+
+	for(var i=0;i<instructionNames.length; i++ ){
+		
+		var name = instructionNames[i];
+		var def = InstructionDefinition[name];
+		
+		
+		if( def ) {
+			var row = '<tr data-toggle="collapse" data-target="#' + def.name + 'Details" class="accordion-toggle" style="border-bottom-style:hidden;" >' 
+						+ '<td><b>' + def.displayName + '</b></td>'
+						+ '<td style="font-family:monospace;">' + def.semantics + '</td></tr>';
+			$('#InstructionTable').append(row);
+			
+			var hiddenRow = '<tr style="border-top-style:hidden; "><td colspan="2" class="hiddenRow">'
+							+ '<div class="accordion-body collapse" id="' + def.name + 'Details">' 
+							+ '<p>' + def.description + '</p>\n'
+							+ '<pre>' + def.impl + '</pre></div></td></tr>';
+			$('#InstructionTable').append(hiddenRow);
+
+		}
+
+	}
+	
+}
+
+	$( document ).ready(function() {
+		loadTable();
+
+	});
+	
+	
+
+	</script>
+
+
+  </body>
+</html>
+
+
