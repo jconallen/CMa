@@ -306,16 +306,16 @@
 	
 	</div> <!--  outer container -->
 	    
-	<script src="/js/vm.js"></script>
-    <script src="/js/instr_arithmetic.js"></script>
-    <script src="/js/instr_comparison.js"></script>
-    <script src="/js/instr_controlflow.js"></script>
-    <script src="/js/instr_io.js"></script>
-    <script src="/js/instr_loadstore.js"></script>
-    <script src="/js/instr_heap.js"></script>
-	<script src="/js/instr_stack.js"></script>
-	<script src="/js/parser.js"></script>
-	<script src="/js/starter_program.js"></script>
+	<script src="js/vm.js"></script>
+    <script src="js/instr_arithmetic.js"></script>
+    <script src="js/instr_comparison.js"></script>
+    <script src="js/instr_controlflow.js"></script>
+    <script src="js/instr_io.js"></script>
+    <script src="js/instr_loadstore.js"></script>
+    <script src="js/instr_heap.js"></script>
+	<script src="js/instr_stack.js"></script>
+	<script src="js/parser.js"></script>
+	<script src="js/starter_program.js"></script>
 	
 	<script type="text/javascript">	
 
@@ -326,7 +326,6 @@
 	var STACK_VIEW = 32;
 	var MemoryNotes = [];
 	var VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY, STACK_VIEW);
-	//VM.loadProgram( starterProgram.instructions, starter_memory );
 	
 	function parseCode(){
 		$('#ParseError').hide();
@@ -375,7 +374,7 @@
 	
 	function loadSample(sourceFile){
 		$.ajax({
-		       url: '/'+sourceFile,
+		       url: sourceFile,
 		       dataType: 'text',
 		       success: function(data) {
 		    		var SourceCode = data;
