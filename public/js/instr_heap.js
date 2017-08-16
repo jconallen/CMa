@@ -2,7 +2,7 @@
 InstructionDefinition["new"] = {
 		"name": 		"new",
 		"displayName": 	"new",
-		"semantics": 	"S[SP] ← A Mark free cells A, A..., A + S[SP] - 1 as allocated",
+		"semantics": 	"S[SP] &larr; A Mark free cells A, A..., A + S[SP] - 1 as allocated",
 		"description": 	"Allocates memory from the heap size of value on the stack.",
 		"impl":			
 function _new(inst,vm){
@@ -21,7 +21,7 @@ function _new(inst,vm){
 InstructionDefinition["enter"] = {
 		"name": 		"enter",
 		"displayName": 	"enter m",
-		"semantics": 	"EP ← SP + m; if( EP>=HP ) error('Stack Overflow Error')",
+		"semantics": 	"EP &larr; SP + m; if( EP>=HP ) error('Stack Overflow Error')",
 		"description": 	"",
 		"impl":			
 function _new(inst,vm){

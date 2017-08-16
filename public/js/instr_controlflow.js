@@ -1,7 +1,7 @@
 InstructionDefinition["jump"] = {
 		"name": 		"jump",
 		"displayName": 	"jump q",
-		"semantics": 	"PC←q",
+		"semantics": 	"PC&larr;q",
 		"description": 	"Unconditional jump to instruction at q.  q may be a label reference.",
 		"impl":			
 function(instr,vm){
@@ -13,7 +13,7 @@ function(instr,vm){
 InstructionDefinition["jumpz"] = {
 		"name": 		"jumpz",
 		"displayName": 	"jumpz q",
-		"semantics": 	"if( S[SP] = 0 ) PC←q; SP←SP-1",
+		"semantics": 	"if( S[SP] = 0 ) PC&larr;q; SP&larr;SP-1",
 		"description": 	"Conditional jump to instruction at q.  If the value on top of the stack is zero then " +
 						"set the next instruction to the label, or if an int then relative to the current PC. " +
 						"Then decrement the stack pointer (SP)",
@@ -31,7 +31,7 @@ function(instr,vm){
 InstructionDefinition["jumpi"] = {
 		"name": 		"jumpi",
 		"displayName": 	"jumpi",
-		"semantics": 	"PC←S[SP]+q; SP←SP-1",
+		"semantics": 	"PC&larr;S[SP]+q; SP&larr;SP-1",
 		"description": 	"Jump indirect. The value pointed to by the address on top of the stack is added to " +
 						"the argument q to determine the next value of the program counter (PC).",
 		"impl":			
@@ -46,7 +46,7 @@ function(instr,vm){
 InstructionDefinition["call"] = {
 		"name": 		"call",
 		"displayName": 	"call q",
-		"semantics": 	"FP←SP-q-1; S[FP]←PC; PC←S[SP]; SP←SP-1;",
+		"semantics": 	"FP&larr;SP-q-1; S[FP]&larr;PC; PC&larr;S[SP]; SP&larr;SP-1;",
 		"description": 	"q is the number of formal parameters",
 		"impl":			
 function(instr,vm){
@@ -64,7 +64,7 @@ function(instr,vm){
 InstructionDefinition["return"] = {
 		"name": 		"return",
 		"displayName": 	"return",
-		"semantics": 	"PC←S[FP]; EP←S[FP-2]; SP←FP-3; FP←S[FP-1];",
+		"semantics": 	"PC&larr;S[FP]; EP&larr;S[FP-2]; SP&larr;FP-3; FP&larr;S[FP-1];",
 		"description": 	"",
 		"impl":			
 function(instr,vm){

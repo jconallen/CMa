@@ -2,7 +2,7 @@
 InstructionDefinition["leq"] = {
 		"name": 		"leq",
 		"displayName":	"leq",
-		"semantics": 	"S[SP-1] ← S[SP-1] ≤ S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] ≤ S[SP]; SP &larr; SP - 1",
 		"description": 	"If the value at top of stack is greater than or equal to the next value on the stack.", 
 		"impl": 		
 function(instr,vm){
@@ -21,7 +21,7 @@ function(instr,vm){
 InstructionDefinition["gr"] = {
 		"name": 		"gr",
 		"displayName":	"gr",
-		"semantics": 	"S[SP-1] ← S[SP-1] > S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] > S[SP]; SP &larr; SP - 1",
 		"description": 	"", 
 		"impl": 		
 function(instr,vm){
@@ -39,7 +39,7 @@ function(instr,vm){
 InstructionDefinition["eq"] = {
 		"name": 		"eq",
 		"displayName":	"eq",
-		"semantics": 	"S[SP-1] ← S[SP-1] = S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] = S[SP]; SP &larr; SP - 1",
 		"description": 	"", 
 		"impl": 		
 function(instr,vm){
@@ -57,7 +57,7 @@ function(instr,vm){
 InstructionDefinition["neq"] = {
 		"name": 		"neq",
 		"displayName":	"neq",
-		"semantics": 	"S[SP-1] ← S[SP-1] != S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] != S[SP]; SP &larr; SP - 1",
 		"description": 	"", 
 		"impl": 		
 function(instr,vm){
@@ -76,7 +76,7 @@ function(instr,vm){
 InstructionDefinition["geq"] = {
 		"name": 		"eq",
 		"displayName":	"eq",
-		"semantics": 	"S[SP-1] ← S[SP-1] ≥ S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] ≥ S[SP]; SP &larr; SP - 1",
 		"description": 	"", 
 		"impl": 		
 function(instr,vm){

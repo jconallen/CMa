@@ -2,7 +2,7 @@
 InstructionDefinition["mark"] = {
 		"name": 		"mark",
 		"displayName":	"mark",
-		"semantics": 	"S[SP+1]←EP; S[SP+2]←FP; SP←SP+2;",
+		"semantics": 	"S[SP+1]&larr;EP; S[SP+2]&larr;FP; SP&larr;SP+2;",
 		"description": 	"Start a new stack frame.  Put the FP and EP on top of the stack.", 
 		"impl": 		
 function(instr,vm){
@@ -17,7 +17,7 @@ function(instr,vm){
 InstructionDefinition["dup"] = {
 		"name": 		"dup",
 		"displayName":	"dup",
-		"semantics": 	"SP←SP+1;S[SP]←S[SP-1]",
+		"semantics": 	"SP&larr;SP+1;S[SP]&larr;S[SP-1]",
 		"description": 	"Duplicate the value on top of the stack.", 
 		"impl": 		
 function(instr,vm){
@@ -30,7 +30,7 @@ function(instr,vm){
 InstructionDefinition["alloc"] = {
 		"name": 		"alloc",
 		"displayName":	"alloc q",
-		"semantics": 	"SP←SP+q",
+		"semantics": 	"SP&larr;SP+q",
 		"description": 	"Increment the SP by the amount q.", 
 		"impl": 		
 function(instr,vm){
@@ -42,7 +42,7 @@ function(instr,vm){
 InstructionDefinition["slide"] = {
 		"name": 		"slide",
 		"displayName":	"slide q m",
-		"semantics": 	"SP←SP+q",
+		"semantics": 	"SP&larr;SP+q",
 		"description": 	"", 
 		"impl": 		
 function(instr,vm){

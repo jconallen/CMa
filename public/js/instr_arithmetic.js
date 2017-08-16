@@ -1,7 +1,7 @@
 InstructionDefinition["neg"] = {
 		"name": 		"neg",
 		"displayName": 	"neg",
-		"semantics": 	"S[SP] ← -S[SP]",
+		"semantics": 	"S[SP] &larr; -S[SP]",
 		"description": 	"Replaces the top of the stack with the negative value.",
 		"imple":		
 function(instr,vm){
@@ -20,7 +20,7 @@ function(instr,vm){
 InstructionDefinition["add"] = {
 		"name": 		"add",
 		"displayName": 	"add",
-		"semantics": 	"S[SP-1] ← S[SP-1] + S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] + S[SP]; SP &larr; SP - 1",
 		"description": 	"The top two values on the stack are added together and replaced but the result.",
 		"impl":			
 function(instr,vm){
@@ -39,7 +39,7 @@ function(instr,vm){
 InstructionDefinition["sub"] = {
 		"name": 		"sub",
 		"displayName": 	"sub",
-		"semantics": 	"S[SP-1] ← S[SP-1] - S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] - S[SP]; SP &larr; SP - 1",
 		"description": 	"The top value on the stack is subtracted from the next value on the stack " +
 						"and the result placed back on the stack.",
 		"impl":			
@@ -58,7 +58,7 @@ function(instr,vm){
 InstructionDefinition["mul"] = {
 		"name": 		"mul",
 		"displayName": 	"mul",
-		"semantics": 	"S[SP-1] ← S[SP-1] * S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] * S[SP]; SP &larr; SP - 1",
 		"description": "The top two values on the stack are multiplied and replaced with the result.",
 		"impl":			
 function(instr,vm){
@@ -78,7 +78,7 @@ function(instr,vm){
 InstructionDefinition["div"] = {
 		"name": 		"div",
 		"displayName": 	"div",
-		"semantics": 	"S[SP-1] ← S[SP-1] / S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] / S[SP]; SP &larr; SP - 1",
 		"description": 	"The top value on the stack is divided into the next value on the stack. " +
 						"If either value is a float the result is a float.  If the are both ints then the " +
 						"result is an int and there is no remainder.",
@@ -100,7 +100,7 @@ function(instr,vm){
 InstructionDefinition["mod"] = {
 		"name": 		"mod",
 		"displayName": 	"mod",
-		"semantics": 	"S[SP-1] ← S[SP-1] mod S[SP]; SP ← SP - 1",
+		"semantics": 	"S[SP-1] &larr; S[SP-1] mod S[SP]; SP &larr; SP - 1",
 		"description": 	"The top value on the stack is divided into the next value on the stack. " +
 						"The value of the remainder is placed on the stack as an integer.",
 		"impl":			
