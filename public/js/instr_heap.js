@@ -26,8 +26,8 @@ InstructionDefinition["enter"] = {
 				"why the EP register exists at all.  What's the big deal with just checking to see if the SP and HP overlap?",
 		"impl":			
 function _new(inst,vm){
-	var m = inst.argument1AsInt();
-	vm.EP = vm.SP + m;
+	//var m = inst.argument1AsInt();
+	vm.EP = vm.SP;
 //	if( vm.HP < vm.EP ) {
 //		throw "Stack Overflow.";
 //	}
