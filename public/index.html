@@ -36,7 +36,7 @@
 						<label class="mr-sm-2" for="sizeStack">Stack View</label>
 		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeStackView" placeholder="32" style="width:60px">
 	
-					  	<button type="submit" class="btn btn-primary" onclick="createVM()">Create VM</button>
+					  	<button type="submit" class="btn btn-primary" onclick="createVM()">Re-Create VM</button>
 			    		
 					</form>
 				</div>
@@ -197,9 +197,14 @@
 						</button>
 						
 					<div class="panel panel-default" style="margin-top: 10px;">
-					  <div class="panel-heading" id="NextInstr"></div>
-					  <div class="panel-body" id="NextInstrDescription" style="min-height: 120px; max-height: 120px;overflow-y: scroll;">
-					  </div>
+						<div class="panel-heading clearfix" >
+							<div class="btn-group pull-right">
+						        <a href="#" class="btn btn-default btn-sm" onclick="showImplementation()"><span class="glyphicon glyphicon-file"></span>impl</a>
+					  		</div>
+					  		<h4 id="NextInstr">Panel header</h4>
+					  	</div>
+						<div class="panel-body" id="NextInstrDescription" style="min-height: 120px; max-height: 120px;overflow-y: scroll;">
+						</div>
 					</div>
 				
 				</div>
@@ -396,6 +401,19 @@
 		updateDisplay();		
 	}
 	
+	function showImplementation(){
+		if( VM.isRunning()  ) {
+			var instr = VM.C[VM.PC];
+			
+			if( instr && instr.def ){
+				var def = instr.def;
+				if( def.impl ) {
+					alert(def.impl);
+				}
+			}
+		}
+	}
+	
 	function executeNext(){
 		try{
 			VM.executeNextInstruction();
@@ -436,7 +454,6 @@
 	function updateNextInstructionInformation(instr){
 		var def = instr.def;
 		if( VM.isRunning() && def ) {
-
 			var info = "";
 			if( def.semantics ){
 				info += '<p><code>'+def.semantics+'</code></p>';
