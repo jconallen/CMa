@@ -28,10 +28,16 @@ function parseLine(line, lineNo) {
 		
 		if( code.includes(' ') ){  // then an argument is defined
 			var l = code.split(' ');
+			var args = [];
 			
+			for(var i=0;i<l.length; i++){
+				if( l[i] && l[i]!='') {
+					args.push(l[i]);
+				}
+			}
 			
-			code = l[0].trim();
-			var argVal = l[1].trim();
+			code = args[0].trim();
+			var argVal = args[1].trim();
 			
 			if( isNaN(argVal) ) {
 				//assume is a label
@@ -44,11 +50,10 @@ function parseLine(line, lineNo) {
 				}
 			}
 			
-			if( l.length > 2 ) {
-				
+			if( args.length>2 ) {
 				
 				// there is a second argument
-				var arg2Val = l[2].trim();
+				var arg2Val = args[2].trim();
 				
 				if( isNaN(arg2Val) ) {
 					//assume is a label
