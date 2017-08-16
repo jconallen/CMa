@@ -58,3 +58,7 @@ typings/
 .env
 
 /.DS_Store
+/package.json
+/.project
+/app.js
+/manifest.yml
