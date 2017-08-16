@@ -277,9 +277,9 @@ class VirtualMachine {
 	}
 
 	push(value) {
-		if( this.SP >= this.EP ) {
-			throw "Stack overflow.  Attempt to push on full stack.";
-		}
+//		if( this.SP >= this.EP ) {
+//			throw "Stack overflow.  Attempt to push on full stack.";
+//		}
 		this.SP++;
 		this.S[this.SP] = value;
 	}
