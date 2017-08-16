@@ -28,7 +28,6 @@
        mark       ; create stack frame (EP|FP|PC)
        loadc main ; put address of main on stack
        call 0     ; call main function, no arguments
-       print      ; print result int main()
        halt       ;
        
 ;===============================================
@@ -47,7 +46,7 @@
        storer 3   ; put return value in local var c (third local var)
        loadr 3    ; copy c to top of stack
        print      ; print the top of stack
-       return 3   ; 3 local vars + no formal params
+       return     ;
        
 ;===============================================
 ;   define the function add 
@@ -58,6 +57,6 @@
        loadr 2    ; now copy local var y on stack
        add        ; x+y
        add        ; (x+y) + z
-       storer -2  ;
-       return 2   ; no local vars + two formal params
+       storer -3  ; put top of stack in return var
+       return     ; 
        

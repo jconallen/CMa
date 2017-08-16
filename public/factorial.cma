@@ -18,45 +18,53 @@
 ;===============================================
 ;    set up the program call to main, and halt
        
-       alloc 1    ; return value of call note: this is before the mark
-       mark       ; create stack frame
+       alloc 1    ; allocate space for return of int main()
+       mark       ; create stack frame (EP|FP|PC)
        loadc main ; put address of main on stack
-       call       ; call main function
- end:  halt       ;
-       
+       call 0     ; call main function, no arguments
+       halt       ;
+        
 ;===============================================
 ;    the main function
        
- main: enter 3    ; there is 1  item for the stack (f)
+ main: enter 1    ; there is 1  item for the stack (f)
        alloc 1    ; allocate variable f
        alloc 1    ; allocate space for ret value
        mark       ;
+       loadc 4    ; first formal param on stack constant 3
        loadc _fac ; put addr of function on stack
-       call       ;
+       call 1     ; call with one parameter
        storer 1   ; put return value in local var f;
        loadr 1    ; put it on top of stack
        print      ; print the top of stack
-       return 1   ;  1 local vars
+       return     ;  
 
 
 _fac:  enter 1       ; 
-       loadr -1      ; put local n on top of stack
+       loadr 1       ; put parameter n on top of stack
        loadc 1       ; put constant 1 on top of stack
        leq           ; compare  n <= 1
        jumpz A       ; if it is not, then jump to A 
        loadc 1       ; otherwise put constant 1 on top of stack
-       storer -1     ;     update return value to the value at top of stack (=1). 
-       return 3      ;     return this instance of function
-   A:  loadr -1      ; put value of local variable n on top of stack
-       loadr -1      ; put value of local variable n on top of stack (again) 
-                     ;    - now value of n is top two values on stack
+       storer -3     ; update return value to the value at top of stack. 
+       return        ; 
+   A:  loadr 1       ; put value param n on top of stack
        loadc 1       ; put constant 1 on top of stack
        sub           ; subtract, putting value on top of stack ( n-1 )
+       alloc 1       ; allocate space for return value
        mark          ; prepare to call function
-       loadc _faq    ; put address of function on top of stack
-       call          ; instantiate function, this invokes the function and 
-                     ;   places result back on top of stack
+       loadr 2       ; put result of subtraction on stack as formal parameter
+       loadc _fac    ; put address of function on top of stack
+       call 1        ; call fac one formal parameter
+       loadr 1       ; put n on stack for mul
        mul           ; multiply the top two values on stack (one of which 
                      ;   is the return value of the prev fac call)
-       storer -1     ; put value of local n on top of stack
-       return 3      ; return this instance of the function
+       storer -3     ; put result in return slot
+       return        ; 
+       
+       
+       
+       
+       
+       
+       

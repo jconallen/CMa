@@ -43,7 +43,7 @@ InstructionDefinition["jumpi"] = {
 InstructionDefinition["call"] = {
 		"name": 		"call",
 		"displayName": 	"call q",
-		"semantics": 	"FP←SP; tmp←PC; PC←S[SP]; S[SP]←tmp;",
+		"semantics": 	"FP←SP-q-1; S[FP]←PC; PC←S[SP]; SP←SP-1;",
 		"description": 	"q is the number of formal parameters",
 		"impl":			function(instr,vm){
 			                var q = 0;
@@ -54,23 +54,18 @@ InstructionDefinition["call"] = {
 							vm.S[vm.FP] = new Value("ptr", vm.PC);
 							vm.PC = vm.S[vm.SP];
 							vm.SP = vm.SP -1;
-//							var tmp = vm.PC;
-//							vm.PC = vm.S[vm.SP].value;
-//							vm.S[vm.SP] = new Value("int", tmp);
 						}
 }
 
 InstructionDefinition["return"] = {
 		"name": 		"return",
-		"displayName": 	"return q",
-		"semantics": 	"PC←S[FP]; EP←S[FP-2]; if(EP>=HP) error(Stack Overflow); SP←FP-q; FP←S[FP-1];",
+		"displayName": 	"return",
+		"semantics": 	"PC←S[FP]; EP←S[FP-2]; SP←FP-3; FP←S[FP-1];",
 		"description": 	"",
 		"impl":			function(instr,vm){
-							var q = instr.argument1AsInt();
 							vm.PC = vm.S[vm.FP].value; 
 							vm.EP = vm.S[vm.FP-2].value;
-							//if( vm.EP >= vm.HP ) throw "Stack Overflow";
-							vm.SP = vm.FP-q;
+							vm.SP = vm.FP-3;
 							vm.FP = vm.S[vm.FP-1].value;
 						}
 }

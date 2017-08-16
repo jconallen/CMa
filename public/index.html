@@ -19,8 +19,47 @@
 <body>
     
 <div class="container" >
+
+	<div class="container" style="padding:15px;">
+		<div class="row">
+	    	<div class="col-md-4">
+	    		<h1>CMa Virtual Machine</h1>
+	    	</div>
+	    	
+	    	<div class="col-md-6">
+	    		<div class="btn-group">
+					<form class="form-inline" style="padding:15px">
+					
+						<label class="mr-sm-2" for="sizeMainMemory">Main Memory</label>
+		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeMainMemory" placeholder="64" style="width:60px">
+	
+						<label class="mr-sm-2" for="sizeStack">Stack View</label>
+		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeStackView" placeholder="32" style="width:60px">
+	
+					  	<button type="submit" class="btn btn-primary" onclick="createVM()">Create VM</button>
+			    		
+					</form>
+				</div>
+	    	</div>
+	    	<div class="col-md-2">
+	    	
+				<div class="dropdown">
+					<button type="button" class="btn btn-default dropdown-toggle" id="loadSample" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					 	<span class="glyphicon glyphicon-open-file"></span>Load Sample <span class="caret"></span>
+								
+					</button>
+					<ul class="dropdown-menu" >
+						  <li><a href="#" onclick="loadSample('simple.cma')">Simple</a></li>
+						  <li><a href="#" onclick="loadSample('sampleFcnCall.cma')">Sample Function Call</a></li>
+						  <li><a href="#" onclick="loadSample('factorial.cma')">Recursive Function</a></li>
+					</ul>				
+				</div>
+	    	
+	    	</div>
+	 	</div>
+	</div>
     
-    <h1>CMa Virtual Machine</h1>
+    
     
 <div class="container">
 
@@ -60,7 +99,6 @@
 	            	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					    <span aria-hidden="true">&times;</span>
 					</button>
-  					<strong>Oh snap!</strong> Change a few things up and try submitting again.
 					</div>
 	            
 	            </div>
@@ -154,13 +192,10 @@
 						<button type="button" class="btn btn-default" onclick="restart()">
 							<span class="glyphicon glyphicon-refresh"></span> Restart
 						</button>
-						<button type="button" class="btn btn-default" onclick="openLoadProgramDialog()">
-							<span class="glyphicon glyphicon-open-file"></span> Load
-						</button>
 						<button type="button" class="btn btn-default" onclick="editProgram()">
 							<span class="glyphicon glyphicon-pencil"></span> Edit 
 						</button>
-					
+						
 					<div class="panel panel-default" style="margin-top: 10px;">
 					  <div class="panel-heading" id="NextInstr"></div>
 					  <div class="panel-body" id="NextInstrDescription" style="min-height: 120px; max-height: 120px;overflow-y: scroll;">
@@ -262,8 +297,6 @@
 			</div>
 		</div>
 
-	
-
 	</div>
 	
 	</div> <!--  outer container -->
@@ -281,16 +314,14 @@
 	
 	<script type="text/javascript">	
 
+	var SourceCode="";
 
-	var SourceCode = starter_prog_src;
-	var starterProgram = parseProgram(SourceCode);
-
-	var PROGRAM_SPACE = 32;
+	var PROGRAM_SPACE = 64;
 	var MAIN_MEMORY = 64;
 	var STACK_VIEW = 32;
 	var MemoryNotes = [];
 	var VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY, STACK_VIEW);
-	VM.loadProgram( starterProgram.instructions, starter_memory );
+	//VM.loadProgram( starterProgram.instructions, starter_memory );
 	
 	function parseCode(){
 		$('#ParseError').hide();
@@ -337,6 +368,34 @@
 		updateDisplay();
 	}
 	
+	function loadSample(sourceFile){
+		$.ajax({
+		       url: '/'+sourceFile,
+		       dataType: 'text',
+		       success: function(data) {
+		    		var SourceCode = data;
+		    		var starterProgram = parseProgram(SourceCode);
+		    		VM.loadProgram( starterProgram.instructions );
+			   		updateDisplay();
+		       }
+		    });
+	}
+	
+	function createVM(){
+		var mm = $('#sizeMainMemory').val();
+		var sv = $('#sizeStackView').val();
+		if( !isNaN(mm) && mm>0 && mm<1024 ){
+			MAIN_MEMORY = mm;
+		}
+		if( !isNaN(sv) && sv>0 && sv<MAIN_MEMORY ){
+			STACK_VIEW = sv;
+		} else {
+			STACK_VIEW = MAIN_MEMORY / 2;
+		}
+		VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY, STACK_VIEW);
+		updateDisplay();		
+	}
+	
 	function executeNext(){
 		try{
 			VM.executeNextInstruction();
@@ -375,8 +434,9 @@
 	}
 	
 	function updateNextInstructionInformation(instr){
-		if( VM.isRunning()) {
-			var def = instr.def;
+		var def = instr.def;
+		if( VM.isRunning() && def ) {
+
 			var info = "";
 			if( def.semantics ){
 				info += '<p><code>'+def.semantics+'</code></p>';
@@ -607,7 +667,9 @@
 	$( document ).ready(function() {
 		updateDisplay();
 		$("#out").html("");
-
+		$('#sizeProgramSpace').val(PROGRAM_SPACE);
+		$('#sizeMainMemory').val(MAIN_MEMORY);
+		$('#sizeStackView').val(STACK_VIEW);
 	});
 
 	</script>

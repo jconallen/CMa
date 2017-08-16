@@ -1,0 +1,5 @@
+      loadc 1  
+      loadc 2 
+      add     ; 1 + 2
+      print   ; print result
+      halt

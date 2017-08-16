@@ -47,8 +47,7 @@ InstructionDefinition["store"] = {
 		"displayName":	"store m",
 		"semantics": 	"S[S[SP]]←S[SP] with no argument otherwise; for(i←0; i&lt;m; i++) { S[S[SP]+i]←S[SP-m+i]; } SP←SP+m-1;",
 		"description": 	"At the location refrenced by the top of the stack, store the value " +
-						"next on the stack.  If there is an argument, m, then store the m consequtive values " +
-						"to the heap. ",
+						"next on the stack.  If there is an argument, m, then store the m consequtive values ",
 			"impl": 	function(instr,vm){
 							if( instr.argu1 ) { 
 								var m = instr.argument1AsInt();
@@ -119,12 +118,23 @@ InstructionDefinition["loadr"] = {
 InstructionDefinition["storer"] = {
 		"name": 		"storer",
 		"displayName":	"storer q",
-		"semantics": 	"S[FP+q] ← S[SP]; SP ← SP - 1;",
+		"semantics": 	"S[FP+q] ← S[SP]; ",
 		"description": 	"Store the value at the top of the stack relative address q (FP+q)",
 		"impl":			function(instr,vm){
 							var q = instr.argument1AsInt();
 							vm.S[vm.FP+q] = vm.S[vm.SP];
-							vm.SP = vm.SP-1;
+						}
+}
+
+
+InstructionDefinition["storerc"] = {
+		"name": 		"storerc",
+		"displayName":	"storer c",
+		"semantics": 	"S[FP+q] ← S[SP]; ",
+		"description": 	"Store the value at the top of the stack relative address q (FP+q)",
+		"impl":			function(instr,vm){
+							var q = instr.argument1AsInt();
+							vm.S[vm.FP+q] = vm.S[vm.SP];
 						}
 }
 

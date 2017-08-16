@@ -1,6 +1,0 @@
-x: loadc 1;
-main: loadc 2;
-call q;
-halt;
-q: print x
-jump 3;
