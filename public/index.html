@@ -146,6 +146,7 @@
     </div>
 </div>
 
+
 </div>
 
     
@@ -204,6 +205,9 @@
 						</button>
 						<button type="button" class="btn btn-default" onclick="editProgram()">
 							<span class="glyphicon glyphicon-pencil"></span> Edit 
+						</button>
+						<button type="button" class="btn btn-default" onclick="viewSource()">
+							<span class="glyphicon glyphicon-file"></span> Source 
 						</button>
 						
 					<div class="panel panel-default" style="margin-top: 10px;">
@@ -387,7 +391,7 @@
 		       url: sourceFile,
 		       dataType: 'text',
 		       success: function(data) {
-		    		var SourceCode = data;
+		    		SourceCode = data;
 		    		var starterProgram = parseProgram(SourceCode);
 		    		VM.loadProgram( starterProgram.instructions );
 			   		updateDisplay();
@@ -428,6 +432,12 @@
 		$('#ProgramStorePanel').height( size );
 		$('#StackPanel').height( size );
 		$('#HeapPanel').height( size );
+	}
+	
+	function viewSource(){
+		var w = window.open();
+		var html = $("#toNewWindow").html();
+		$(w.document.body).html('<pre>' + SourceCode + '</pre>');
 	}
 	
 	function executeNext(){
