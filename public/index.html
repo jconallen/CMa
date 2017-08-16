@@ -28,7 +28,7 @@
 	    	
 	    	<div class="col-md-6">
 	    		<div class="btn-group">
-					<form class="form-inline" style="padding:15px">
+					<form class="form-inline" >
 					
 						<label class="mr-sm-2" for="sizeMainMemory">Main Memory</label>
 		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeMainMemory" placeholder="64" style="width:60px">
@@ -36,8 +36,18 @@
 						<label class="mr-sm-2" for="sizeStack">Stack View</label>
 		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeStackView" placeholder="32" style="width:60px">
 	
-					  	<button type="submit" class="btn btn-primary" onclick="createVM()">Re-Create VM</button>
+					  	<button type="submit" class="btn btn-default" onclick="createVM()">Re-Create VM</button>
 			    		
+					</form>
+				</div>
+				<div class="btn-group">
+					<form class="form-inline" style="padding:5px">
+						<div class="input-group">
+					      <input type="text" class="form-control" placeholder="600px" id="viewSize" size="2">
+					      <span class="input-group-btn">
+					        <button class="btn btn-default" type="button" onclick="setViewSize()">Set View Size</button>
+					      </span>
+					    </div><!-- /input-group -->
 					</form>
 				</div>
 	    	</div>
@@ -231,7 +241,7 @@
 					  </thead>
 					</table>
 			  	</div>
-			  	<div class="panel-body" style="overflow: auto; height: 600px; padding:0px; ">
+			  	<div class="panel-body" id="ProgramStorePanel" style="overflow: auto; padding:0px; ">
 					<table class="table table-fixed header-fixed "  id="ProgramStore">
 					
 					</table>
@@ -255,7 +265,7 @@
 					  </thead>
 					</table>
 			  	</div>
-				<div class="panel-body" style="overflow: auto; height: 600px; padding:0px">
+				<div class="panel-body" id="StackPanel" style="overflow: auto; padding:0px">
 					<table class="table " id="Stack">
 					  
 					</table>
@@ -279,7 +289,7 @@
 				  		</thead>
 				  	</table>
 			  	</div>
-				<div class="panel-body" style="overflow: auto; height: 600px; padding:0px">
+				<div class="panel-body" id="HeapPanel" style="overflow: auto; padding:0px">
 					<table class="table" id="Heap">
 					</table>
 				</div>
@@ -324,6 +334,7 @@
 	var PROGRAM_SPACE = 64;
 	var MAIN_MEMORY = 64;
 	var STACK_VIEW = 32;
+	var VIEW_HEIGHT = "100px";
 	var MemoryNotes = [];
 	var VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY, STACK_VIEW);
 	
@@ -411,6 +422,13 @@
 				}
 			}
 		}
+	}
+	
+	function setViewSize(){
+		var size = $('#viewSize').val();
+		$('#ProgramStorePanel').height( size );
+		$('#StackPanel').height( size );
+		$('#HeapPanel').height( size );
 	}
 	
 	function executeNext(){
@@ -686,6 +704,11 @@
 		$('#sizeProgramSpace').val(PROGRAM_SPACE);
 		$('#sizeMainMemory').val(MAIN_MEMORY);
 		$('#sizeStackView').val(STACK_VIEW);
+		$('#ProgramStorePanel').height( VIEW_HEIGHT );
+		$('#StackPanel').height( VIEW_HEIGHT );
+		$('#HeapPanel').height( VIEW_HEIGHT );
+		
+		VIEW_HEIGHT
 	});
 
 	</script>
