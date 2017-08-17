@@ -2,15 +2,88 @@
 
 var InstructionDefinition = {};
 
+class Argument {
+	constructor( value, type ){
+		if( type == undefined ) {
+			type = "int";
+		}
+		// type can be "int", "float", "char", "label"
+		if( type != "int" && type != "float" && type != "char" && type != "label"){
+			throw "Invalid type '" + type + "' intializing Value";
+		}
+
+		this._type = type;
+		this._value = value;
+	}
+	
+	get type(){
+		return this._type;
+	}
+	
+	get value(){
+		if( this.isLabel() ) {
+			throw "Unable to create value from label.";
+		}
+		var v = new Value(this._value, this._type );
+		return v;
+	}
+	
+	get label(){
+		if( !this.isLabel() ) {
+			throw "Not a label.";
+		}
+		return this._value;
+	}
+	
+	asInt(){
+		if( this._type == 'label' ) {
+			throw "Argument type is label and can not be directly converted to int";
+		}
+		return parseInt(this._value);
+	}
+	
+	asChar(){
+		if( this._type == 'label' ) {
+			throw "Argument type is label and can not be directly converted to char";
+		}
+	
+		if( this._value == parseInt(this._value) ){
+			String.fromCharCode(this.value);
+		}
+	}
+	
+	isLabel(){
+		return this._type=='label';
+	}
+	
+	toString(){
+		var str = "";
+		if( this.type=="int" ){
+			str += this.value;
+		} else if( this.type=="float" ){
+			if( this.value % 1 ){				
+				str += this.value;
+			} else {
+				str += this.value + ".0"; 
+			}
+		} else if( this.type=="char" ) {
+			str += "'" + String.fromCharCode(this.value) + "'";
+		} else if( this.type=="label" ) {
+			str += this.label;
+		} 
+		return ""+this._value;
+	}
+	
+}
+
 class Instruction {
 	
-	constructor( def, arg1, arg2, label, comment ) {
-		this.def = def;
-		this._arg1 = arg1;
-		this._arg2 = arg2;
-		this._label = label;
-		this.breakpoint = false;
-		this._comment = comment;
+	constructor( def ) {
+		this._def = def;
+		this._args = [];
+		this._label = null;
+		this._breakpoint = false;
+		this._comment = null;
 	};
 	
 	toString(){
@@ -28,22 +101,16 @@ class Instruction {
 		return "";
 	}
 	
-	get arg1(){
-		if( this._arg1 ) {
-			return this._arg1;
-		};
-		return "";
-	}
-	
-	get arg2(){
-		if( this._arg2 ) {
-			return this._arg2;
-		};
-		return "";
+	set label(val){
+		this._label = val;
 	}
 	
 	get name(){
-		return this.def.name;
+		return this._def.name;
+	}
+	
+	set name(val) {
+		return this._name = val;
 	}
 	
 	get comment(){
@@ -53,54 +120,69 @@ class Instruction {
 		return "";
 	}
 
+	set comment(val){
+		this._comment = val;
+	}
+
+	get def(){
+		return this._def;
+	}
+	
+	set def(val) {
+		this._def = val;
+	}
+	
+	get args(){
+		return this._args;
+	}
+	
+	arg(i){
+		if( i>=this._args.length || i<0 ){
+			throw "Invalid argument index " + i + " args[" + this._args.length + "]";
+		}
+		return this._args[i];
+	}
+	
+	hasArg(i){
+		return (i<this._args.length && i>0);
+	}
+	
+	addArg( arg ){
+		this._args.push( arg );
+	}
+	
+	argAsInt(i){
+		if( i>=this._args.length || i<0 ){
+			throw "Invalid argument index " + i + " args[" + this._args.length + "]";
+		}
+		return this._args[i].asInt();
+	}
+	
+	argAsValue(i){
+		if( i>=this._args.length || i<0 ){
+			throw "Invalid argument index " + i + " args[" + this._args.length + "]";
+		}
+		var a = this._args[i];
+		if( a._type == "label") {
+			throw "Can not convert a argument of type label to a stack value.";
+		}
+		var v = new Value(a._value, a._type);
+		return v;
+	}
+	
 	toFormattedString(){
 		if( this.def ) {
-			var str =  '<b>' + this.def.name + '</b>';
-			if( this._arg1 ) {
-				if( this._arg1.type=="label" ) {
-					str += " <i>" + this._arg1.toString() + "</i>";
-				} else {
-					str += " " + this._arg1.toString();
-				}
-			};
-			
-			if( this._arg2 ) {
-				if( this._arg2.type=="label" ) {
-					str += " <i>" + this._arg2.toString() + "</i>";
-				} else {
-					str += " " + this._arg2.toString();
-				}
-			};
-			
+			var str =  '<b>' + this._def.name + '</b>';
+			for(var i=0; i<this._args.length; i++){
+				str += " " + this._args[i].toString();
+			}			
 			return str;
 		}
 		
 		return "-";
 		
 	};
-	
-	// returns the argument value as an int, thows error if it is not.
-	argument1AsInt(){
-		if( this._arg1.type == "int" || this._arg1.type == "ptr" || this._arg1.type == "char") {
-			return this._arg1.value;
-		} else {
-			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this._arg1.type + '.';
-		}
-			
-	}
-
-	// returns the argument value as an int, thows error if it is not.
-	argument2AsInt(){
-		if( this._arg2.type == "int" || this._arg2.type == "ptr" || this._arg2.type == "char") {
-			return this.arg2.value;
-		} else {
-			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this._arg2.type + '.';
-		}
-			
-	}
-	
+		
 	toggleBreakpoint(){
 		this.breakpoint = !this.breakpoint;
 		return this.breakpoint;
@@ -109,17 +191,32 @@ class Instruction {
 };
 
 class Value {
-	constructor( type, value ){
+	constructor( value, type ){
+		if( type == undefined ) {
+			type = "int";
+		}
+		// valid types are "int" "float" "char"
+		if( type != "int" && type != "float" && type != "char" ){
+			throw "Invalid type '" + type + "' intializing Value";
+		}
 		this.type = type;
 		this.value = value;
 	}
 	
-	asIntOrPtr(){
-		if( this.type == "int" || this.type == "ptr" || this.type == "char") {
+	asInt(){
+		if( this.type == "int" || this.type == "char") {
 			return this.value;
 		} else {
-			throw 'Error: Value expected to be an int or ptr, not ' + this.argument.type + '.';
+			throw 'Value expected to be an int or char, not float.';
 		}
+	}
+	
+	isNumber(){
+		return this._type=='int' || this._type=='float';
+	}
+	
+	isChar(){
+		return this._type=="char";
 	}
 	
 	toString(){
@@ -133,15 +230,9 @@ class Value {
 			} else {
 				str += this.value + ".0"; 
 			}
-		} else if( this.type=="ptr" ) {
-			str += this.value;
 		} else if( this.type=="char" ) {
 			str += "'" + String.fromCharCode(this.value) + "'";
-		} else if( this.type=="label" ) {
-			str += this.value;
-		} else {
-			str += "UNKNOWN";
-		}
+		} 
 		return str;
 	}
 	
@@ -149,9 +240,9 @@ class Value {
 
 const NOP = new Instruction(null,null,null);
 
-const NULL_VALUE = new Value("int", 0 );
-const TRUE = new Value("int", 1 );
-const FALSE = new Value("int", 0 );
+const NULL_VALUE = new Value( 0 );
+const TRUE = new Value( 1 );
+const FALSE = new Value( 0 );
 
 
 class VirtualMachine {
@@ -262,7 +353,7 @@ class VirtualMachine {
 
 	peek() {
 		if( this.SP < 0 ) {
-			throw "Stack underflow.  Attempt to pop on empty stack.";
+			throw "Stack underflow.  Attempt to peek empty stack.";
 		}
 		var v = this.S[this.SP];
 		return v;
@@ -297,17 +388,17 @@ class VirtualMachine {
 	}
 	
 	getAddressFromArgument(arg){
-		if( arg.type=="ptr" ) {
+		if( arg.isLabel() ) {
 			for(var i=0; i<this.PROGRAM_STORE_SIZE; i++) {
 				var instr = this.C[i];
-				if( arg.value == instr.label ){
+				if( arg.label == instr.label ){
 					return i;
 				}
 			}
 		} else if( arg.type=="int" ){
 			return arg.value;
 		}
-		throw "Error: unable to convert argument to physical address.";
+		throw "Error: unable to convert label to physical address.";
 	}
 	
 }

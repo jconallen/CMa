@@ -5,7 +5,7 @@ InstructionDefinition["jump"] = {
 		"description": 	"Unconditional jump to instruction at q.  q may be a label reference.",
 		"impl":			
 function(instr,vm){
-	var q = vm.getAddressFromArgument(instr.arg1);
+	var q = vm.getAddressFromArgument(instr.arg(0));
 	vm.PC = q-1;  // sub 1 because vm process next instr will auto increment;
 }
 }
@@ -19,7 +19,7 @@ InstructionDefinition["jumpz"] = {
 						"Then decrement the stack pointer (SP)",
 		"impl":			
 function(instr,vm){
-	var q = vm.getAddressFromArgument(instr.arg1);
+	var q = vm.getAddressFromArgument(instr.arg(0));
 	if( vm.S[vm.SP].value == 0 ) {
 		vm.PC = q; 
 	}
@@ -36,7 +36,7 @@ InstructionDefinition["jumpi"] = {
 						"the argument q to determine the next value of the program counter (PC).",
 		"impl":			
 function(instr,vm){
-	var q = instr.argument1AsInt();
+	var q = instr.arg(0).asInt();
 	vm.PC = vm.S[vm.SP].value + q - 1; // sub 1 because vm process next instr will auto increment;
 	// decrement the SP
 	vm.SP = vm.SP - 1;
@@ -51,11 +51,11 @@ InstructionDefinition["call"] = {
 		"impl":			
 function(instr,vm){
     var q = 0;
-	if( instr.arg1 ) {
-		q = instr.argument1AsInt();
+	if( instr.arg(0) ) {
+		q = instr.arg(0).asInt();
 	}
 	vm.FP = vm.SP - q - 1;
-	vm.S[vm.FP] = new Value("ptr", vm.PC);
+	vm.S[vm.FP] = new Value(vm.PC);
 	vm.PC = vm.S[vm.SP];
 	vm.SP = vm.SP -1;
 }

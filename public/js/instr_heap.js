@@ -14,7 +14,7 @@ function _new(inst,vm){
 	}
 	
 	vm.HP = hp;
-	vm.push( new Value("ptr", hp) );
+	vm.push( new Value(hp) );
 }
 }
 

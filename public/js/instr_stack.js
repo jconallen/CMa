@@ -6,9 +6,9 @@ InstructionDefinition["mark"] = {
 		"description": 	"Start a new stack frame.  Put the FP and EP on top of the stack.", 
 		"impl": 		
 function(instr,vm){
-	vm.S[vm.SP+1] = new Value("ptr", vm.EP);
-	vm.S[vm.SP+2] = new Value("ptr", vm.FP);
-	vm.S[vm.SP+3] = new Value("ptr", 0 ); // for the PC
+	vm.S[vm.SP+1] = new Value(vm.EP);
+	vm.S[vm.SP+2] = new Value(vm.FP);
+	vm.S[vm.SP+3] = new Value( 0 ); // for the PC
 	vm.SP = vm.SP + 3;
 }
 }
@@ -34,7 +34,7 @@ InstructionDefinition["alloc"] = {
 		"description": 	"Increment the SP by the amount q.", 
 		"impl": 		
 function(instr,vm){
-	var q = instr.argument1AsInt();
+	var q = instr.argAsInt(0);
 	vm.SP = vm.SP + q;
 }
 }
@@ -47,8 +47,8 @@ InstructionDefinition["slide"] = {
 		"impl": 		
 function(instr,vm){
 
-	var q = instr.argument1AsInt();
-	var m = instr.argument2AsInt();
+	var q = instr.argAsInt(0);
+	var m = instr.argAsInt(1);
 
 	if(q>0 ) {
 		if(m==0) sp = sp-q;

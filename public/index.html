@@ -335,7 +335,6 @@
     <script src="js/instr_heap.js"></script>
 	<script src="js/instr_stack.js"></script>
 	<script src="js/parser.js"></script>
-	<script src="js/starter_program.js"></script>
 	
 	<script type="text/javascript">	
 
@@ -356,9 +355,10 @@
 		
 		if( result.errors.length>0 ) {
 			var errStr = "";
-			for( vare=0; e<error.length; e++){
-				var er = error[e];
-				errStr += "\n"+ e;
+			for( var e=0; e<errors.length; e++){
+				var er = errors[e];
+				if( e>0 ) errStr += "<br/>";
+				errStr += er;
 			}
 			$('#ParseError').html(errStr);
 			$('#ParseError').show();
@@ -398,8 +398,8 @@
 		       dataType: 'text',
 		       success: function(data) {
 		    		SourceCode = data;
-		    		var starterProgram = parseProgram(SourceCode);
-		    		VM.loadProgram( starterProgram.instructions );
+		    		var parsedProg = parseProgram(SourceCode);
+		    		VM.loadProgram( parsedProg.instructions );
 			   		updateDisplay();
 		       }
 		    });

@@ -4,17 +4,17 @@ var instructions;
 
 function parseLine(line, lineNo) {
 	
-	var code =line.trim();
+	var code;
 	var label = null;
-	var arg = null;
-	var arg2 = null;
 	var comment = null;
 	
 	var t = line.indexOf(';');
 	if( t>=0 ) {
 		code = line.substring(0,t).trim(); // everything after the semi is a comment
 		comment = line.substring(t+1).trim();
-	} 
+	} else {
+		code = line.trim();
+	}
 		
 	if( code != '' ) {
 		
@@ -26,69 +26,57 @@ function parseLine(line, lineNo) {
 			code = code.trim();
 		}
 		
-		if( code.includes(' ') ){  // then an argument is defined
-			var l = code.split(' ');
-			var args = [];
-			
-			for(var i=0;i<l.length; i++){
-				if( l[i] && l[i]!='') {
-					args.push(l[i]);
-				}
+		var l = code.split(' ');
+		var args = [];
+		
+		for(var i=0;i<l.length; i++){
+			if( l[i] && l[i]!='') {
+				args.push(l[i]);
 			}
-			
-			code = args[0].trim();
-			var argVal = args[1].trim();
-			
-			if( isNaN(argVal) ) {
-				if( argVal.startsWith( "'") && argVal.endsWith("'")){
-					// literal character 
-					var char = argVal.charAt(1);
-					arg = new Value("char", argVal.charCodeAt(1));
-				} else {
-					//assume is a label
-					arg = new Value("ptr", argVal );
-				}
-			} else {
-				if( argVal.includes('.') ){
-					arg = new Value("float", Number(argVal) );
-				} else {
-					arg = new Value("int", Number(argVal) );
-				}
-			}
-			
-			if( args.length>2 ) {
-				
-				// there is a second argument
-				var arg2Val = args[2].trim();
-				
-				if( isNaN(arg2Val) ) {
-					if( argVal.startsWith( "'") && argVal.endsWith("'")){
-						// literal character 
-						var char = argVal.charAt(1);
-						arg = new Value("char", argVal.charCodeAt(1));
-					} else {
-						//assume is a label
-						arg = new Value("ptr", argVal );
-					}
-				} else {
-					if( arg2Val.includes('.') ){
-						arg2 = new Value("float", Number(arg2Val) );
-					} else {
-						arg2 = new Value("int", Number(arg2Val) );
-					}
-				}
-			}
-			
 		}
 		
-		var def = InstructionDefinition[code];
+		code = args[0].trim();
 		
-		if (def) {
-			var instr = new Instruction(def, arg, arg2, label, comment);
-			instructions.push(instr);
+		var def = InstructionDefinition[code];
+		if( def ) {
+			
+			var instr = new Instruction(def);
+			instr.comment = comment;
+			instr.label = label;
+			try{
+				var i=1;
+				while( i<args.length ){
+					var arg;
+					var argStr = args[i].trim();
+					if( argStr != '' ) {
+						if( isNaN(argStr) ) {
+							if( argStr.startsWith( "'") && argStr.endsWith("'")){
+								// literal character 
+								var char = argStr.charAt(1);
+								arg = new Argument(argStr.charCodeAt(1), "char");
+							} else {
+								//assume is a label
+								arg = new Argument( argStr, "label" );
+							}
+						} else {
+							if( argStr.includes('.') ){
+								arg = new Argument(Number(argStr), "float" );
+							} else {
+								arg = new Argument(Number(argStr), "int" );
+							}
+						}
+					}
+					if( arg ) instr.addArg(arg);
+					i++;
+				}
+				return instr;
+			} catch (err){
+				errors.push(err);
+			}
 		} else {
 			errors.push("<p>Unrecognized instruction: " + code + " at line: " + lineNo + "</p>");
 		}
+		
 	}
 
 };
@@ -104,47 +92,11 @@ function parseProgram( str ){
 	for( var l=0; l<lines.length; l++){
 		
 		var line = lines[l];
-		parseLine(line, l);
+		var instr = parseLine(line, l);
+		if( instr ) instructions.push(instr);
 	}
 	
 	return { "errors": errors, "instructions": instructions };
 	
 }
 
-function serializeProgram(instructions){
-	var code = "";
-	for(var i=0;i<instructions.length;i++){
-
-		var instr = instructions[i];
-		if( instr && instr.def ) {
-			var name = instr.name;
-			var label = instr.label;
-			var comment = instr.comment;
-			var arg1 = instr.arg1;
-			var arg2 = instr.arg2;
-			
-			if( label && label!='') {
-				code += label + ': ';
-			}
-			
-			code += name;
-			
-			if( arg1 ) {
-				code += ' ' + arg1.value;
-			}
-			
-			if( arg2 ) {
-				code += ' ' + arg2.value;
-			}
-			
-			if( comment && comment!='') {
-				code += ' ; ' + comment;
-			}
-			
-			code += '\n';
-		} 
-		
-	}
-	
-	return code;
-}

@@ -3,17 +3,10 @@ InstructionDefinition["neg"] = {
 		"displayName": 	"neg",
 		"semantics": 	"S[SP] &larr; -S[SP]",
 		"description": 	"Replaces the top of the stack with the negative value.",
-		"imple":		
+		"impl":		
 function(instr,vm){
-	var a = vm.pop();
-	var t = a.type;
-	if( t=="int" || t=="float" ) {
-		var c = -Number(a.value);
-		var value = new Value( t, c );
-		vm.push(value);
-	} else {
-		throw "Unable to take negative of a non int or float value.";
-	}
+	var v = vm.pop();
+	v.value = -Number(v.value);
 }
 }
 
@@ -31,7 +24,7 @@ function(instr,vm){
 	if( a.type=="float" || b.type=="float" ) {
 		t = "float";
 	}
-	var value = new Value( t, c );
+	var value = new Value( c, t);
 	vm.push(value);
 }
 }
@@ -47,9 +40,9 @@ function(instr,vm){
 	var a = Number(vm.S[vm.SP-1].value);
 	var b = Number(vm.S[vm.SP].value);
 	if( vm.S[vm.SP-1].type=="float" || vm.S[vm.SP].type=="float"){
-		vm.S[ vm.SP-1 ] = new Value("float", a-b );
+		vm.S[ vm.SP-1 ] = new Value(a-b, "float");
 	} else {
-		vm.S[ vm.SP-1 ] = new Value("int", a-b );
+		vm.S[ vm.SP-1 ] = new Value(a-b, "int");
 	}
 	vm.SP--;
 }
@@ -66,9 +59,9 @@ function(instr,vm){
 	var b = vm.S[vm.SP];
 	var m = Number(a.value) * Number(b.value);
 	if( a.type=="float" || b.type=="float"){
-		vm.S[ vm.SP-1 ] = new Value("float", m );
+		vm.S[ vm.SP-1 ] = new Value(m, "float");
 	} else {
-		vm.S[ vm.SP-1 ] = new Value("int", m );
+		vm.S[ vm.SP-1 ] = new Value( m );
 	}
 	vm.SP--;
 	
@@ -88,9 +81,9 @@ function(instr,vm){
 	var b = Number(vm.S[vm.SP].value);
 	var v = a/b;
 	if( vm.S[vm.SP-1].type=="float" || vm.S[vm.SP].type=="float"){
-		vm.S[ vm.SP-1 ] = new Value("float", v );
+		vm.S[ vm.SP-1 ] = new Value(v, "float");
 	} else {
-		vm.S[ vm.SP-1 ] = new Value("int", Math.floor(v) );
+		vm.S[ vm.SP-1 ] = new Value( Math.floor(v) );
 	}
 	vm.S--;
 					
@@ -111,7 +104,7 @@ function mod(instr,vm){
 	
 	var c = Number(b) % Number(a);
 	
-	var value = new Value( "int", c );
+	var value = new Value( c );
 	vm.push(value);
 	
 }
