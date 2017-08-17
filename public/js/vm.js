@@ -81,19 +81,8 @@ class Instruction {
 	
 	// returns the argument value as an int, thows error if it is not.
 	argument1AsInt(){
-		if( this._arg1.type == "int" || this._arg1.type == "ptr" ) {
+		if( this._arg1.type == "int" || this._arg1.type == "ptr" || this._arg1.type == "char") {
 			return this._arg1.value;
-		} else {
-			throw 'Error: Argument for instruction ' + this.def.name 
-					+ ' must be an int or a ptr, not ' + this._arg1.type + '.';
-		}
-			
-	}
-
-	// returns the argument value as an int or ptr 
-	argument1AsPtr(){
-		if( this._arg1.type == "int" || this._arg1.type == "ptr" ) {
-			return this.arg1.value;
 		} else {
 			throw 'Error: Argument for instruction ' + this.def.name 
 					+ ' must be an int or a ptr, not ' + this._arg1.type + '.';
@@ -103,7 +92,7 @@ class Instruction {
 
 	// returns the argument value as an int, thows error if it is not.
 	argument2AsInt(){
-		if( this._arg2.type == "int" || this._arg2.type == "ptr" ) {
+		if( this._arg2.type == "int" || this._arg2.type == "ptr" || this._arg2.type == "char") {
 			return this.arg2.value;
 		} else {
 			throw 'Error: Argument for instruction ' + this.def.name 
@@ -111,7 +100,7 @@ class Instruction {
 		}
 			
 	}
-
+	
 	toggleBreakpoint(){
 		this.breakpoint = !this.breakpoint;
 		return this.breakpoint;
@@ -126,7 +115,7 @@ class Value {
 	}
 	
 	asIntOrPtr(){
-		if( this.type == "int" || this.type == "ptr" ) {
+		if( this.type == "int" || this.type == "ptr" || this.type == "char") {
 			return this.value;
 		} else {
 			throw 'Error: Value expected to be an int or ptr, not ' + this.argument.type + '.';
@@ -146,6 +135,8 @@ class Value {
 			}
 		} else if( this.type=="ptr" ) {
 			str += this.value;
+		} else if( this.type=="char" ) {
+			str += "'" + String.fromCharCode(this.value) + "'";
 		} else if( this.type=="label" ) {
 			str += this.value;
 		} else {
@@ -156,8 +147,9 @@ class Value {
 	
 };
 
-const NULL_VALUE = new Value("int", 0 );
 const NOP = new Instruction(null,null,null);
+
+const NULL_VALUE = new Value("int", 0 );
 const TRUE = new Value("int", 1 );
 const FALSE = new Value("int", 0 );
 
@@ -285,7 +277,12 @@ class VirtualMachine {
 	}
 	
 	print( value ) {
-		this.out += value.toString();
+		if( value.type == "char" ) {
+			this.out += String.fromCharCode(value.value);
+		} else {
+			this.out += value.toString();
+		}
+		
 	}
 	
 	eatOutput(){

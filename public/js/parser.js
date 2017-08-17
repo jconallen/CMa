@@ -40,8 +40,14 @@ function parseLine(line, lineNo) {
 			var argVal = args[1].trim();
 			
 			if( isNaN(argVal) ) {
-				//assume is a label
-				arg = new Value("ptr", argVal );
+				if( argVal.startsWith( "'") && argVal.endsWith("'")){
+					// literal character 
+					var char = argVal.charAt(1);
+					arg = new Value("char", argVal.charCodeAt(1));
+				} else {
+					//assume is a label
+					arg = new Value("ptr", argVal );
+				}
 			} else {
 				if( argVal.includes('.') ){
 					arg = new Value("float", Number(argVal) );
@@ -56,8 +62,14 @@ function parseLine(line, lineNo) {
 				var arg2Val = args[2].trim();
 				
 				if( isNaN(arg2Val) ) {
-					//assume is a label
-					arg2 = new Value("ptr", arg2Val );
+					if( argVal.startsWith( "'") && argVal.endsWith("'")){
+						// literal character 
+						var char = argVal.charAt(1);
+						arg = new Value("char", argVal.charCodeAt(1));
+					} else {
+						//assume is a label
+						arg = new Value("ptr", argVal );
+					}
 				} else {
 					if( arg2Val.includes('.') ){
 						arg2 = new Value("float", Number(arg2Val) );

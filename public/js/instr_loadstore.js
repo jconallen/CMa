@@ -7,7 +7,7 @@ InstructionDefinition["loadc"] = {
 						" on the stack at the position of the stack pointer.", 
 		"impl": 		
 function(instr,vm){
-	if( instr.arg1.type == "int" ) {
+	if( instr.arg1.type == "int" || instr.arg1.type == "char") {
 		vm.push( instr.arg1 );
 	} else if( instr.arg1.type == 'ptr' ){
 		// compute add
