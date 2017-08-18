@@ -148,7 +148,7 @@ class Instruction {
 	}
 	
 	hasArg(i){
-		return (i<this._args.length && i>0);
+		return (i<this._args.length && i>=0);
 	}
 	
 	addArg( arg ){
@@ -235,7 +235,11 @@ class Value {
 				str += this.value + ".0"; 
 			}
 		} else if( this.type=="char" ) {
-			str += "'" + String.fromCharCode(this.value) + "'";
+			if( this.value == 10 ) {
+				str += "'\\n'";
+			} else {
+				str += "'" + String.fromCharCode(this.value) + "'";
+			}
 		} 
 		return str;
 	}

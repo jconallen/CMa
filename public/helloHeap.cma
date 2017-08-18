@@ -1,7 +1,7 @@
 ;
 ;  int main(){
 ;    char *msg = (char*) malloc(6*sizeof(char));
-     msg = "Hey.\n";
+;    msg = "Hey.\n";
 ;    printf("%s",msg);
 ;    return 0;
 ;  }
@@ -22,20 +22,24 @@
 ;===============================================
 ;    the main function
        
- main:  enter    
-        loadc '\n'  
-        loadc '.'  
-        loadc 'y'   
+ main:  enter
+        loadc 6     ; 6*sizeof(char)
+        new         ; malloc();
+        loadc 'H'
         loadc 'e'  
-        loadc 'H'  
-        loadrc 6    ; puts address of beginning of string on stack
+        loadc 'y'   
+        loadc '.'  
+        loadc '\n'  
+        loadc 0     ; 
+        loadr 1  
+        store 6
         dup         ; duplicate index since it gets consumed by load
 start:  load        ; put next char on top of stack
         dup         ; dup it, because it will get consumed by jumpz
         jumpz end   ; if top of stack is 0 jump to end
         print       ; otherwise print the char
         loadc 1     ; put 1 on stack
-        sub         ; subtract it from index, which points to next char
+        add         ; increment index
         dup         ; dup index cause it gets consumed by jump
         jump start  ; start loop again
 end:    return      ; were done, the char was null (0)

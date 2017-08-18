@@ -55,7 +55,8 @@ function(instr,vm){
 	if( instr.hasArg(0) ) { 
 		var m = instr.argAsInt(0);
 		for(var i=0; i<m; i++ ) {
-			vm.S[ vm.S[vm.SP].value + i ] = vm.S[vm.SP-m+i].value;
+			
+			vm.S[ vm.S[vm.SP].value + i ] = vm.S[vm.SP-m+i];
 		}
 		vm.SP = vm.SP-m-1;
 	} else {
