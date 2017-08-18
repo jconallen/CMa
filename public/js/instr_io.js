@@ -11,8 +11,5 @@ function print(inst,vm){
 	// send the value on top of the stack to std out
 	var a = vm.pop();
 	vm.print(a);
-	// decrement the SP
-	vm.SP = vm.SP - 1;
-
 }
 }

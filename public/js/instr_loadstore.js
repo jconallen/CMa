@@ -23,22 +23,22 @@ InstructionDefinition["load"] = {
 		"name": 		"load",
 		"displayName":	"load m",
 		"semantics": 	"S[SP]&larr;S[S[SP]] with no argument otherwise; for(i&larr;m-1; i>=0; i--) { S[SP+i]&larr;S[S[SP]+i]; } SP&larr;SP+m-1;",
-		"description": 	"The value in memory refrenced by the address at the top of the stack, is" +
+		"description": 	"The value in memory refrenced by the address at the top of the stack, is " +
 						"copied to the top of the stack.  If there is an optional argument <i>m</i>, then " +
 						"that number of memory locations is copied to the top of the stack. " +
 						"Note: <b>load</b> <i>m</i> where <i>m</i>=1 is equivalent to <b>load</b>.",
 		"impl": 		
 function(instr,vm){
-	var addr = vm.pop().asInt();
-	if( instr.arg(0) ) {
+	
+	if( instr.hasArg(0) ) {
+		var addr = vm.pop().asInt();
 		var m = instr.arg(0).asInt();
 		for(var i=m-1; i>=0; i-- ) {
 			var val = vm.S[addr-i];
 			vm.push( val );
 		}
 	} else {
-		var val = vm.S[addr];
-		vm.push( val );
+		vm.S[vm.SP] = vm.S[ vm.S[vm.SP].value ];
 	}
 	
 }

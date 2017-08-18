@@ -6,7 +6,7 @@ InstructionDefinition["jump"] = {
 		"impl":			
 function(instr,vm){
 	var q = vm.getAddressFromArgument(instr.arg(0));
-	vm.PC = q-1;  // sub 1 because vm process next instr will auto increment;
+	vm.PC = q;  // sub 1 because vm process next instr will auto increment;
 }
 }
 

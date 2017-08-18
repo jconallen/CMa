@@ -58,20 +58,20 @@ class Argument {
 	
 	toString(){
 		var str = "";
-		if( this.type=="int" ){
-			str += this.value;
-		} else if( this.type=="float" ){
-			if( this.value % 1 ){				
-				str += this.value;
+		if( this._type=="int" ){
+			str += this._value;
+		} else if( this._type=="float" ){
+			if( this._value % 1 ){				
+				str += this._value;
 			} else {
-				str += this.value + ".0"; 
+				str += this._value + ".0"; 
 			}
-		} else if( this.type=="char" ) {
-			str += "'" + String.fromCharCode(this.value) + "'";
-		} else if( this.type=="label" ) {
+		} else if( this._type=="char" ) {
+			str += "'" + String.fromCharCode(this._value) + "'";
+		} else if( this._type=="label" ) {
 			str += this.label;
 		} 
-		return ""+this._value;
+		return str;
 	}
 	
 }
@@ -171,7 +171,7 @@ class Instruction {
 	}
 	
 	toFormattedString(){
-		if( this.def ) {
+		if( this._def ) {
 			var str =  '<b>' + this._def.name + '</b>';
 			for(var i=0; i<this._args.length; i++){
 				str += " " + this._args[i].toString();
