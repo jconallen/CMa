@@ -23,11 +23,12 @@
        
  main:  enter      
         loadc 0    
+        loadc '\n'  
         loadc '.'  
         loadc 'y'   
         loadc 'e'  
         loadc 'H'  
-        loadrc 5    ; puts address of beginning of string on stack
+        loadrc 6    ; puts address of beginning of string on stack
         dup         ; duplicate index since it gets consumed by load
 start:  load        ; put next char on top of stack
         dup         ; dup it, because it will get consumed by jumpz

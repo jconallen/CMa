@@ -67,7 +67,11 @@ class Argument {
 				str += this._value + ".0"; 
 			}
 		} else if( this._type=="char" ) {
-			str += "'" + String.fromCharCode(this._value) + "'";
+			if( this._value == 10 ) {
+				str += "'\\n'";
+			} else {
+				str += "'" + String.fromCharCode(this._value) + "'";
+			}
 		} else if( this._type=="label" ) {
 			str += this.label;
 		} 

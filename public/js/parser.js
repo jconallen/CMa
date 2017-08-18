@@ -53,7 +53,17 @@ function parseLine(line, lineNo) {
 							if( argStr.startsWith( "'") && argStr.endsWith("'")){
 								// literal character 
 								var char = argStr.charAt(1);
-								arg = new Argument(argStr.charCodeAt(1), "char");
+								if( char == '\\' ) {
+									// then is it a special character
+									char = argStr.charAt(2);
+									if( char == "n" ){
+										arg = new Argument(10, "char");
+									} else {
+										throw "Invalid escaped char \\" + char + ".";
+									}
+							    } else {
+									arg = new Argument(argStr.charCodeAt(1), "char");
+							    }
 							} else {
 								//assume is a label
 								arg = new Argument( argStr, "label" );
