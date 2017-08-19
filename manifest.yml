@@ -1,8 +1,0 @@
-applications:
-- path: .
-  memory: 256M
-  instances: 1
-  domain: mybluemix.net
-  name: CMa-virtual-machine
-  host: CMa-virtual-machine
-  disk_quota: 1024M
