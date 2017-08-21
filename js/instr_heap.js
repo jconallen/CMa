@@ -22,8 +22,9 @@ InstructionDefinition["enter"] = {
 		"name": 		"enter",
 		"displayName": 	"enter m",
 		"semantics": 	"EP &larr; SP + m;",
-		"description": 	"Not really sure what this instruction is intended for.  In fact, I still can't figure out " +
-				"why the EP register exists at all.  What's the big deal with just checking to see if the SP and HP overlap?",
+		"description": 	"Push up the EP register.  This puts an upper limit on the expected use of the stack during " +
+				"the next stack frame.  The value m should include memory space for the return value, stack frame " +
+				"(EP, FP, PC) formal parameters, local variables and any additional stack usage needed to do the math.",
 		"impl":			
 function _new(inst,vm){
 	if( vm.SP < 0 ) vm.SP = 0;
