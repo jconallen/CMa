@@ -27,7 +27,7 @@ InstructionDefinition["enter"] = {
 				"(EP, FP, PC) formal parameters, local variables and any additional stack usage needed to do the math.",
 		"impl":			
 function _new(inst,vm){
-	if( vm.SP < 0 ) vm.SP = 0;  // only happens after vm initialization when EP is set to -1
+	if( vm.SP < 0 ) vm.SP = 0;  // only happens after vm initialization when SP is set to -1
 	var m = inst.arg(0).asInt();
 	vm.EP = vm.SP + m;
 	if( vm.EP >= vm.HP ) {
