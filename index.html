@@ -135,17 +135,14 @@
     <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header">
-              <button class="close" data-dismiss="modal">×</button>
-              <h3>Instruction Description</h3>
+              <button class="close" data-dismiss="modal">x</button>
+              <h3 id="InstructionDescriptionTitle">title</h3>
             </div>
             <div class="modal-body">
-            	<div class="panel panel-default" style="margin-top: 10px;">
-		            	<div class="panel-heading" >
-							<h3 class="panel-title" id="InsructionDescriptionTitle"></h3>
-						</div>
-					  <div class="panel-body" id="InstructionDescription">
-					  </div>
-				</div>
+				<code id="InstructionDescriptionSemantics">semantics</code>
+				<p id="InstructionDescription">description</p>
+					<a href="#" onclick="showImplementation()"><span class="glyphicon glyphicon-file"></span>impl</a>
+				
             </div>
             <div class="modal-footer">
                 <a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -217,18 +214,7 @@
 						<button type="button" class="btn btn-default" onclick="viewSource()">
 							<span class="glyphicon glyphicon-file"></span> Source 
 						</button>
-						
-					<div class="panel panel-default" style="margin-top: 10px;">
-						<div class="panel-heading panel-heading-sm "  data-toggle="collapse" href="#collapse1" id="NextInstr">
-					  	</div>
-						<div class="panel-body panel-collapse collapse" id="collapse1" style="min-height: 120px; max-height: 120px;overflow-y: scroll;">
-							<div id="NextInstrDescription"></div>
-							<div class="btn-group  pull-right">
-						        <a href="#" class="btn btn-default btn-sm" onclick="showImplementation()"><span class="glyphicon glyphicon-file"></span>impl</a>
-					  		</div>
-						</div>
-					</div>
-				
+										
 				</div>
 		    </div>
 	    </div>
@@ -706,8 +692,9 @@
 		var instr = VM.C[address];
 		var def = instr.def;
 		
-		$('#InstructionDescription').html(def.description);
-		$('#InsructionDescriptionTitle').text(def.displayName + ' ' + def.semantics);
+		$('#InstructionDescriptionSemantics').html(def.semantics);
+		$('#InstructionDescriptionTitle').html(def.displayName );
+		$('#InstructionDescription').html(def.description );
 		
 		$('#instrDescrModal').modal('show');
 	}

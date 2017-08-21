@@ -11,7 +11,8 @@
        
 ;===============================================
 ;    set up the program call to main, and halt
-       
+
+       enter
        alloc 1   
        mark       
        loadc main 
@@ -22,7 +23,8 @@
 ;===============================================
 ;    the main function
        
- main:  enter    
+ main:  enter   
+        loadc 0 
         loadc '\n'  
         loadc '.'  
         loadc 'y'   
