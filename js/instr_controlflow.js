@@ -6,7 +6,7 @@ InstructionDefinition["jump"] = {
 		"impl":			
 function(instr,vm){
 	var q = vm.getAddressFromArgument(instr.arg(0));
-	vm.PC = q;  // sub 1 because vm process next instr will auto increment;
+	vm.PC = q;  
 }
 }
 
@@ -23,7 +23,6 @@ function(instr,vm){
 	if( vm.S[vm.SP].value == 0 ) {
 		vm.PC = q; 
 	}
-	// decrement the SP
 	vm.SP = vm.SP - 1;
 }
 }
@@ -37,8 +36,7 @@ InstructionDefinition["jumpi"] = {
 		"impl":			
 function(instr,vm){
 	var q = instr.arg(0).asInt();
-	vm.PC = vm.S[vm.SP].value + q - 1; // sub 1 because vm process next instr will auto increment;
-	// decrement the SP
+	vm.PC = vm.S[vm.SP].value + q; 
 	vm.SP = vm.SP - 1;
 }
 }
