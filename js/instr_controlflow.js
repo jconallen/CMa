@@ -70,6 +70,7 @@ InstructionDefinition["return"] = {
 function(instr,vm){
 	vm.PC = vm.S[vm.FP].value; 
 	vm.EP = vm.S[vm.FP-2].value;
+	if( vm.EP >= vm.HP ) throw "Stack Overflow";
 	vm.SP = vm.FP-3;
 	vm.FP = vm.S[vm.FP-1].value;
 }

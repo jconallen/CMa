@@ -255,10 +255,9 @@ const FALSE = new Value( 0 );
 
 class VirtualMachine {
 
-	constructor( ProgramStoreSize, MainMemorySize, MaxStackSize ){
+	constructor( ProgramStoreSize, MainMemorySize ){
 		this.MAIN_MEMORY_SIZE = MainMemorySize;
 		this.PROGRAM_STORE_SIZE = ProgramStoreSize;
-		this.MAX_STACK_SIZE = MaxStackSize;
 		
 		this.C = [];  // Program Store
 		
@@ -271,8 +270,8 @@ class VirtualMachine {
 		this.memory = null;
 	}
 	
-	get HeapSize(){
-		return this.MAIN_MEMORY_SIZE-this.MAX_STACKSIZE+1;
+	get MainMemorySize(){
+		return this.MAIN_MEMORY_SIZE;
 	}
 	
 	get currentInstruction(){
@@ -308,7 +307,7 @@ class VirtualMachine {
 		this.PC = 0;
 		this.FP = 0;
 		this.SP = -1;
-		this.EP = this.MAX_STACK_SIZE;
+		this.EP = -1;
 		this.HP = this.MAIN_MEMORY_SIZE;
 		
 		this.out = "";
@@ -368,9 +367,6 @@ class VirtualMachine {
 	}
 
 	push(value) {
-//		if( this.SP >= this.EP ) {
-//			throw "Stack overflow.  Attempt to push on full stack.";
-//		}
 		this.SP++;
 		this.S[this.SP] = value;
 	}

@@ -36,9 +36,6 @@
 						<label class="mr-sm-2" for="sizeMainMemory">Main Memory</label>
 		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeMainMemory" placeholder="64" style="width:60px">
 	
-						<label class="mr-sm-2" for="sizeStack">Stack View</label>
-		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeStackView" placeholder="32" style="width:60px">
-	
 					  	<button type="submit" class="btn btn-default" onclick="createVM()">Re-Create VM</button>
 			    		
 					</form>
@@ -252,7 +249,7 @@
 	 	<div class="col-md-3">
 			<div class="panel panel-success">
 				<div class="panel-heading">
-			    	<h3 class="panel-title">Stack</h3>
+			    	<h3 class="panel-title">Stack View</h3>
 			  	</div>
 			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
@@ -276,7 +273,7 @@
 		<div class="col-md-3">
 			<div class="panel panel-success">
 				<div class="panel-heading">
-			    	<h3 class="panel-title">Heap</h3>
+			    	<h3 class="panel-title">Heap View</h3>
 			  	</div>
 			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
@@ -330,9 +327,8 @@
 
 	var PROGRAM_SPACE = 64;
 	var MAIN_MEMORY = 64;
-	var STACK_VIEW = 32;
 	var MemoryNotes = [];
-	var VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY, STACK_VIEW);
+	var VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY);
 	
 	function parseCode(){
 		$('#ParseError').hide();
@@ -566,18 +562,23 @@
 		
 		var stackData = [];
 
-		for(var i=VM.MAX_STACK_SIZE-1; i>=0; i--) {
+		for(var i=VM.MainMemorySize-1; i>=0; i--) {
 			
 			var value = VM.S[i];
-			
+			var addr = i ;
 			var row = { "address": i };
 			row.value = value.toString();
 			
-			row.color = '#c4daef';
-	    	if( i > VM.SP ){
+			if( addr == VM.SP && addr > VM.EP && VM.EP >=0 ){
+				row.color = '#e09084';
+	    	} else if( addr <= VM.SP ) {
+				row.color = '#c4daef';
+			} else if( addr <= VM.EP ) {
+				row.color = '#cce5e4';
+	    	} else {
 	    		row.color = "#ffffff";
-	    		row.value = "<i>" + value.toString() + "</i>";
-	    	}
+	    	}  
+    		row.value = "<i>" + value.toString() + "</i>";
 	    	if( MemoryNotes[i] ){
 		    	row.note = MemoryNotes[i];
 	    	} else {
@@ -599,7 +600,7 @@
 
 		var heapData = [];
 
-		for(var i=VM.MAIN_MEMORY_SIZE-1; i>=VM.EP; i--) {
+		for(var i=VM.MAIN_MEMORY_SIZE-1; i>=0; i--) {
 			var heapValue = VM.S[i];
 			var addr = i ;
 			var row = { "address": addr};
@@ -608,6 +609,8 @@
 			row.color = "#ffffff";
 	    	if( addr >= VM.HP ){
 	    		row.color = '#efe9c4' ;
+	    	} else if( addr <= VM.EP ) {
+	    		row.color = '#cce5e4;'
 	    	}
 	    	if( MemoryNotes[i] ){
 		    	row.note = MemoryNotes[i];
@@ -704,9 +707,8 @@
 	$( document ).ready(function() {
 		updateDisplay();
 		$("#out").html("");
-		$('#sizeProgramSpace').val(PROGRAM_SPACE);
+		//$('#sizeProgramSpace').val(PROGRAM_SPACE);
 		$('#sizeMainMemory').val(MAIN_MEMORY);
-		$('#sizeStackView').val(STACK_VIEW);
 	});
 
 	</script>

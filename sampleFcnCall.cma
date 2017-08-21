@@ -17,13 +17,14 @@
 ;===============================================
 ;    define the global variables and assign the values
 
+       enter 2    ; 2 for global vars + 1 call addr
        loadc 42   ; define and initialize global var x=42
        alloc 1    ; define global var y,  no initialization
        
        
 ;===============================================
 ;    set up the program call to main, and halt
-       
+       enter 5    ; 5 to set up call to int main
        alloc 1    ; allocate space for return of int main()
        mark       ; create stack frame (EP|FP|PC)
        loadc main ; put address of main on stack
@@ -33,7 +34,7 @@
 ;===============================================
 ;    the main function
        
- main: enter      ; 
+ main: enter 10   ; 
        loadc 30   ; a = 30
        loadc 40   ; b = 40
        alloc 1    ; allocate c
@@ -51,7 +52,7 @@
 ;===============================================
 ;   define the function add 
 
- add:  enter      ;
+ add:  enter 3    ; 2 formal params, 1 local
        loadc 20   ; define local var z
        loadr 1    ; now copy local var x on stack
        loadr 2    ; now copy local var y on stack

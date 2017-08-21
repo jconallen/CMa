@@ -17,7 +17,8 @@
 
 ;===============================================
 ;    set up the program call to main, and halt
-       
+
+       enter 5    ; min for int main()       
        alloc 1    ; allocate space for return of int main()
        mark       ; create stack frame (EP|FP|PC)
        loadc main ; put address of main on stack
@@ -27,7 +28,7 @@
 ;===============================================
 ;    the main function
        
- main: enter      ; 
+ main: enter 7    ; 
        alloc 1    ; allocate variable f
        alloc 1    ; allocate space for ret value
        mark       ;
@@ -40,7 +41,7 @@
        return     ;  
 
 
-_fac:  enter 1       ; 
+_fac:  enter 7       ;  
        loadr 1       ; put parameter n on top of stack
        loadc 1       ; put constant 1 on top of stack
        leq           ; compare  n <= 1
