@@ -11,7 +11,7 @@
        
 ;===============================================
 ;    set up the program call to main, and halt
-       enter 5      ; minimum for fcn that calls another and has return 
+       enter 5      ; call to int main()
        alloc 1      
        mark       
        loadc main 
@@ -22,7 +22,7 @@
 ;===============================================
 ;    the main function
        
- main:  enter 8    ;
+ main:  enter 8     ; 6 local str + 1 local var + 1 math
         loadc 6     ; 6*sizeof(char)
         new         ; malloc();
         loadc 'H'

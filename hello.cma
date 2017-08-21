@@ -13,8 +13,7 @@
 ;    set up the program call to main, and halt
 
        enter 5     ; 1 for return, 3 for frame, 1 for 
-                   ; call addr - 5 min for all fcns that
-                   ; call another one.
+                   ; call addr 
        alloc 1   
        mark       
        loadc main 
@@ -25,7 +24,7 @@
 ;===============================================
 ;    the main function
        
- main:  enter   9   ; 
+ main:  enter 9     ; 6 for local string + 3 for local math
         loadc 0 
         loadc '\n'  
         loadc '.'  

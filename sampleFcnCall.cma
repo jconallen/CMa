@@ -17,7 +17,7 @@
 ;===============================================
 ;    define the global variables and assign the values
 
-       enter 2    ; 2 for global vars + 1 call addr
+       enter 2    ; push up EP for 2 for global vars 
        loadc 42   ; define and initialize global var x=42
        alloc 1    ; define global var y,  no initialization
        
@@ -34,7 +34,7 @@
 ;===============================================
 ;    the main function
        
- main: enter 10   ; 
+ main: enter 10   ; 3 local vars + 7 for call to add (5 + 2 formal params)
        loadc 30   ; a = 30
        loadc 40   ; b = 40
        alloc 1    ; allocate c
