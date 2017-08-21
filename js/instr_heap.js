@@ -21,7 +21,7 @@ function _new(inst,vm){
 InstructionDefinition["enter"] = {
 		"name": 		"enter",
 		"displayName": 	"enter m",
-		"semantics": 	"EP &larr; SP + m;",
+		"semantics": 	"EP &larr; SP + m; if( HP < EP ) error(Stack Overflow);",
 		"description": 	"Push up the EP register.  This puts an upper limit on the expected use of the stack during " +
 				"the next stack frame.  The value m should include memory space for the return value, stack frame " +
 				"(EP, FP, PC) formal parameters, local variables and any additional stack usage needed to do the math.",
