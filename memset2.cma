@@ -11,7 +11,8 @@
 ; the statement:
 ;     while( a > 0 ) { c <- c + 1; a <- a - b; }
 ;
-; code s p produces the sequence
+; code s p produces the sequence, using labels for the 
+; address space instead of the absolute int values
 ;
 
 A:   loada a    ; put value at address 7 on top of stack (a)
