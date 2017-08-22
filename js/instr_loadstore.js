@@ -88,8 +88,9 @@ InstructionDefinition["loada"] = {
 						"on top of the stack.  Rquivalent to <b>loadc</b> q; <b>load</b>",
 		"impl":			
 function(instr,vm){
-	var q = instr.argAsInt(0);
-	var v = vm.S[q];
+	var q = instr.arg(0);
+	var addr = vm.getAddressFromArgument(q);
+	var v = vm.S[addr];
 	vm.push(v);
 }
 }
@@ -102,9 +103,10 @@ InstructionDefinition["storea"] = {
 		"description": 	"Store the value at the top of the stack to memory location q <b>loadc</b> q; <b>store</b>;",
 		"impl":			
 function(instr,vm){
+	var q = instr.arg(0);
+	var addr = vm.getAddressFromArgument(q);
 	var a = vm.pop();
-	var q = instr.argAsInt(0);
-	vm.S[q] = a;
+	vm.S[addr] = a;
 }
 }
 

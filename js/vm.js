@@ -410,6 +410,14 @@ class VirtualMachine {
 					return i;
 				}
 			}
+			// if it is not in a program instruction label
+			// lets see if it is in a address space one
+			for(var i=0; i<this.addressSpace.length; i++){
+				var msc = this.addressSpace[i];
+				if( msc.label == arg.label ){
+					return msc.address;
+				}
+			}
 		} else if( arg.type=="int" ){
 			return arg.value;
 		}
