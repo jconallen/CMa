@@ -394,7 +394,8 @@
 		$.ajax({
 		       url: sourceFile,
 		       dataType: 'text',
-		       success: loadProgram
+		       success: loadProgram,
+		       crossDomain:true
 		    });
 	}
 	
@@ -711,13 +712,29 @@
 		$('#instrDescrModal').modal('show');
 	}
 
+	function isValidURL(url){
+	    var RegExp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
+	    if(RegExp.test(url)){
+	        return true;
+	    }else{
+	        return false;
+	    }
+	} 
 	
 	$( document ).ready(function() {
 		updateDisplay();
 		$("#out").html("");
-		//$('#sizeProgramSpace').val(PROGRAM_SPACE);
 		$('#sizeMainMemory').val(MAIN_MEMORY);
+		var hash = window.location.hash.substr(1);
+		if( hash ) {
+			var src = decodeURIComponent(hash);
+			if( isValidURL(src) ) {
+				loadSample(src);
+			} else {
+				alert('Invalid src: ' + src);
+			}
+		}
 	});
 
 	</script>
