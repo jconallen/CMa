@@ -1,3 +1,7 @@
+;
+; #MEMSET x: S[5] = 10
+;
+;
       loadc 1  
       loadc 2 
       add     ; 1 + 2

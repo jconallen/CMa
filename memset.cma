@@ -1,0 +1,32 @@
+; based on Example 2.5.2 of the text
+;
+; address environment: p = { a->7, b->8, c-> 9}
+;
+; we initialize the variables a=3, b=1, c=10
+;
+; #MEMSET a: S[7]=3
+; #MEMSET b: S[8]=1
+; #MEMSET c: S[9]=10
+;
+; the statement:
+;     while( a > 0 ) { c <- c + 1; a <- a - b; }
+;
+; code s p produces the sequence
+;
+
+A:   loada 7    ; put value at address 7 on top of stack (a)
+     loadc 0    ; put 0 on top of stack
+     gr         ; if a>0
+     jumpz B    ;   then skip to next statement, otherwise goto B:
+     loada 9    ; put vaue of c on top of stack
+     loadc 1    ; put 1 on stack
+     add        ; c+1
+     storea 9   ; update value of c in memory
+     pop        ; clear stack
+     loada 7    ; load a on stack
+     loada 8    ; load b on stack
+     sub        ; a-b
+     storea 7   ; update a
+     pop        ; clear stack
+     jump A     ; loop back to top of while
+B:   halt       ; 

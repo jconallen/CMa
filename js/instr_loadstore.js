@@ -99,13 +99,12 @@ InstructionDefinition["storea"] = {
 		"name": 		"storea",
 		"displayName":	"storea q",
 		"semantics": 	"S[S[SP]] &larr; q; SP &larr; SP-1;",
-		"description": 	"Store the value q at the location pointed to by the top of the stack.  Equivalent " +
-						"to <b>loadc</b> q; <b>store</b>;",
+		"description": 	"Store the value at the top of the stack to memory location q <b>loadc</b> q; <b>store</b>;",
 		"impl":			
 function(instr,vm){
-	var q = instr.argAsValue(0);
-	var a = vm.pop().asInt();
-	vm.S[a] = q;
+	var a = vm.pop();
+	var q = instr.argAsInt(0);
+	vm.S[q] = a;
 }
 }
 

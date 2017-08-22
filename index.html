@@ -67,6 +67,7 @@
 						  <li><a href="#" onclick="loadSample('factorial.cma')">Recursive Function</a></li>
 						  <li><a href="#" onclick="loadSample('hello.cma')">Print String</a></li>
 						  <li><a href="#" onclick="loadSample('helloHeap.cma')">Print String (heap)</a></li>
+						  <li><a href="#" onclick="loadSample('memset.cma')">Setting Address Space example</a></li>
 					</ul>				
 				</div>
 	    	
@@ -121,7 +122,7 @@
 	        </div>
             <div class="modal-footer">
                 <a href="#" class="btn" data-dismiss="modal">Close</a>
-            	<a class="btn btn-primary" onclick="loadProgram()">Load program</a>
+            	<a class="btn btn-primary" onclick="updateProgram()">Load program</a>
             </div>
         </div>
     </div>
@@ -367,25 +368,32 @@
 		$('#myModal').modal('show');
 	}
 	
-	function loadProgram(){
-		SourceCode = $("#programCode").val();
-		var result = parseProgram(SourceCode);
-		var instructions = result.instructions;
-		VM.loadProgram( instructions );
+	function updateProgram(){
+		loadProgram($("#programCode").val());
 		$('#myModal').modal('hide');
-		updateDisplay();
+	}
+	
+	function loadProgram(source){
+		SourceCode = source;
+		var parsedProg = parseProgram(SourceCode);
+		VM.loadProgram( parsedProg );
+		
+		// add notes for all memset with labels
+		for(var a=0; a<parsedProg.addressSpace.length; a++){
+			var ms = parsedProg.addressSpace[a];
+			if( ms.label ) {
+			MemoryNotes[ms.address] = ms.label;	
+			}
+		}
+		
+   		updateDisplay();
 	}
 	
 	function loadSample(sourceFile){
 		$.ajax({
 		       url: sourceFile,
 		       dataType: 'text',
-		       success: function(data) {
-		    		SourceCode = data;
-		    		var parsedProg = parseProgram(SourceCode);
-		    		VM.loadProgram( parsedProg.instructions );
-			   		updateDisplay();
-		       }
+		       success: loadProgram
 		    });
 	}
 	

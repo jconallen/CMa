@@ -194,6 +194,14 @@ class Instruction {
 	
 };
 
+class MemorySetCommand {
+	constructor( address, value, label ) {
+		this.address = address;
+		this.value = value;
+		this.label = label;
+	}
+}
+
 class Value {
 	constructor( value, type ){
 		if( type == undefined ) {
@@ -205,6 +213,7 @@ class Value {
 		}
 		this.type = type;
 		this.value = value;
+		this.note = null;
 	}
 	
 	asInt(){
@@ -267,7 +276,7 @@ class VirtualMachine {
 		
 		this.running = false;
 		this.restart();
-		this.memory = null;
+		this.addressSpace = null;
 	}
 	
 	get MainMemorySize(){
@@ -320,24 +329,26 @@ class VirtualMachine {
 			this.S[i] = NULL_VALUE;
 		}
 
-		if( this.memory ) {
+		if( this.addressSpace && this.addressSpace.length>0 ) {
 			// now update main memory with the supplied values
-			for( var i=0; i<this.memory.length; i++ ) {
-				var v = this.memory[i];
+			for( var i=0; i<this.addressSpace.length; i++ ) {
+				var v = this.addressSpace[i];
 				this.S[v.address] = v.value;
 			}	
 		}
 		
 	}
 	
-	loadProgram( program, memory ) {
-		this.memory = memory;
+	loadProgram( program ) {
 		
-		for( var i=0; i <program.length; i++ ){
-			var instr = program[i];
+		var instructions = program.instructions;
+		this.addressSpace = program.addressSpace;
+		
+		for( var i=0; i <instructions.length; i++ ){
+			var instr = instructions[i];
 			this.C[i] = instr;
 		}
-		for( var i=program.length; i<this.PROGRAM_STORE_SIZE; i++){
+		for( var i=instructions.length; i<this.PROGRAM_STORE_SIZE; i++){
 			this.C[i] = NOP;
 		} 
 		
