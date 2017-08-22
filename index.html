@@ -11,6 +11,7 @@
  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />
  	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
  	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
  	<style>
 
  	</style>
@@ -18,7 +19,7 @@
   </head>
 
 <body>
-    
+
 <div class="container" >
 
 	<div class="container" style="padding:15px;">
@@ -174,7 +175,7 @@
 								<td id="PC"></td>
 								<td id="FP"></td>
 								<td id="SP"></td>
-								<td id="EP"></td>
+								<td id="EP" onclick="editEP()"></td>
 								<td id="HP"></td>
 							</tr>
 						</tbody>
@@ -251,9 +252,11 @@
 	 	<div class="col-md-3">
 			<div class="panel panel-success">
 				<div class="panel-heading">
-			    	<h3 class="panel-title">Stack View</h3>
+			    	<h3 class="panel-title">Stack View
+			    	<i onclick="copyStackToClipboard()" class="glyphicon glyphicon-copy pull-right"></i>
+			    	</h3>
 			  	</div>
-			  	<div class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
+			  	<div id="StackTable" class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 			    	<table class="table" style="border-bottom-style:hidden; margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
 					  <thead style="border:0px; ">
 					  		<th class="col-md-3 text-center">addr</th>
@@ -322,9 +325,11 @@
     <script src="js/instr_heap.js"></script>
 	<script src="js/instr_stack.js"></script>
 	<script src="js/parser.js"></script>
+	<script src="js/clipboard.min.js"></script>
 	
 	<script type="text/javascript">	
-
+	
+	var clipboard;
 	var SourceCode="";
 
 	var PROGRAM_SPACE = 64;
@@ -721,6 +726,32 @@
 	        return false;
 	    }
 	} 
+	
+	function editEP(){
+		var ep = VM.EP;
+		var newEp = parseInt(prompt('Override EP', ep));
+		if( !isNaN( newEp ) ){
+			VM.EP = newEp;
+			updateDisplay();
+		}
+	}
+	
+	function copyStackToClipboard(){
+		
+		var max = VM.EP;
+		var tbl = '<table><thead><th style="width:50px; text-align:center;">addr</th><th style="width:50px; text-align:center;">value</th></thead>';
+		for( var addr = max; addr>=0; addr--) {
+			var value = VM.S[ addr ];
+			tbl += '<tr><td style="text-align:center;">'+addr+'</td><td style="text-align:center;">'+value+'</td></tr>';
+		}		
+		
+		tbl += "</table>";
+		
+		clipboard.copy({
+			"text/plain": "Markup text. Paste me into a rich text editor.",
+	        "text/html": tbl
+	    });
+	}
 	
 	$( document ).ready(function() {
 		updateDisplay();

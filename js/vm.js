@@ -276,8 +276,7 @@ class VirtualMachine {
 		
 		this.running = false;
 		this.restart();
-		this.addressSpace = null;
-	}
+		this.addressSpace = null;	}
 	
 	get MainMemorySize(){
 		return this.MAIN_MEMORY_SIZE;
@@ -334,6 +333,7 @@ class VirtualMachine {
 			for( var i=0; i<this.addressSpace.length; i++ ) {
 				var v = this.addressSpace[i];
 				this.S[v.address] = v.value;
+				if( v.address > this._EP ) this.EP = v.address;
 			}	
 		}
 		

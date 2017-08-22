@@ -1,0 +1,31 @@
+; based on Example 2.5.2 of the text
+;
+; address environment: p = { a->5, b->6, c-> 7}
+;
+; we initialize the variables a=22, b=33, c=44
+;
+; #MEMSET a: S[5]=22
+; #MEMSET b: S[6]=33
+; #MEMSET c: S[7]=44 
+;
+; the statements:
+;    a <- 2 * ( c + ( b - 3 ) )
+;    b <- b * ( a + 3 )
+;
+;
+
+     loada b    ; put b on top of stack
+     loadc 3    ; put constant 3 on top
+     sub        ; subtract (b-3)
+     loada c    ; put c on top of stack
+     add        ; add   c + (b-3)
+     loadc 2    ; put 2 on top of stack
+     mul        ; multiply 2 * (c+(b-3))
+     storea a   ; update value of a
+     loada a    ; put a back on stack
+     loadc 3    ; put constant 3 on top
+     add        ; add (a+3)
+     loada b    ; put b on stack
+     mul        ; multiply b * (a+3)
+     storea b   ; update value of b in memory
+     halt
