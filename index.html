@@ -484,7 +484,6 @@
 		if( VM.isRunning() && instr ) {
 			var def = instr.def;
 			if( def ) {
-				//var title = '<a data-toggle="collapse" href="#collapse1">' + instr.toFormattedString() +' <code>' +def.semantics +'</code></a>';
 				var title = instr.toFormattedString() +' <code>' +def.semantics +'</code>';
 				$('#NextInstr').html(title);
 				$('#NextInstrDescription').html(def.description);
@@ -670,7 +669,21 @@
  			var note = prompt('Note', oldNote);
 			MemoryNotes[address]=note;
 			$(this).closest('tr').find('td:eq(2)').text(note);
+			updateDisplay();
 		});
+		
+		$('#Heap tr td#note').click(function(e){
+			var address = $(this).closest('tr').find('td:eq(0)').text();
+			var oldNote = "";
+			if( MemoryNotes.length>address && MemoryNotes[address]){
+				oldNote =  MemoryNotes[address];
+			}
+ 			var note = prompt('Note', oldNote);
+			MemoryNotes[address]=note;
+			$(this).closest('tr').find('td:eq(2)').text(note);
+			updateDisplay();
+		});
+
 	}
 	
 	
