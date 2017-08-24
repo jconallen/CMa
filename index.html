@@ -4,18 +4,11 @@
    <title>CMa Virtual Machine</title>
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-	
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />	
  	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
- 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
- 	
- 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />
- 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/todc-bootstrap/3.3.7-3.3.13/js/bootstrap.min.js"></script>
  	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js"></script>
- 	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
- 	<style>
-
- 	</style>
- 	
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
   </head>
 
 <body>
@@ -27,7 +20,8 @@
 	    	<div class="col-md-4">
 	    		<h1>CMa Virtual Machine</h1>
 	    		<a href="instructions.html" target="_blank">Instruction Set</a> |
-	    		<a href="about.html" target="_blank">About</a>
+	    		<a href="about.html" target="_blank">About</a> | 
+	    		<a href="docs/GettingStarted.html" target="_blank">Docs</a>
 	    	</div>
 	    	
 	    	<div class="col-md-6">
@@ -101,10 +95,10 @@
 	             
 				  <div class="col-md-4">
 				  	<table class="table table-fixed header-fixed "  id="UploadedProgram">
-					  <thead >
+					  <thead ><tr>
 					  		<th data-field="label">label</th>
 						    <th data-field="instruction">instruction</th>
-					  </thead>
+					  </tr></thead>
 					</table>
 				  
 				  </div>
@@ -163,19 +157,19 @@
 				</div>
 				<div class="panel-body" >
 					<table class="table table-bordered" >
-						<thead>
-							<th>PC</th>
-							<th>FP</th>
-							<th>SP</th>
-							<th>EP</th>
-							<th>HP</th>
-						</thead>
+						<thead><tr>
+							<th><a onclick="editPC()">PC</a></th>
+							<th><a onclick="editFP()">FP</a></th>
+							<th><a onclick="editSP()">SP</a></th>
+							<th><a onclick="editEP()">EP</a></th>
+							<th><a onclick="editHP()">HP</a></th>
+						</tr></thead>
 						<tbody>
 							<tr>
 								<td id="PC"></td>
 								<td id="FP"></td>
 								<td id="SP"></td>
-								<td id="EP" onclick="editEP()"></td>
+								<td id="EP"></td>
 								<td id="HP"></td>
 							</tr>
 						</tbody>
@@ -253,7 +247,7 @@
 			<div class="panel panel-success">
 				<div class="panel-heading">
 			    	<h3 class="panel-title">Stack View
-			    	<i onclick="copyStackToClipboard()" class="glyphicon glyphicon-copy pull-right"></i>
+			    	<i id="copyStackGlyph" onclick="copyStackToClipboard()" class="glyphicon glyphicon-copy pull-right"></i>
 			    	</h3>
 			  	</div>
 			  	<div id="StackTable" class="panel-body" style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom:0;">
@@ -326,6 +320,7 @@
 	<script src="js/instr_stack.js"></script>
 	<script src="js/parser.js"></script>
 	<script src="js/clipboard.min.js"></script>
+	<script src="js/sprintf.min.js"></script>
 	
 	<script type="text/javascript">	
 	
@@ -380,6 +375,8 @@
 	}
 	
 	function loadProgram(source){
+		// clear notes
+		MemoryNotes = [];
 		SourceCode = source;
 		var parsedProg = parseProgram(SourceCode);
 		VM.loadProgram( parsedProg );
@@ -727,6 +724,33 @@
 	    }
 	} 
 	
+	function editPC(){
+		var pc = VM.PC;
+		var newPc = parseInt(prompt('Override PC', pc));
+		if( !isNaN( newPc ) ){
+			VM.PC = newPc;
+			updateDisplay();
+		}
+	}
+	
+	function editFP(){
+		var fp = VM.FP;
+		var newFp = parseInt(prompt('Override FP', fp));
+		if( !isNaN( newFp ) ){
+			VM.FP = newFp;
+			updateDisplay();
+		}
+	}
+	
+	function editSP(){
+		var sp = VM.SP;
+		var newSp = parseInt(prompt('Override SP', sp));
+		if( !isNaN( newSp ) ){
+			VM.SP = newSp;
+			updateDisplay();
+		}
+	}
+	
 	function editEP(){
 		var ep = VM.EP;
 		var newEp = parseInt(prompt('Override EP', ep));
@@ -736,21 +760,53 @@
 		}
 	}
 	
+	function editHP(){
+		var hp = VM.HP;
+		var newHp = parseInt(prompt('Override HP', hp));
+		if( !isNaN( newHp ) ){
+			VM.HP = newHp;
+			updateDisplay();
+		}
+	}
+	
 	function copyStackToClipboard(){
 		
+		$('#copyStackGlyph').hide();
+		setTimeout(function(){ $('#copyStackGlyph').show(); }, 200);
+		
 		var max = VM.EP;
-		var tbl = '<table><thead><th style="width:50px; text-align:center;">addr</th><th style="width:50px; text-align:center;">value</th></thead>';
+		var tblText =  "        Stack     \n"
+		             + "   addr   | value \n"
+		             + "----------+-------\n";
+		             
+		var tblHtml = '<table><tr><td colspan="2" style="text-align:center;">Stack</td></tr><thead><th style="width:50px; text-align:center;">addr</th><th style="width:50px; text-align:center;">value</th></thead>';
 		for( var addr = max; addr>=0; addr--) {
 			var value = VM.S[ addr ];
-			tbl += '<tr><td style="text-align:center;">'+addr+'</td><td style="text-align:center;">'+value+'</td></tr>';
+			var rowColor = "#ffffff";
+			if( VM.SP >= addr ) {
+				rowColor = "#c4daef";
+			} else if( VM.EP >= addr ) {
+				rowColor = "#cce5e4";
+			}
+			if( VM.SP == addr ) {
+				tblHtml += '<tr><td style="width:40px;text-align:center;background-color:' + rowColor + '">'+addr+'</td><td style="width:20px;text-align:center;background-color:' + rowColor + '">'+value+'</td></tr>';
+				var row = sprintf("SP->%5i |%5i\n", addr, value);
+				tblText += 	row;
+			} else {
+				tblHtml += '<tr><td style="width:40px;text-align:center;background-color:' + rowColor + '">'+addr+'</td><td style="width:20px;text-align:center;background-color:' + rowColor + '">'+value+'</td></tr>';
+				var row = sprintf("%9i |%5i\n", addr, value);
+				tblText += 	row;
+			}
 		}		
 		
-		tbl += "</table>";
+		tblHtml += "</table>";
 		
 		clipboard.copy({
-			"text/plain": "Markup text. Paste me into a rich text editor.",
-	        "text/html": tbl
+			"text/plain": tblText,
+	        "text/html": tblHtml
 	    });
+		
+		
 	}
 	
 	$( document ).ready(function() {

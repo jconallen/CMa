@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+	<title>CMa Virtual Machine - Getting Started</title>
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />	
+ 	<link rel="stylesheet" href="../css/docs.min.css" >
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/todc-bootstrap/3.3.7-3.3.13/js/bootstrap.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script> 	
+ 	
+ 	<style>
+ 	figcaption {
+ 		font-style: italic;
+ 	}
+ 	figure {
+ 	 text-indent: 50px;
+ 	}
+ 	img {
+ 		border:1px solid black;
+ 	}
+ 	</style>
+</head>
+
+<body class="bd-docs" data-spy="scroll" data-target=".bd-sidenav-active">
+
+	<div class="bd-pageheader">
+		<div class="container">
+			<h1>Getting Started</h1>
+			<p class="lead">
+    			An introduction to this Javascript implementation of the C Virtual Machine - CMa.
+			</p>
+      </div>
+    </div>
+
+    <div class="container">
+    	<div class="row">
+        	<div class="col-12 col-md-3 push-md-9 bd-sidebar">
+				<nav class="bd-links" id="docsNavbarContent">
+				  	<div class="bd-toc-item active"><a class="bd-toc-link" href="GettingStarted.html">Getting started</a></div>
+					<div class="bd-toc-item "><a class="bd-toc-link" href="ExecutingPrograms.html">Executing Programs</a></div>
+	    			<div class="bd-toc-item "><a class="bd-toc-link" href="EditingPrograms.html">Editing Programs</a></div>
+    			</nav>
+            </div>
+            
+            <div class="col-12 col-md-9 pull-md-3 bd-content">
+            
+				<h1 class="bd-title" id="content">Introduction</h1>
+				<p/>
+				<p>
+				This 100% client side Javascript application is an implementation of the CMa virtual machine as defined by
+				the text <a href="http://www.springer.com/us/book/9783642149085">Compiler Design: Virtual Machines</a> by 
+				Reinhard Wilhelm and Helmut Seidl.  I did the best I could, given the information in the text, so there is
+				no guarantee that it is completely correct. 
+				</p>
+				<p>
+				The main goal of this effort was to produce a tool that a student could use to try out some of the ideas, 
+				concepts and most importantly the code described in this text.  It is by no means an efficient implementation 
+				as I favored code simplicity and readability over efficiency.  The user interface was designed (or should I 
+				say evolved) to help explain what is happening at each step and to provide tools to make it easy to try out
+				different options.
+				</p>
+				
+
+				<h2 id="contents">Contents</h2>
+
+				<ul>
+				  <li><a href="#contents">Contents</a></li>
+				  <li><a href="#quick-start">Quick start</a>
+			      <li><a href="#screen" >The Screen</a>
+				    <ul>
+				      <li><a href="#pc" >Program Store (C)</a></li>
+				      <li><a href="#sv" >Stack View</a></li>
+				      <li><a href="#hv" >Heap View</a></li>
+				      <li><a href="#reg" >Registers</a></li>
+				      <li><a href="#ctrl" >Controls</a></li>
+				  	</ul>
+			      </li>
+				 
+				  <li><a href="#help">Instruction Help</a></li>
+				</ul>
+
+				<h2 id="quick-start">Quick start</h2>
+				<p>
+				The fastest way to start using this virtual machine is to try it out with one of the sample programs. Using
+				the Load Sample button at the top right of the main page, select the Simple example.  This example is not a 
+				full C program interpreted for the CMa machine, but rather some quick instructions, including a predefined 
+				value set in memory. 
+				</p>
+				
+				
+					<figure class="figure">
+						<img class="figure-img img-fluid rounded" src="images/MainScreen.png" style="max-height:400px"></img>
+						<figcaption class="figure-caption">Main Screen</figcaption>
+					</figure>
+				
+				
+				<p>
+				If your screen looks like that in Figure 1. you are almost ready to step through the code. Before you begin 
+				you may want to scroll the Stack View such that the bottom of the table is in view (see Figure).  For the 
+				simple program you will see the memory location 5 has the value 10, with a note 'x'.
+				</p>
+				<p>
+				Press the Next button in the control panel to execute the first instruction. You'll notice a few changes 
+				in the state of the UI. Each time you press the Next button	the program counter register (PC) will increment 
+				by one.  Then the instruction will be executed. This first instruction, <code>loadc 1</code> will put the 
+				constant 1 on top of the stack. You'll also notice that the values on the stack are shaded.  This means that
+				the stack pointer (SP) has been changed to 0, and all values in main memory below the stack pointer are
+				shaded to indicate that they are active.  
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/step1.png" style="max-height:400px"></img>
+					<figcaption class="figure-caption">State of machine after execution of first instruction <code>loadc 1</code></figcaption>
+				</figure>
+				
+				<p>
+				The program counter now points to the next instruction. Press the Next button again to load the constant 2 
+				on top of the stack.  Again the program counter and stack pointer will increment. 
+				</p>
+				<p>
+				Continue pressing the Next button watching the stack and registers as they change.  When you execute the last
+				instruction; <code>halt</code> the machine will be halted, no further execution can take place. A message is 
+				written in the output. Notice that the last instruction is also identified by the label 'end', which can be 
+				referenced by name in CMa programs.
+				</p>
+				<p>
+				That's it. That's all she does.  Well, the simple program that is.  You can press the Reset button to execute the 
+				program again, or perhaps try a different sample program.   If you want to look a the full, commented source 
+				for the program loaded press the Source button.  It will open up another tab in the browser and display the program 
+				in plain text form with any comments (text after semicolons in any line).
+				</p>
+				
+				<h2 id="screen">The Screen</h2>
+				<p>
+				At the very top of the screen are two configuration options to set the VM main memory size, 
+				and to adjust the viewable size of the Program Store, Stack and Heap Views.  We'll examine these 
+				later.  The upper right hand corner has a button to load the sample code, hopefully you've already 
+				used this to load the simple program.
+				</p>
+				
+				
+				
+				<p>The rest of the page is divided up into panels.</p>
+				
+				<h3 id="pc">Program Store (C)</h3>
+				<p>
+				The program store is a separate set of memory (distinct from main memory) where the program instructions
+				are stored and walked through.  The Program Counter register (PC) points to the next instruction in the 
+				program store, which is adorned with a right chevron on the left of the table.
+				</p>
+				
+				<h3 id="sv">Stack View</h3>
+				<p>
+				The stack view is one of two views into main memory (the other is the <a href="#hv">heap view</a>). It 
+				appears next to the program store.  The highest memory locations appear first in this view, so typically
+				it makes sense to scroll down to the bottom of the view to see the newest activity.  The stack view and the 
+				heap view show the same main memory, however the rules for shading occupied locations are different.  In the
+				stack view everything at the stack pointer and below are shaded a light blue.  Everything at or below the
+				Extreme Pointer and up to the location pointed to by the stack pointer is shaded a light green.  
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/StackBelowEP.png" style="max-height:300px"></img>
+					<figcaption class="figure-caption">Stack with space below EP.</figcaption>
+				</figure>
+				
+				<p>
+				If for some reason an item is placed on the stack above the Extreme Pointer the memory location will be shaded
+				red.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/StackAboveEP.png" style="max-height:300px"></img>
+					<figcaption class="figure-caption">Stack with space allocated above the EP.</figcaption>
+				</figure>
+				
+				<h3 id="hv">Heap View</h3>				
+				<p>
+				The heap view is one of two views into main memory (the other is the <a href="#sv">stack view</a>). Typically 
+				this view begins at the top most memory location and you can scroll down to view the lower memory locations.
+				The shading in this view is a light yellow for all memory locations above the value of the heap pointer (HP).
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/MemoryAllocated.png" style="max-height:250px"></img>
+					<figcaption class="figure-caption">Memory Allocated</figcaption>
+				</figure>
+								
+				<h3 id="reg">Registers</h3>
+				<p>
+				The registers panel shows the five built in registers of the virtual machine; the program counter (PC),
+				frame pointer (FP), stack pointer (SP), extreme pointer (EP), and heap pointer (HP).  All five of which
+				can be manually changed by clicking on the register name and entering in the new value with the dialog.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/Registers.png" style="max-height:150px"></img>
+					<figcaption class="figure-caption">CMa Registers</figcaption>
+				</figure>
+				<p>
+				If the virtual machine throws an error while processing an instruction then it will appear as a red 
+				panel within the Registers panel.
+				</p>
+				
+				<h3 id="reg">Controls</h3>
+				<p>
+				The Controls panel includes all the commands you would use to interact with the virtual machine.  The 
+				<b>Next</b> button will step past the next instruction (pointed to by the program counter). The <b>Run to Brkpt</b>
+				button will execute all the statements in the program up to any marked with a breakpoint.  If no halt is 
+				at the end of the program an error will be reported (in the area just under the Registers).  The <b>Run</b> command
+				will run the program until it reaches a <code>halt</code> command or an error is thrown during the execution 
+				of an instruction.  The <b>Restart</b> command will initialize the registers, and clear main memory, readying the 
+				machine for another run of the program.  The <b>Edit</b> command will open up a modal dialog with a simple program
+				editor and the current program in the edit area.  You can edit the program and update the machine for another 
+				execution run (see <a href="EditingPrograms.html">Editing Programs</a>).  The <b>Source</b> command will open another
+				browser tab and display the current program in plain text with any comments.
+				</p>
+				
+				<h2 id="help">Instruction Help</h2>
+				<p>
+				If you want to know what a specific instruction does in your program, or rather be reminded of what it exactly does
+				you can click on it in the Program Store panel.  A modal dialog will appear with the instruction and its semantics (as 
+				defined by the text).
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/InstructionHelpPopup.png" style="max-height:200px"></img>
+					<figcaption class="figure-caption">Instruction Documentation</figcaption>
+				</figure>				
+				
+				<p>
+				If you click on the <b>impl</b> link at the bottom of the dialog, another dialog will appear with the actual JavaScript 
+				implementation of the instruction in it.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/InstructionImplementation.png" style="max-height:150px"></img>
+					<figcaption class="figure-caption">Instruction JavaScript Implementation</figcaption>
+				</figure>	
+				
+				<p>
+				If you are interested in all the instructions currently available on the machine you can click on the 
+				<a href="../instructions.html" target="_blank">Instruction Set</a> link at the top left of the main page.  This will 
+				open up another tab in the browser and display the list of all the instructions (in alphabetical order).  Clicking on 
+				any of these instructions will expose the full description and JavaScript implementation.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/InstructionSet.png" style="max-height:350px"></img>
+					<figcaption class="figure-caption">Instruction Set Listing</figcaption>
+				</figure>					
+								
+        </div>
+      </div>
+    </div>
+
+    <footer class="bd-footer text-muted">
+	  <div class="container">
+	    <p>Copyright 2017 jim conallen, jconallen@acm.org</p>
+	   </div>
+	</footer>
+
+  </body>
+</html>

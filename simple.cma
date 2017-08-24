@@ -1,9 +1,11 @@
+; Simple program that adds 1 + 2 and
+; prints the results in the output.
 ;
 ; #MEMSET x: S[5] = 10
 ;
 ;
-      loadc 1  
-      loadc 2 
-      add     ; 1 + 2
-      print   ; print result
-      halt
+        loadc 1  
+        loadc 2 
+        add       ; 1 + 2
+        print     ; print result
+ end:   halt

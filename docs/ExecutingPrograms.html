@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+	<title>CMa Virtual Machine - Executing Programs</title>
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />	
+ 	<link rel="stylesheet" href="../css/docs.min.css" >
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/todc-bootstrap/3.3.7-3.3.13/js/bootstrap.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script> 	
+ 	
+ 	<style>
+ 	figcaption {
+ 		font-style: italic;
+ 	}
+ 	figure {
+ 	 text-indent: 50px;
+ 	}
+ 	img {
+ 		border:1px solid black;
+ 	}
+ 	</style>
+ 	
+</head>
+
+<body class="bd-docs" data-spy="scroll" data-target=".bd-sidenav-active">
+
+	<div class="bd-pageheader">
+		<div class="container">
+			<h1>Executing Programs</h1>
+			<p class="lead">
+    			Executing code in the virtual machine.
+			</p>
+      </div>
+    </div>
+
+    <div class="container">
+    	<div class="row">
+        	<div class="col-12 col-md-3 push-md-9 bd-sidebar">
+				<nav class="bd-links" id="docsNavbarContent">
+				  	<div class="bd-toc-item"><a class="bd-toc-link" href="GettingStarted.html">Getting started</a></div>
+					<div class="bd-toc-item active"><a class="bd-toc-link" href="ExecutingPrograms.html">Executing Programs</a></div>
+	    			<div class="bd-toc-item "><a class="bd-toc-link" href="EditingPrograms.html">Editing Programs</a></div>
+    			</nav>
+            </div>
+            
+            <div class="col-12 col-md-9 pull-md-3 bd-content">
+            
+				<h1 class="bd-title" id="content">Executing Programs</h1>
+				<p/>
+				
+				<p>
+				This application is meant to be a learning tool for understanding compilers and virtual machines.  As such there 
+				are many features included here that are not found in a simple implementation of the VM.  The views and machine 
+				are intended to be as interactive as possible to help the student understand what is going on as a program 
+				executes.
+				</p>
+
+				<h2 id="contents">Contents</h2>
+
+				<ul id="markdown-toc">
+				  <li><a href="#contents">Contents</a></li>
+				  <li><a href="#notes">Executing an Instruction</a></li>
+				  <ul>
+				  </ul>
+			      <li><a href="#notes">Adding notes</a></li>
+			      <li><a href="#edit-reg">Editing registers</a></li>
+			      <li><a href="#viewsize">Adjusting viewable size</a></li>
+			      <li><a href="#copy-stack">Copy Stack to Clipboard</a></li>
+			      <li><a href="#memory">Redefine VM Memory</a></li>
+			      <li><a href="#breakpoints">Breakpoints</a></li>
+				</ul>
+
+				<h2 id="interacting">Interacting with the machine</h2>
+				
+				
+				<h3 id="notes">Adding Notes</h3>
+				<p>
+				It is often convenient to annotate memory with something to help you remember what it represents or
+				or how it got created.  If you click in a Notes cell in the Stack View section you will be prompted
+				with a dialog to edit the Note for that memory location.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/annotatedmemory.png" style="max-height:120px"></img>
+					<figcaption class="figure-caption">Annotated Memory</figcaption>
+				</figure>
+								
+				<h3 id="edit-reg">Editing registers</h3>
+				<p>
+				At any time during the execution of a program you can manually override any of the registers.  Simply click on 
+				the register title and enter in the new value at the prompt.  There are no guarantees that the VM will behave 
+				well.  Use this feature to stress the machine or set up unusual situations and see how they play out. No one will
+				be harmed.  It's just a virtual machine in your web browser after all.
+				</p>
+				
+				<h3 id="viewsize">Adjusting viewable size</h3>
+				<p>
+				Some of us are lucky and have large screens.  This application was developed on my 27" iMac and I was loving 
+				every minute of it. I sized the panels so they worked very well with my display.  However trying this out
+				on my little 13" work MacBook, the app was unusable.  So I added a feature with which you can change the 
+				size (depth) of the Program Store, Stack and Heap panels.  Just use the control at the very top of the screen
+				to change the size of these panels (in pixels).  I found that with a combination of 80% view of my browser
+				window and a panel size of 400px the app was usable on my smaller 13" screen.
+				</p>
+				
+				<h3 id="copy-stack">Copy Stack to Clipboard</h3>
+				<p>
+				A useful feature I added in late was a copy to clipboard button on the Stack View.  This was to facilitate 
+				the completion of assignments in the text that asked for the stack to be displayed after each instruction. At 
+				any time you can click on the icon in the Stack View title to copy the contents of the Stack View into the 
+				clipboard.  The entire main memory is not copied, but rather all the contents of the stack from the EP register
+				and below.  This way the resulting table is only concerned with the values in the stack that are legal.
+				</p>
+				<p>
+				There are two forms of the stack placed in the clipboard, an HTML formatted view with shading.  This is useful
+				for pasting into apps like Microsoft Word.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/WordStack.png" style="max-height:300px"></img>
+					<figcaption class="figure-caption">Copying the stack in MS Word</figcaption>
+				</figure>
+				<p>
+				And a text only view with formatted spaces for documents that have fixed space characters.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/TextStack.png" style="max-height:200px"></img>
+					<figcaption class="figure-caption">Text view of copied stack</figcaption>
+				</figure>
+
+				<h3 id="memory">Redefine VM Memory</h3>
+				<p>
+				By default the virtual machine that gets created has 64 memory locations (the term byte or word is irrelevant in 
+				this virtual machine).  You can set the main memory size to anything up to 1024 (an arbitrary upper limit I set) 
+				with the control at the very top of the screen.  The program size however will expand to whatever size of program 
+				you feed it.
+				</p>
+				
+				<h3 id="breakpoints">Breakpoints</h3>
+				<p>
+				You can set a breakpoint in the code by clicking just to the left of the instruction row in the Program Store.
+				A small bullet icon will appear.  Clicking on it will toggle the breakpoint off.  When you set a breakpoint and 
+				you press the <b>Run to Brkpt</b> command the code will execute quickly  (updating the display alone the way)
+				until a breakpoint is reached or the program is halted, or an error is thrown by the virtual machine.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/BreakpointSet.png" style="max-height:120px"></img>
+					<figcaption class="figure-caption">Breakpoint set on <code>print</code> instruction</figcaption>
+				</figure>				
+				
+        </div>
+      </div>
+    </div>
+
+    <footer class="bd-footer text-muted">
+	  <div class="container">
+	  
+	    <p>Copyright 2017 jim conallen, jconallen@acm.org</p>
+	   </div>
+	</footer>
+
+  </body>
+</html>

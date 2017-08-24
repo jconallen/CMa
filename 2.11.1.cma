@@ -1,4 +1,4 @@
-; based on Example 2.5.2 of the text
+; Exercise 2.11 #1
 ;
 ; address environment: p = { a->5, b->6, c-> 7}
 ;
@@ -13,7 +13,8 @@
 ;    b <- b * ( a + 3 )
 ;
 ;
-
+     enter 8    ; set the EP to the top 
+                ; of the assigned memory
      loada b    ; put b on top of stack
      loadc 3    ; put constant 3 on top
      sub        ; subtract (b-3)

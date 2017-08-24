@@ -1,0 +1,43 @@
+; Exercise 2.11 #2
+;
+; address environment: p = { x->2, y->3, z->5 }
+;
+; we initialize the variables a=22, b=33, c=44
+;
+; #MEMSET x: S[2]=33
+; #MEMSET y: S[3]=22
+; #MEMSET z: S[5]=55 
+;
+; the CMa code for the two loops:
+;    while( x > y ) {
+;        if( 2*y > x ) y = y + x;
+;        else x = x - y;
+;    }
+;
+;    for( x=0; x<42; x=x+z ){
+;      if( !(x==y)) z = z + 1;
+;
+;
+       alloc 6      ; push the stack up to accommodate  
+                    ; the assigned memory
+loop:  loada x      ;
+       loada y      ; 
+       gr           ; x>y
+       jumpz end    ; while( x>y ) execute next, otherwise goto end
+       loadc 2      ;
+       loada y      ;
+       mul          ;
+       loada x      ; 
+       gr           ; 
+       jumpz else   ; if 2y>x next, otherwise go to else
+       loada y      ;
+       loada x      ;
+       add          ;
+       storea y     ; y = y+x
+       jump loop    ; back to top of loop
+else:  loada x      ; 
+       loada y      ;
+       sub          ;
+       storea x     ; x = x-y
+       jump loop    ; back to top of loop
+end:   halt         

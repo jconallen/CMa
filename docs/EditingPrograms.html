@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+	<title>CMa Virtual Machine - Editing Programs</title>
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" />	
+ 	<link rel="stylesheet" href="../css/docs.min.css" >
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/todc-bootstrap/3.3.7-3.3.13/js/bootstrap.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modalmanager.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+ 	<style>
+ 	figcaption {
+ 		font-style: italic;
+ 	}
+ 	figure {
+ 	 text-indent: 50px;
+ 	}
+ 	img {
+ 		border:1px solid black;
+ 	}
+ 	keyword {
+ 		font-family:monospace;
+ 	}
+ 	</style> 	
+</head>
+
+<body class="bd-docs" data-spy="scroll" data-target=".bd-sidenav-active">
+
+	<div class="bd-pageheader">
+		<div class="container">
+			<h1>Editing Programs</h1>
+			<p class="lead">
+    			Editing your own code to run in the virtual machine.
+			</p>
+      </div>
+    </div>
+
+    <div class="container">
+    	<div class="row">
+        	<div class="col-12 col-md-3 push-md-9 bd-sidebar">
+				<nav class="bd-links" id="docsNavbarContent">
+				  	<div class="bd-toc-item"><a class="bd-toc-link" href="GettingStarted.html">Getting started</a></div>
+					<div class="bd-toc-item "><a class="bd-toc-link" href="ExecutingPrograms.html">Executing Programs</a></div>
+	    			<div class="bd-toc-item active"><a class="bd-toc-link" href="EditingPrograms.html">Editing Programs</a></div>
+    			</nav>
+            </div>
+            
+            <div class="col-12 col-md-9 pull-md-3 bd-content">
+            
+				<h1 class="bd-title" id="content">Editing Programs</h1>
+				<p/>
+				
+				<p>
+				A design decision was made early on to not have an in place editor.  Perhaps this was wrong, but it is the way it
+				is and the only way to edit a CMa program with the UI is with the build in <b>Edit</b> command.  This command 
+				creates a modal pop up dialog with a text area to edit the code in and a button to parse it. Once the code is 
+				complete you can choose to load it into the virtual machine and begin executing it.
+				</p>
+
+				<h2 id="contents">Contents</h2>
+
+				<ul id="markdown-toc">
+				  <li><a href="#contents">Contents</a></li>
+				  <li><a href="#editor">Code Editor</a></li>
+				  <li><a href="#loadUrl">Load Code via URL</a></li>
+				</ul>
+
+				<h2 id="editor">Code Editor</h2>
+				<p>
+				The <b>Edit</b> command will open up the modal Program Editor dialog, and if there is already a program in the
+				VM it will show the current set of source code (including comments).   Pressing the Parse button will parse the 
+				code using the <i>very simple</i> parser in this application.  The instructions it finds are displayed to the right 
+				in a small table.  Labels in the first column and the instruction and its argument in the next.  Pressing the 
+				Load Program button will close the dialog and load the program in the VM.  Pressing Close (or the x) will simply
+				dismiss the dialog without making changes to the VM.
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/CodeEditor.png" style="max-height:300px"></img>
+					<figcaption class="figure-caption">Code Editor</figcaption>
+				</figure>
+				
+				<p>
+				WIn general whitespace is ignored in by the parser.  Each line in the file is expected to contain at most one
+				instruction.  All text after a semicolon is considered a comment.  Instructions can have multiple arguments, however
+				all but one instruction (at this time) have at most on one argument. Arguments are separated by a space (not a tab).
+				</p>
+				<p>
+				A line can begin with a label followed by a colon.  This label can be used as an instruction reference as in the case
+				of a <code>jump</code> instruction, or as a program address reference (the physical address of the instruction in
+				the Program Store) and used in an instruction like <code>loada</code>.
+				</p>
+				<p>
+				This implementation of the virtual machine has some extensions to make it useful when examining concepts and examples
+				in the text.  If a comment includes the text <code>#MEMSET</code> then the rest of the comment is parsed for special commands to 
+				initialize main memory with specific values.  This makes it easier to try out the examples in the text where an address
+				space is given prior to executing some code.
+				</p>
+				<p>
+				The statement after the <code>#MEMSET</code> keyword the parser looks for a command of the form:
+				</p>
+				<code>{label} : S[{address}] = {value}</code>
+				<p>
+				Where the values inside the curley braces are replaced by a string label, absolute memory address and a 
+				value of type <keyword>int</keyword>, <keyword>float</keyword> or <keyword>char</keyword>.
+				</p>
+				<p>For example the following comment commands:
+				</p>
+				<pre>
+; #MEMSET x: S[5] = 10
+; #MEMSET pi: S[6] = 3.14
+; #MEMSET letter: S[7] = 'A'</pre>
+				<p>
+				Will initialize the memory with the following values, and any labels will be automatically added as a Note.				
+				</p>
+				<figure class="figure">
+					<img class="figure-img img-fluid rounded" src="images/InitializedStack.png" style="max-height:200px"></img>
+					<figcaption class="figure-caption">Main Memory Initialized by special instructions in comments.</figcaption>
+				</figure>				
+				
+				
+				<h2 id="loadUrl">Load URL</h2>
+				<p>
+				TODO
+				</p>
+				
+				
+        	</div>
+      	</div>
+    </div>
+
+    <footer class="bd-footer text-muted">
+	  <div class="container">
+	  
+	    <p>Copyright 2017 jim conallen, jconallen@acm.org</p>
+	   </div>
+	</footer>
+
+  </body>
+</html>
