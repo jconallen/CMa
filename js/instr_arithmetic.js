@@ -7,6 +7,7 @@ InstructionDefinition["neg"] = {
 function(instr,vm){
 	var v = vm.pop();
 	v.value = -Number(v.value);
+	vm.push(v);
 }
 }
 
