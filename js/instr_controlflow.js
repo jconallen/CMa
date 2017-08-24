@@ -45,7 +45,13 @@ InstructionDefinition["call"] = {
 		"name": 		"call",
 		"displayName": 	"call q",
 		"semantics": 	"FP&larr;SP-q-1; S[FP]&larr;PC; PC&larr;S[SP]; SP&larr;SP-1;",
-		"description": 	"q is the number of formal parameters",
+		"description": 	"Calls the function referenced by the address on top of the stack. " +
+				"First update the frame pointer (FP) with the stack pointer (SP) adjusted " +
+				"by q, the number of formal parameters, or more accurately the size of memory " +
+				"holding the formal parameters minus one.  Then store the current program counter " +
+				"at the location of the frame pointer. Next, change the program counter to point to " +
+				"the first instruction of the function being called.  Finally decrement the stack " +
+				"by one (eating up the address of the function).",
 		"impl":			
 function(instr,vm){
     var q = 0;
@@ -55,7 +61,7 @@ function(instr,vm){
 	vm.FP = vm.SP - q - 1;
 	vm.S[vm.FP] = new Value(vm.PC);
 	vm.PC = vm.S[vm.SP];
-	vm.SP = vm.SP -1;
+	vm.SP = vm.SP - 1;
 }
 }
 
@@ -63,7 +69,12 @@ InstructionDefinition["return"] = {
 		"name": 		"return",
 		"displayName": 	"return",
 		"semantics": 	"PC&larr;S[FP]; EP&larr;S[FP-2]; SP&larr;FP-3; FP&larr;S[FP-1];",
-		"description": 	"",
+		"description": 	"Returns program control back to the calling function. The program counter is " +
+				"updated with the value that was last stored in the stack frame, currently pointed to " +
+				"by the frame pointer (FP). Next, the extreme pointer is updated with the value cached in " +
+				"the stack frame. The stack pointer is updated to point to the return value of the function, " +
+				"or if there is no return value the top of the stack of teh previous stack frame. Finally, the " +
+				"frame pointer is updated with the cached value.",
 		"impl":			
 function(instr,vm){
 	vm.PC = vm.S[vm.FP].value; 
@@ -79,7 +90,7 @@ InstructionDefinition["halt"] = {
 		"name": 		"halt",
 		"displayName": 	"halt",
 		"semantics": 	"",
-		"description": 	"Stops the virtual machine.",
+		"description": 	"Stops the virtual machine. The program counter is set to -1.  A message is printed in the output.",
 		"impl":			
 function halt(inst,vm){
 	vm.halt();
