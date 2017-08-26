@@ -1,0 +1,63 @@
+; Exercise 2.11 #1
+;
+; The code in this problem computes the value of a given power 
+; Given the address space below, the base is represented 
+; by the x variable, and the exponent by the n variable.  
+; The result is placed in the z variable;  z = x^n
+; 
+; address environment: p = { n->1, j->2, x-> 3, y->4, z->5}
+;
+; to test we initialize the variables a=2, n=4.  This will 
+; produce a value z = 16
+;
+; #MEMSET n: S[1]=4
+; #MEMSET x: S[3]=2
+;
+; to make testing easier we will also inialize the other variables
+; with 0's so that they will automatically set the note field in the
+; stack view of the virtual machine UI.  This initialization is not
+; required for the computation.
+;
+; #MEMSET j: S[2]=0
+; #MEMSET y: S[4]=0
+; #MEMSET z: S[5]=0
+;
+        alloc 6    ; this ensures that all stack operations happen above 
+                   ; the memory reserved for the defined address space
+        loadc 1    ; constant 1 on stack
+        storea 5   ; z = 1
+w1:     loada 1    ; put n on top o stack
+        loadc 0    ; put constant 0 on top of stack
+        gr         ;  n > 0 
+        jumpz end  ; if n>0 then jump to end, otherwise continue on
+        loadc 1
+        storea 2   ; j = 1
+        loada 3    ; put x on top of stack
+        storea y   ; y = x
+w2:     loadc 2    ; put constant 2 on stack
+        loada 2    ; put j on stack
+        mul        ; 2*j
+        loada 1    ; put n on top of stack
+        leq        ; compute 2j <= n
+        jumpz A    ; if 2j<=n then jump out of loop
+        loada 4    ; put y on stack
+        dup        ; duplicate y on stack
+        mul        ; multiply  y*y
+        storea 4   ; y = y*y
+        loada 2    ; put j on stack
+        loadc 2    ; put constant 2 on stack
+        mul        ; j*2
+        storea 2   ; j = j*2
+        jump w2    ; go back to begining of this inner loop
+A:      loada 5    ; put z on top
+        loada 4    ; put y on top
+        mul        ; y*z
+        storea 5   ; z = y*z
+        loada 1    ; n on top
+        loada 2    ; j on top
+        sub        ; n-j
+        storea 1   ; n = n-j
+        jump w1    ;       
+ end:   loada z    ; put z on top
+        print      ; print z to output    
+        halt   

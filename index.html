@@ -829,11 +829,7 @@
 		var hash = window.location.hash.substr(1);
 		if( hash ) {
 			var src = decodeURIComponent(hash);
-			if( isValidURL(src) ) {
-				loadSample(src);
-			} else {
-				alert('Invalid src: ' + src);
-			}
+			loadSample(src);
 		}
 	});
 

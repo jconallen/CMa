@@ -15,18 +15,18 @@
 ;
      enter 8    ; set the EP to the top 
                 ; of the assigned memory
-     loada b    ; put b on top of stack
+     loada 6    ; put b on top of stack
      loadc 3    ; put constant 3 on top
      sub        ; subtract (b-3)
-     loada c    ; put c on top of stack
+     loada 7    ; put c on top of stack
      add        ; add   c + (b-3)
      loadc 2    ; put 2 on top of stack
      mul        ; multiply 2 * (c+(b-3))
-     storea a   ; update value of a
-     loada a    ; put a back on stack
+     storea 5   ; update value of a
+     loada 5    ; put a back on stack
      loadc 3    ; put constant 3 on top
      add        ; add (a+3)
-     loada b    ; put b on stack
+     loada 6    ; put b on stack
      mul        ; multiply b * (a+3)
-     storea b   ; update value of b in memory
+     storea 6   ; update value of b in memory
      halt
