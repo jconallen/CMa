@@ -33,7 +33,7 @@ w1:     loada 1    ; put n on top o stack
         loadc 1
         storea 2   ; j = 1
         loada 3    ; put x on top of stack
-        storea y   ; y = x
+        storea 4   ; y = x
 w2:     loadc 2    ; put constant 2 on stack
         loada 2    ; put j on stack
         mul        ; 2*j
@@ -58,6 +58,6 @@ A:      loada 5    ; put z on top
         sub        ; n-j
         storea 1   ; n = n-j
         jump w1    ;       
- end:   loada z    ; put z on top
+ end:   loada 5    ; put z on top
         print      ; print z to output    
         halt   
