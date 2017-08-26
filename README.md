@@ -17,6 +17,7 @@ in those gaps with this resource I found on the net;
 [cma.pdf](http://www.rw.cdl.uni-saarland.de/teaching/cc07/project/cma.pdf) but it too seemed 
 to be little out of sync with the text.
 
+It is currently hosted here on GitHub: [CMa Virtual Machime](https://jconallen.github.io/CMa/).
 
 
 So all I can say is that **this implementation (still incomplete) may not match exactly the machine as described in 
