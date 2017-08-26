@@ -126,7 +126,23 @@
 				
 				<h2 id="loadUrl">Load URL</h2>
 				<p>
-				TODO
+				You can pre-load a source file by passing a reference to some raw source code in CMa after the hash tag in the 
+				main VM URL.  For example suppose the application was hosted at <a href="https://jconallen.github.io/CMa/">https://jconallen.github.io/CMa/</a>.  
+				Calling this URL directly will only load the application.  If you specify the URL of a program after a hash tag, then the app will
+				attempt to load that as CMa source and parse it.  In order for this to work the site hosting the code must allow
+				<a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">Cross Origin Resource Sharing (CORS)</a>.
+				</p>
+				<p> 
+				Fortunately if you use GitHub to store your files, you can specify a GitHub link to your CMa code to load
+				in the machine when the page opens.  All you need to do is URL encode the URL to your source and put it after 
+				a hash in the link to the application.  For example the solution to problem 2.11 #1 of the text is placed in the
+				GitHub hosted file: <a href="https://github.com/jconallen/CMa/blob/master/2.11.1.cma">https://github.com/jconallen/CMa/blob/master/2.11.1.cma</a> however
+				because this link includes a lot of HTML, we need the <b>Raw</b> version of the file (CMa code only), which you get by pressing 
+				the Raw button.  It is this URL that you place after the hash in the app url.
+ 				</p>
+				<p>The URL <code>https://jconallen.github.io/CMa/#https://raw.githubusercontent.com/jconallen/CMa/master/2.11.1.cma</code> will
+				load the app, hosted on GitHub and then load the CMa program 2.11.1.cam.  This link can be passed around in an email
+				or specified in a web page like this: <a href="https://jconallen.github.io/CMa/#https://raw.githubusercontent.com/jconallen/CMa/master/2.11.1.cma">Problem 2.11 #1</a>
 				</p>
 				
 				
