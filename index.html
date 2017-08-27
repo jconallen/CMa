@@ -480,13 +480,14 @@
 			
 			var instr = VM.C[VM.PC];
 			var stackView = stackHtml();
-			tblHtml += '<tr><td style="border-bottom:1pt solid black;">' + instr.toFormattedString() + '<br/><i>' + instr.comment + '</i></td>';
+			tblHtml += '<tr><td style="border-bottom:1pt solid black;"></td>';
 			tblHtml += '<td style="border-bottom:1pt solid black; vertical-align: top;">' + currentRegisterTable() + "</td>";		
 			if( stackView.html ) {
 				tblHtml += '<td style="border-bottom:1pt solid black;">' + stackView.html + '</td></tr>';
 			} else {
 				tblHtml += '<td style="border-bottom:1pt solid black;"></td></tr>';
 			}
+			tblHtml += '<tr><td colspan="2">' + instr.toFormattedString() + '<br/><i>' + instr.comment + '</i></td></tr>';
 
 			VM.executeNextInstruction();
 			
