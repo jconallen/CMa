@@ -264,9 +264,9 @@ const FALSE = new Value( 0 );
 
 class VirtualMachine {
 
-	constructor( ProgramStoreSize, MainMemorySize ){
+	constructor( MainMemorySize ){
 		this.MAIN_MEMORY_SIZE = MainMemorySize;
-		this.PROGRAM_STORE_SIZE = ProgramStoreSize;
+		this.PROGRAM_STORE_SIZE = 64;  // initial size will grow as required
 		
 		this.C = [];  // Program Store
 		

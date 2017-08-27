@@ -26,28 +26,20 @@
 	    	
 	    	<div class="col-md-6">
 	    		<div class="btn-group">
-					<form class="form-inline" >
 					
-						<label class="mr-sm-2" for="sizeMainMemory">Main Memory</label>
-		  				<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="sizeMainMemory" placeholder="64" style="width:60px">
-	
-					  	<button type="submit" class="btn btn-default" onclick="createVM()">Re-Create VM</button>
-			    		
-					</form>
+					<div class="input-group input-group-sm">
+					  <input type="text" class="form-control" id="sizeMainMemory" placeholder="64" style="width:60px" aria-describedby="sizing-addon3">
+					  <span class="input-group-addon" onclick="createVM()">Size VM</span>
+					</div>
 				</div>
 				<div class="btn-group">
-					<form class="form-inline" style="padding:5px">
-						<div class="input-group">
-					      <input type="text" class="form-control" placeholder="400px" id="viewSize" size="2">
-					      <span class="input-group-btn">
-					        <button class="btn btn-default" type="button" onclick="setViewSize()">Set View Size</button>
-					      </span>
-					    </div><!-- /input-group -->
-					    
-					</form>
-					
-	    			
+					<div class="input-group input-group-sm">
+					  <input type="text" class="form-control" id="viewSize" placeholder="400px" style="width:60px" aria-describedby="sizing-addon3">
+					  <span class="input-group-addon" onclick="setViewSize()">Set View Size</span>
+					</div>
+
 				</div>
+				
 	    	</div>
 	    	<div class="col-md-2">
 	    	
@@ -330,10 +322,9 @@
 	var clipboard;
 	var SourceCode="";
 
-	var PROGRAM_SPACE = 64;
 	var MAIN_MEMORY = 64;
 	var MemoryNotes = [];
-	var VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY);
+	VM = new VirtualMachine(MAIN_MEMORY);
 	
 	function parseCode(){
 		$('#ParseError').hide();
@@ -406,16 +397,10 @@
 	
 	function createVM(){
 		var mm = $('#sizeMainMemory').val();
-		var sv = $('#sizeStackView').val();
 		if( !isNaN(mm) && mm>0 && mm<1024 ){
 			MAIN_MEMORY = mm;
 		}
-		if( !isNaN(sv) && sv>0 && sv<MAIN_MEMORY ){
-			STACK_VIEW = sv;
-		} else {
-			STACK_VIEW = MAIN_MEMORY / 2;
-		}
-		VM = new VirtualMachine(PROGRAM_SPACE, MAIN_MEMORY, STACK_VIEW);
+		VM = new VirtualMachine(MAIN_MEMORY);
 		updateDisplay();		
 	}
 	
@@ -652,7 +637,7 @@
 
 		var heapData = [];
 
-		for(var i=VM.MAIN_MEMORY_SIZE-1; i>=0; i--) {
+		for(var i=VM.MainMemorySize-1; i>=0; i--) {
 			var heapValue = VM.S[i];
 			var addr = i ;
 			var row = { "address": addr};
