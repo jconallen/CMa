@@ -127,11 +127,14 @@ function(instr,vm){
 InstructionDefinition["storer"] = {
 		"name": 		"storer",
 		"displayName":	"storer q",
-		"semantics": 	"S[FP+q] &larr; S[SP]; ",
-		"description": 	"Store the value at the top of the stack to the relative address q",
+		"semantics": 	"S[FP+q] &larr; S[SP]; SP &larr; SP-1;",
+		"description": 	"Store the value at the top of the stack to the relative address q " +
+				"NOTE: this implementation of the machine decrements the SP.  The version in the " +
+				"PDF does not, and the version on the text requires two aguments j and m.",
 		"impl":			
 function(instr,vm){
 	var q = instr.argAsInt(0);
 	vm.S[vm.FP+q] = vm.S[vm.SP];
+	vm.SP = vm.SP - 1;
 }
 }
