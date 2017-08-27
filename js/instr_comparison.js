@@ -8,8 +8,8 @@ InstructionDefinition["le"] = {
 				"an int 0 replaces the top two values.", 
 		"impl": 		
 function(instr,vm){
-	var a = vm.S[vm.SP-1];
-	var b = vm.S[vm.SP];
+	var a = vm.S[vm.SP-1].value;
+	var b = vm.S[vm.SP].value;
 	if( a < b ) {
 		vm.S[vm.SP-1] = TRUE;
 	} else {
@@ -28,8 +28,8 @@ InstructionDefinition["leq"] = {
 				"an int 0 replaces the top two values.", 
 		"impl": 		
 function(instr,vm){
-	var a = vm.S[vm.SP-1];
-	var b = vm.S[vm.SP];
+	var a = vm.S[vm.SP-1].value;
+	var b = vm.S[vm.SP].value;
 	if( a <= b ) {
 		vm.S[vm.SP-1] = TRUE;
 	} else {
@@ -49,8 +49,8 @@ InstructionDefinition["gr"] = {
 				"an int 0 replaces the top two values.", 
 		"impl": 		
 function(instr,vm){
-	var a = vm.S[vm.SP-1];
-	var b = vm.S[vm.SP];
+	var a = vm.S[vm.SP-1].value;
+	var b = vm.S[vm.SP].value;
 	if( a > b ) {
 		vm.S[vm.SP-1] = TRUE;
 	} else {
@@ -69,8 +69,8 @@ InstructionDefinition["eq"] = {
 				"an int 0 replaces the top two values.", 
 		"impl": 		
 function(instr,vm){
-	var a = vm.S[vm.SP-1];
-	var b = vm.S[vm.SP];
+	var a = vm.S[vm.SP-1].value;
+	var b = vm.S[vm.SP].value;
 	if( a == b ) {
 		vm.S[vm.SP-1] = TRUE;
 	} else {
@@ -89,8 +89,8 @@ InstructionDefinition["neq"] = {
 				"an int 0 replaces the top two values.", 
 		"impl": 		
 function(instr,vm){
-	var a = vm.S[vm.SP-1];
-	var b = vm.S[vm.SP];
+	var a = vm.S[vm.SP-1].value;
+	var b = vm.S[vm.SP].value;
 	if( a != b ) {
 		vm.S[vm.SP-1] = TRUE;
 	} else {
@@ -110,8 +110,8 @@ InstructionDefinition["geq"] = {
 				"an int 0 replaces the top two values.", 
 		"impl": 		
 function(instr,vm){
-	var a = vm.S[vm.SP-1];
-	var b = vm.S[vm.SP];
+	var a = vm.S[vm.SP-1].value;
+	var b = vm.S[vm.SP].value;
 	if( a >= b ) {
 		vm.S[vm.SP-1] = TRUE;
 	} else {
