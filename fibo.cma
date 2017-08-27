@@ -1,0 +1,104 @@
+;
+;  CMa program for Fibonacci Sequence function
+;
+;  int result;
+;
+;  int fibo(int n) {
+;    int result;
+;    if( n < 0  ) return -1;
+;    switch (n) {
+;       case 0 : return 0; break;
+;       case 1 : return 1; break;
+;       default: return fibo(n-1) + fibo(n-2);
+;    }
+;  }
+;  
+;  int main(){
+;    int n;
+;    n = 5;
+;    result  = fibo(n);
+;    return 0;
+;  }
+;
+;===============================================
+;    define the global variables and assign the values
+
+        enter 1       ; push up the EP for the global var
+        alloc 1       ; global var result
+
+;===============================================
+;    set up the program call to main, and halt
+
+        enter 5       ; 5 required for fcn call with return      
+        alloc 1       ; allocate space for return of int main()
+        mark          ; create stack frame (EP|FP|PC)
+        loadc main    ; put address of main on stack
+        call 0        ; call main function, no arguments
+        halt          ;
+        
+;===============================================
+;    the main function
+       
+ main:  enter 7       ; 6 for call to fib + 1 local var
+        alloc 1       ; allocate variable n
+        loadc 5       ; 
+        storer 1      ; put 5 in relative local var 1 (n=5)
+        alloc 1       ; allocate space for ret value
+        mark          ;
+        loadr 1       ; load formal param n
+        loadc fib     ;
+        call 1        ; call with one parameter
+        storea 0      ; 
+        return        ;  
+
+
+fib:   enter 12       ; 6 for call to fib + 1 local var + 1 intermediate var
+       alloc 1        ; local result - not used 
+       loadr 1        ; copy param n on top of strack 
+       loadc 0        ; 
+       le             ;  n < 0
+       jumpz sw0      ; if( n < 0 ) err, return -1 otherwise jump to sw0
+       loadc -1       ; put const -1 on stack
+       storer -3       ; put in ret value
+       return         ;
+sw0:   loadc 0        ; put const 0 on stack
+       loadr 1        ; put n back on stack
+       eq             ; n==0
+       jumpz sw1      ; if( n == 0 ) return 0, otherwise jmp sw1
+       loadc 0        ; put const 0 on stack
+       storer -3       ; put in ret value
+       return         ;
+sw1:   loadr 1        ; put n back on stack
+       loadc 1        ; put const 1 on stack
+       eq             ; n==1
+       jumpz f2       ; if( n == 1 ) return 1, otherwise f2
+       loadc 1        ; put const 1 on stack
+       storer -3       ; put in ret value
+       return         ;
+;    set up call to fib(n-1)
+f2:     loadr 1       ; copy formal param n on stack
+        loadc 1       ; put const 1 on stack
+        sub           ; sub 
+        alloc 1       ; allocate space for ret
+        mark          ;
+        loadr 3       ; put result of sub in formal param n
+        loadc fib     ;
+        call 1        ; call fib with one formal param
+                      ; after call ret is top of stack
+; call fibo( n-2 )
+        loadr 1       ; copy formal param n on stack
+        loadc 2       ; put const 2 on stack
+        sub           ; sub 
+        alloc 1       ; return value of next call
+        mark          ;
+        loadr 4       ; put result of sub as formal param
+        loadc fib     ;
+        call 1        ;     
+        loadr 5       ; put result of prev call on stack
+        add           ; add the results of the two calls to fib
+        storer -3     ; put result in return value
+        return        ;  
+
+       
+       
+       
