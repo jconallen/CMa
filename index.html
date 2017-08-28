@@ -868,9 +868,15 @@
 		updateDisplay();
 		$("#out").html("");
 		$('#sizeMainMemory').val(MAIN_MEMORY);
-		var hash = window.location.hash.substr(1);
-		if( hash ) {
-			var src = decodeURIComponent(hash);
+		
+		var params = (new URL(document.location)).searchParams;
+		var src = params.get("src");
+		var mem = params.get("mem");
+		if( mem ) {
+			$('#sizeMainMemory').val(mem);
+			createVM();
+		}
+		if( src ) {
 			loadSample(src);
 		}
 	});
