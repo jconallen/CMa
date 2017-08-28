@@ -27,14 +27,15 @@
 	    	<div class="col-md-6">
 	    		<div class="btn-group">
 					
-					<div class="input-group input-group-sm">
-					  <input type="text" class="form-control" id="sizeMainMemory" placeholder="64" style="width:60px" aria-describedby="sizing-addon3">
+					<div class="input-group input-group-sm" style="width:100px" >
+					  <input type="text" class="form-control" id="sizeMainMemory" placeholder="64" aria-describedby="sizing-addon3">
 					  <span class="input-group-addon" onclick="createVM()">Size VM</span>
 					</div>
 				</div>
 				<div class="btn-group">
-					<div class="input-group input-group-sm">
-					  <input type="text" class="form-control" id="viewSize" placeholder="400px" style="width:60px" aria-describedby="sizing-addon3">
+
+					<div class="input-group input-group-sm"  style="width:150px">
+					  <input type="text" class="form-control" id="viewSize" placeholder="400px"  aria-describedby="sizing-addon3">
 					  <span class="input-group-addon" onclick="setViewSize()">Set View Size</span>
 					</div>
 
@@ -865,7 +866,6 @@
 	}
 	
 	$( document ).ready(function() {
-		updateDisplay();
 		$("#out").html("");
 		$('#sizeMainMemory').val(MAIN_MEMORY);
 		
@@ -879,6 +879,7 @@
 		if( src ) {
 			loadSample(src);
 		}
+		updateDisplay();
 	});
 
 	</script>
