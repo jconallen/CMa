@@ -54,29 +54,29 @@
         return        ;  
 
 
-fib:   enter 12       ; 6 for call to fib + 1 local var + 1 intermediate var
-       alloc 1        ; local result - not used 
-       loadr 1        ; copy param n on top of strack 
-       loadc 0        ; 
-       le             ;  n < 0
-       jumpz sw0      ; if( n < 0 ) err, return -1 otherwise jump to sw0
-       loadc -1       ; put const -1 on stack
-       storer -3       ; put in ret value
-       return         ;
-sw0:   loadc 0        ; put const 0 on stack
-       loadr 1        ; put n back on stack
-       eq             ; n==0
-       jumpz sw1      ; if( n == 0 ) return 0, otherwise jmp sw1
-       loadc 0        ; put const 0 on stack
-       storer -3       ; put in ret value
-       return         ;
-sw1:   loadr 1        ; put n back on stack
-       loadc 1        ; put const 1 on stack
-       eq             ; n==1
-       jumpz recrse   ; if( n == 1 ) return 1, otherwise f2
-       loadc 1        ; put const 1 on stack
-       storer -3       ; put in ret value
-       return         ;
+fib:    enter 12       ; 6 for call to fib + 1 local var + 1 intermediate var
+        alloc 1        ; local result - not used 
+        loadr 1        ; copy param n on top of strack 
+        loadc 0        ; 
+        le             ;  n < 0
+        jumpz sw0      ; if( n < 0 ) err, return -1 otherwise jump to sw0
+        loadc -1       ; put const -1 on stack
+        storer -3       ; put in ret value
+        return         ;
+sw0:    loadc 0        ; put const 0 on stack
+        loadr 1        ; put n back on stack
+        eq             ; n==0
+        jumpz sw1      ; if( n == 0 ) return 0, otherwise jmp sw1
+        loadc 0        ; put const 0 on stack
+        storer -3       ; put in ret value
+        return         ;
+sw1:    loadr 1        ; put n back on stack
+        loadc 1        ; put const 1 on stack
+        eq             ; n==1
+        jumpz recrse   ; if( n == 1 ) return 1, otherwise f2
+        loadc 1        ; put const 1 on stack
+        storer -3       ; put in ret value
+        return         ;
 ;       
 ;    set up call to fibo(n-1)
 ;
@@ -105,6 +105,4 @@ recrse: loadr 1       ; copy formal param n on stack
         storer -3     ; put result in return value
         return        ;  
 
-       
-       
        
