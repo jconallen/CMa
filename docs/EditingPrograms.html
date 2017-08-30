@@ -128,7 +128,8 @@
 				<p>
 				You can pre-load a source file by passing a reference to some raw source code in CMa after the hash tag in the 
 				main VM URL.  For example suppose the application was hosted at <a href="https://jconallen.github.io/CMa/">https://jconallen.github.io/CMa/</a>.  
-				Calling this URL directly will only load the application.  If you specify the URL of a program after a hash tag, then the app will
+				Calling this URL directly will only load the application.  If you specify the URL of a program with the query parameter <code>src</code> and
+				optionally the size of main memory with the query parameter <source>mem</source>, then the app will
 				attempt to load that as CMa source and parse it.  In order for this to work the site hosting the code must allow
 				<a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">Cross Origin Resource Sharing (CORS)</a>.
 				</p>
@@ -142,7 +143,7 @@
  				</p>
 				<p>The URL <code>https://jconallen.github.io/CMa/#https://raw.githubusercontent.com/jconallen/CMa/master/2.11.1.cma</code> will
 				load the app, hosted on GitHub and then load the CMa program 2.11.1.cam.  This link can be passed around in an email
-				or specified in a web page like this: <a href="https://jconallen.github.io/CMa/#https://raw.githubusercontent.com/jconallen/CMa/master/2.11.1.cma">Problem 2.11 #1</a>
+				or specified in a web page like this: <a href="https://jconallen.github.io/CMa?src=https://raw.githubusercontent.com/jconallen/CMa/master/2.11.1.cma">Problem 2.11 #1</a>
 				</p>
 				
 				
