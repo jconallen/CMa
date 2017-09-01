@@ -29,7 +29,7 @@ function(instr,vm){
 
 InstructionDefinition["jumpi"] = {
 		"name": 		"jumpi",
-		"displayName": 	"jumpi",
+		"displayName": 	"jumpi q",
 		"semantics": 	"PC&larr;S[SP]+q; SP&larr;SP-1",
 		"description": 	"Jump indirect. The value pointed to by the address on top of the stack is added to " +
 						"the argument q to determine the next value of the program counter (PC).",
