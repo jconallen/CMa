@@ -14,7 +14,7 @@ a means of killing time and providing some insights into the material in the tex
 Well, I certainly hit the mark on the first one. On the second goal, however I think I have found a number 
 of discrepancies in the text and there were a lot omissions of detail that I had to guess at.  I tried to fill
 in those gaps with this resource I found on the net; 
-[cma.pdf](http://www.rw.cdl.uni-saarland.de/teaching/cc07/project/cma.pdf) but it too seemed 
+[cma.pdf](https://web.archive.org/web/20150505175118/http://www.rw.cdl.uni-saarland.de:80/teaching/cc07/project/cma.pdf)) but it too seemed 
 to be little out of sync with the text.
 
 It is currently hosted here on GitHub: [CMa Virtual Machime](https://jconallen.github.io/CMa/).
